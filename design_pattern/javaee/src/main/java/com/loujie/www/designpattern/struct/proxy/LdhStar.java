@@ -1,5 +1,11 @@
 package com.loujie.www.designpattern.struct.proxy;
 
+/**
+ * 刘德华明星
+ * 
+ * @author loujie
+ *
+ */
 public class LdhStar implements Star {
 
 	@Override

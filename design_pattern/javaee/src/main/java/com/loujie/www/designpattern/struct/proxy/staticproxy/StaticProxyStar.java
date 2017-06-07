@@ -1,4 +1,4 @@
-package com.loujie.www.designpattern.struct.proxy.dynamicproxy;
+package com.loujie.www.designpattern.struct.proxy.staticproxy;
 
 import com.loujie.www.designpattern.struct.proxy.Star;
 
@@ -29,10 +29,7 @@ public class StaticProxyStar implements Star {
 
 	@Override
 	public void sing() {
-		// this.negotiate();
-		// this.signContract();
 		star.sing();
-		// this.receivables();
 	}
 
 	@Override

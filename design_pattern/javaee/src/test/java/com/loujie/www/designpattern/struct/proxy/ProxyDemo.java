@@ -2,7 +2,7 @@ package com.loujie.www.designpattern.struct.proxy;
 
 import org.junit.Test;
 
-import com.loujie.www.designpattern.struct.proxy.dynamicproxy.StaticProxyStar;
+import com.loujie.www.designpattern.struct.proxy.staticproxy.StaticProxyStar;
 
 public class ProxyDemo {
 
