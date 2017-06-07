@@ -2,6 +2,7 @@ package com.loujie.www.designpattern.create.signleton;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.ObjectStreamException;
 import java.io.Serializable;
 import java.util.Properties;
 
@@ -34,6 +35,15 @@ public class HungryManObject implements Serializable {
 
 	// 1.[私有的构造函数]
 	private HungryManObject() {
+		if (hmObject != null) {
+			throw new RuntimeException("instance is singleton");
+		}
+	}
+
+	@SuppressWarnings("unused")
+	private Object readResolver() throws ObjectStreamException {
+
+		return hmObject;
 	}
 
 	// 3.一个[对外的],[获取变量的静态方法]
