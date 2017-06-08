@@ -8,11 +8,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 
 import org.junit.Test;
 
@@ -193,11 +193,12 @@ public class IoDemo {
 		BufferedReader r = null;
 		BufferedWriter w = null;
 		try {
-			r = new BufferedReader(new FileReader(srcFile));
-			w = new BufferedWriter(new FileWriter(new File(descFile, srcFile.getName())));
+			r = new BufferedReader(new InputStreamReader(new FileInputStream(srcFile), "utf-8"));
+			w = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(descFile, srcFile.getName())), "utf-8"));
 			String tempStr = null;
 			do {
 				tempStr = r.readLine();
+				System.err.println(tempStr);
 				if (tempStr != null) {
 					w.write(tempStr);
 					w.newLine();
@@ -228,7 +229,7 @@ public class IoDemo {
 
 	@Test
 	public void testBuffered() {
-		File srcFile = new File("D:\\logss\\dir\\ArgsUtils.java");
-		copyFileByCharStream(srcFile, "D:\\logss\\dir\\ArgsUtils2.java");
+		File srcFile = new File("D:\\logss\\dir\\PbsConstants.java");
+		copyFileByCharStream(srcFile, "D:\\logss\\dir2");
 	}
 }
