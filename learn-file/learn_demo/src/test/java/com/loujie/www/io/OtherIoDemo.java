@@ -13,17 +13,10 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintStream;
-import java.io.RandomAccessFile;
 import java.io.Serializable;
 
 import org.junit.Test;
 
-/**
- * 其它的文件操作流
- * 
- * @author loujie
- *
- */
 public class OtherIoDemo implements Serializable {
 
 	/**
@@ -177,12 +170,6 @@ public class OtherIoDemo implements Serializable {
 		ps.println("ooxxx");
 		ps.println('x');
 		ps.println(1234);
-	}
-
-	public void randomDemo() throws IOException {
-		RandomAccessFile raf = new RandomAccessFile("D:\\logss\\dir\\PbsConstants.java", "r");
-		raf.seek(10);
-		
 	}
 
 }
