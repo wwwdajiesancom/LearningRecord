@@ -1,5 +1,6 @@
 package com.loujie.www.utils;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -27,6 +28,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Properties;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -955,5 +957,40 @@ public class ArgsUtils {
 			}
 			return null;
 		}
+	}
+
+	/**
+	 * 读取properties文件中的数据
+	 * 
+	 * @author loujie
+	 *
+	 */
+	public static class PropertisUtils {
+
+		private static final Properties pro = new Properties();
+		static {
+			try {
+				pro.load(new BufferedInputStream(PropertisUtils.class.getResource("/config.properties").openStream()));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+		/**
+		 * 获取某个键的值从配置文件中
+		 * 
+		 * @param key
+		 *            键
+		 * @param defaultValues
+		 *            默认值
+		 * @return
+		 */
+		public static String getProperty(String key, String... defaultValues) {
+			if (defaultValues == null || defaultValues.length == 0) {
+				defaultValues = new String[1];
+			}
+			return pro.getProperty(key, defaultValues[0]);
+		}
+
 	}
 }
