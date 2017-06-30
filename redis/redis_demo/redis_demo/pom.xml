@@ -8,14 +8,6 @@
 	<name>redis_demo Maven Webapp</name>
 	<url>http://maven.apache.org</url>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<spring.version>4.0.5.RELEASE</spring.version>
-		<!--dubbo 2.4.10依赖sping2.5架包 会导致冲突 -->
-		<dubbo.version>2.4.10</dubbo.version>
-		<zkclient.version>0.1</zkclient.version>
-	</properties>
-
 	<profiles>
 		<profile>
 			<id>dev</id>
@@ -68,6 +60,20 @@
 			<scope>test</scope>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.1.0</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/net.sf.json-lib/json-lib -->
+		<dependency>
+			<groupId>net.sf.json-lib</groupId>
+			<artifactId>json-lib</artifactId>
+			<version>2.4</version>
+		</dependency>
 
 
 	</dependencies>
@@ -84,6 +90,17 @@
 			</resource>
 		</resources>
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.5.1</version>
+				<configuration>
+					<skip>true</skip>
+					<source>1.7</source>
+                    <target>1.7</target>
+				</configuration>
+			</plugin>
+
 			<plugin>
 				<groupId>org.apache.tomcat.maven</groupId>
 				<artifactId>tomcat7-maven-plugin</artifactId>
