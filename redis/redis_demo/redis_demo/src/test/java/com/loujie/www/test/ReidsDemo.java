@@ -1,44 +1,19 @@
 package com.loujie.www.test;
 
 import org.junit.Test;
-
-import com.loujie.www.redis.RedisUtils;
-import com.loujie.www.utils.ArgsUitls;
-
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPubSub;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ReidsDemo {
 
-	@Test
-	public void ping() {
-		Jedis jedis = new Jedis(ArgsUitls.Config.get("redis_ip"), Integer.parseInt(ArgsUitls.Config.get("redis_port")));
-		JedisPubSub jps = new JedisPubSub() {
-			public void onMessage(String channel, String message) {
-				System.err.println(channel);
-				System.err.println("1:" + message);
-			}
-		};
-		jedis.subscribe(jps, "c1");
-	}
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Test
-	public void ping2() {
-		Jedis jedis = new Jedis(ArgsUitls.Config.get("redis_ip"), Integer.parseInt(ArgsUitls.Config.get("redis_port")));
-		JedisPubSub jps = new JedisPubSub() {
-			public void onMessage(String channel, String message) {
-				System.err.println(channel);
-				System.err.println("2:" + message);
-			}
-		};
-		jedis.subscribe(jps, "c1");
+	public void nxf() throws InterruptedException {
+		for (long i = 0; i < 100000l * 100000l; i++) {
+			logger.debug(i
+					+ " There are moments in life when you miss someone so much that you just want to pick them from your dreams and hug them for real! Dream what you want to dream;go where you want to go;be what you want to be,because you have only one life and one chance to do all the things you want to do.");
+		}
 	}
 
-	@Test
-	public void ping3() {
-		RedisUtils.set("abc", "jiege");
-	}
-	
-	
-	
 }
