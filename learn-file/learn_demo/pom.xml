@@ -59,6 +59,24 @@
 			<version>2.5</version>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/commons-collections/commons-collections -->
+		<!-- <dependency> <groupId>commons-collections</groupId> <artifactId>commons-collections</artifactId> 
+			<version>3.2.2</version> </dependency> -->
+
+		<!-- https://mvnrepository.com/artifact/com.google.guava/guava-collections -->
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava-collections</artifactId>
+			<version>r03</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/javassist/javassist -->
+		<dependency>
+			<groupId>javassist</groupId>
+			<artifactId>javassist</artifactId>
+			<version>3.12.1.GA</version>
+		</dependency>
+
 
 	</dependencies>
 
