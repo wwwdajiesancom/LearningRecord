@@ -1,0 +1,16 @@
+<dataConfig>
+	<dataSource driver="com.mysql.jdbc.Driver" url="jdbc:mysql://192.168.139.1:3306/pcloudaboard_bak" user="root" password="admin" />
+	<document name="schools">
+		<entity name="school" query="SELECT id,`name`,name_int,address,address_int,international_rank,national_rank,introduction,created_at FROM school">
+			<field column="id" name="id" />
+			<field column="name" name="name" />
+			<field column="name_int" name="nameInt" />
+			<field column="address" name="address" />
+			<field column="address_int" name="addressInt" />
+			<field column="international_rank" name="internationalRank" />
+			<field column="national_rank" name="nationalRank" />
+			<field column="introduction" name="introduction" />
+			<field column="created_at" name="createdAt" />
+		</entity>
+	</document>
+</dataConfig>
