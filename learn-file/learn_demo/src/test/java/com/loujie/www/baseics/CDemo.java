@@ -1,12 +1,16 @@
 package com.loujie.www.baseics;
 
+import java.util.Arrays;
+
 import org.junit.Test;
 
 public class CDemo {
 
 	@Test
 	public void lll() {
-		System.err.println("oxoxoxoxooxoxoxoxoxoxo");
+		String[] ll = "oooooooxoooooooo".split("o");
+		System.err.println(Arrays.toString(ll));
+		System.err.println(ll.length);
 	}
 
 }
