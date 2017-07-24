@@ -37,6 +37,49 @@ public class ThreadDemo {
 	}
 
 	@Test
+	public void thr() throws InterruptedException {
+		System.out.println(Runtime.getRuntime().availableProcessors());
+		ExecutorService fixedThreadPool = Executors.newFixedThreadPool(3);
+		for (int i = 0; i < 10; i++) {
+			final int index = i;
+			fixedThreadPool.execute(new Runnable() {
+				public void run() {
+					try {
+						System.out.println(index);
+						Thread.sleep(2000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+			});
+		}
+
+		// Thread.sleep(20000);
+
+	}
+
+	public class Tl implements Runnable {
+
+		private int i;
+
+		public Tl(int i) {
+			this.i = i;
+		}
+
+		@Override
+		public void run() {
+			System.out.println("run" + i);
+			try {
+				Thread.sleep(3000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			System.err.println("runnnnnnnnnnnn" + i);
+		}
+
+	}
+
+	@Test
 	public void threadDemo() throws InterruptedException, ExecutionException {
 		ExecutorService es = Executors.newFixedThreadPool(10);
 		MyCall task = new MyCall();

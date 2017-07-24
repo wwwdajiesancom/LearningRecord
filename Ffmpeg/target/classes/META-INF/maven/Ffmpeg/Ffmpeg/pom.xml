@@ -34,7 +34,7 @@
 							<addClasspath>true</addClasspath>
 						</manifest>
 						<manifestEntries>
-							<Main-Class>www.loujie.com.ffmpeg.FfmpegHls</Main-Class>
+							<Main-Class>www.loujie.com.task.FfmpegMain</Main-Class>
 						</manifestEntries>
 					</archive>
 				</configuration>

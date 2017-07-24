@@ -1,14 +1,13 @@
 package www.loujie.com.task;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import www.loujie.com.utils.FfmpegUtils;
 
 /**
  * 做为一个定时的扫描器
@@ -17,13 +16,14 @@ import java.util.TimerTask;
  *
  */
 public class ScanTask {
-	private static final Map<String, String> addMap = new Hashtable<>();
-	private static final Map<String, String> deleteMap = new Hashtable<>();
+	private static final List<File> addList = new ArrayList<>();
+	private static final List<File> deleteList = new ArrayList<>();
 	private static Scanner scanner;
 
 	private static volatile Boolean isNext = true;
 
 	public static void main(String[] args) {
+		// 0.设置扫描目录
 		scanner = new Scanner(System.in);
 		System.out.print("请输入要扫描的目录:");
 		final String pathname = scanner.nextLine();
@@ -34,14 +34,18 @@ public class ScanTask {
 				try {
 					if (isNext) {
 						isNext = false;
-						if (addMap.isEmpty() && deleteMap.isEmpty()) {
+						if (addList.isEmpty() && deleteList.isEmpty()) {
 							File file = new File(pathname);
 							if (file.exists()) {
-								List<File> childFiles = childDirList(file);
+								// 获取所有的子项
+								List<File> childFiles = FfmpegUtils.FileUtils.childDirList(file);
 								if (childFiles.size() > 0) {
 									for (File itemFile : childFiles) {
-										System.err.println(itemFile.getAbsolutePath());
+										// 找出m3u8文件
+										List<File> m3u8List = FfmpegUtils.FileUtils.iterationFileBySuffix(itemFile, ".m3u8");
+										addList.addAll(m3u8List);
 									}
+									// 处理加密
 								}
 							} else {
 								System.err.println("目录" + pathname + "不存在.");
@@ -55,37 +59,9 @@ public class ScanTask {
 				}
 			}
 		};
-		// 2.定时
+		// 2.定时,每隔1s扫描一下
 		Timer timer = new Timer();
 		timer.schedule(tt, 2000, 1000);
-	}
-
-	/**
-	 * 获取父目录下的直接子目录
-	 * 
-	 * @param parentDirFile
-	 *            父目录
-	 * @return
-	 */
-	private static List<File> childDirList(File parentDirFile) {
-		List<File> returnList = new ArrayList<>();
-		if (parentDirFile.exists() && parentDirFile.isDirectory()) {
-			File[] files = parentDirFile.listFiles(new FileFilter() {
-				@Override
-				public boolean accept(File pathname) {
-					if (pathname.isDirectory()) {
-						return true;
-					}
-					return false;
-				}
-			});
-			if (files != null && files.length > 0) {
-				for (File itemFile : files) {
-					returnList.add(itemFile);
-				}
-			}
-		}
-		return returnList;
 	}
 
 }
