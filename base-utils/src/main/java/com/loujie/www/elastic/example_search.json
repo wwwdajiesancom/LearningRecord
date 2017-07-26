@@ -1,0 +1,372 @@
+{"array":[{
+    "school_list": {
+        "aliases": {},
+        "mappings": {
+            "school": {
+                "properties": {
+                    "address": {
+                        "type": "string",
+                        "store": true,
+                        "term_vector": "with_positions_offsets",
+                        "analyzer": "ik_max_word",
+                        "include_in_all": true
+                    },
+                    "addressInt": {
+                        "type": "string"
+                    },
+                    "countryId": {
+                        "type": "long",
+                        "store": true,
+                        "include_in_all": true
+                    },
+                    "countryName": {
+                        "type": "string",
+                        "store": true,
+                        "analyzer": "ik_max_word",
+                        "include_in_all": true
+                    },
+                    "countryUsName": {
+                        "type": "string",
+                        "store": true,
+                        "analyzer": "ik_max_word",
+                        "include_in_all": true
+                    },
+                    "createdAt": {
+                        "type": "date",
+                        "format": "strict_date_optional_time||epoch_millis"
+                    },
+                    "created_at": {
+                        "type": "date",
+                        "store": true,
+                        "format": "strict_date_optional_time||epoch_millis",
+                        "include_in_all": true
+                    },
+                    "id": {
+                        "type": "long",
+                        "store": true,
+                        "precision_step": 8
+                    },
+                    "internationalRank": {
+                        "type": "long",
+                        "store": true,
+                        "precision_step": 8
+                    },
+                    "introduction": {
+                        "type": "string",
+                        "store": true,
+                        "analyzer": "ik_max_word",
+                        "include_in_all": true
+                    },
+                    "logo": {
+                        "type": "string",
+                        "store": true,
+                        "analyzer": "ik_max_word",
+                        "include_in_all": true
+                    },
+                    "name": {
+                        "type": "string",
+                        "store": true,
+                        "term_vector": "with_positions_offsets",
+                        "analyzer": "ik_max_word",
+                        "include_in_all": true
+                    },
+                    "nameInt": {
+                        "type": "string",
+                        "store": true,
+                        "include_in_all": true
+                    },
+                    "nationalRank": {
+                        "type": "long",
+                        "store": true,
+                        "precision_step": 8
+                    },
+                    "sortName": {
+                        "type": "string",
+                        "store": true,
+                        "analyzer": "ik_max_word",
+                        "include_in_all": true
+                    },
+                    "status": {
+                        "type": "long",
+                        "store": true,
+                        "include_in_all": true
+                    },
+                    "theRank": {
+                        "type": "string",
+                        "store": true,
+                        "analyzer": "ik_max_word",
+                        "include_in_all": true
+                    },
+                    "type": {
+                        "type": "long",
+                        "store": true,
+                        "include_in_all": true
+                    },
+                    "updatedAt": {
+                        "type": "date",
+                        "format": "strict_date_optional_time||epoch_millis"
+                    },
+                    "updated_at": {
+                        "type": "date",
+                        "store": true,
+                        "format": "strict_date_optional_time||epoch_millis",
+                        "include_in_all": true
+                    }
+                }
+            },
+            "majorList": {
+                "_parent": {
+                    "type": "school"
+                },
+                "_routing": {
+                    "required": true
+                },
+                "properties": {
+                    "courseIntroduction": {
+                        "type": "string",
+                        "store": true,
+                        "analyzer": "ik_max_word",
+                        "include_in_all": true
+                    },
+                    "courseIntroductionInt": {
+                        "type": "string",
+                        "store": true,
+                        "analyzer": "ik_max_word",
+                        "include_in_all": true
+                    },
+                    "degreeName": {
+                        "type": "string",
+                        "store": true,
+                        "analyzer": "ik_max_word",
+                        "include_in_all": true
+                    },
+                    "degreeNameInt": {
+                        "type": "string",
+                        "store": true,
+                        "analyzer": "ik_max_word",
+                        "include_in_all": true
+                    },
+                    "eduLevel": {
+                        "type": "long",
+                        "index": "analyzed",
+                        "store": true,
+                        "include_in_all": true
+                    },
+                    "enterSchoolAt": {
+                        "type": "string",
+                        "store": true,
+                        "include_in_all": true
+                    },
+                    "experienceRequirements": {
+                        "type": "string",
+                        "store": true,
+                        "analyzer": "ik_max_word",
+                        "include_in_all": true
+                    },
+                    "gpa": {
+                        "type": "double",
+                        "store": true,
+                        "precision_step": 8
+                    },
+                    "id": {
+                        "type": "long",
+                        "store": true,
+                        "precision_step": 8
+                    },
+                    "ielts": {
+                        "type": "double",
+                        "store": true,
+                        "precision_step": 8
+                    },
+                    "jobProspects": {
+                        "type": "string",
+                        "store": true,
+                        "analyzer": "ik_max_word",
+                        "include_in_all": true
+                    },
+                    "majorAspectId": {
+                        "type": "long",
+                        "store": true,
+                        "include_in_all": true
+                    },
+                    "majorAspectName": {
+                        "type": "string",
+                        "store": true,
+                        "analyzer": "ik_max_word",
+                        "include_in_all": true
+                    },
+                    "majorDomainId": {
+                        "type": "long",
+                        "store": true,
+                        "include_in_all": true
+                    },
+                    "majorDomainName": {
+                        "type": "string",
+                        "store": true,
+                        "analyzer": "ik_max_word",
+                        "include_in_all": true
+                    },
+                    "majorName": {
+                        "type": "string",
+                        "store": true,
+                        "term_vector": "with_positions_offsets",
+                        "analyzer": "ik_max_word",
+                        "include_in_all": true
+                    },
+                    "majorNameInt": {
+                        "type": "string",
+                        "store": true,
+                        "analyzer": "ik_max_word",
+                        "include_in_all": true
+                    },
+                    "payType": {
+                        "type": "long",
+                        "store": true,
+                        "precision_step": 8
+                    },
+                    "payment": {
+                        "type": "long",
+                        "store": true,
+                        "precision_step": 8
+                    },
+                    "professionalBackground": {
+                        "type": "string",
+                        "store": true,
+                        "analyzer": "ik_max_word",
+                        "include_in_all": true
+                    },
+                    "schoolId": {
+                        "type": "long",
+                        "store": true,
+                        "precision_step": 8
+                    },
+                    "schoolSystem": {
+                        "type": "long",
+                        "store": true,
+                        "precision_step": 8
+                    },
+                    "status": {
+                        "type": "long",
+                        "store": true,
+                        "include_in_all": true
+                    },
+                    "summary": {
+                        "type": "string",
+                        "term_vector": "with_positions_offsets",
+                        "analyzer": "ik_max_word",
+                        "include_in_all": true
+                    },
+                    "tofel": {
+                        "type": "double",
+                        "store": true,
+                        "precision_step": 8
+                    }
+                }
+            }
+        },
+        "settings": {
+            "index": {
+                "creation_date": "1487155993050",
+                "number_of_shards": "5",
+                "number_of_replicas": "1",
+                "uuid": "E8I1GXmOQtObrhb3k6Siaw",
+                "version": {
+                    "created": "2030399"
+                }
+            }
+        },
+        "warmers": {}
+    }
+},
+{
+    "query": {
+        "bool": {
+            "must": [
+                {
+                    "constant_score": {
+                        "filter": {
+                            "term": {
+                                "status": 1
+                            }
+                        }
+                    }
+                },
+                {
+                    "constant_score": {
+                        "filter": {
+                            "term": {
+                                "countryId": 5
+                            }
+                        }
+                    }
+                }
+            ],
+            "filter": {
+                "has_child": {
+                    "query": {
+                        "bool": {
+                            "must": {
+                                "term": {
+                                    "status": 1
+                                }
+                            }
+                        }
+                    },
+                    "child_type": "majorList"
+                }
+            }
+        }
+    }
+},
+{
+    "from": 0,
+    "size": 10,
+    "query": {
+        "bool": {
+            "must": [
+                {
+                    "constant_score": {
+                        "filter": {
+                            "term": {
+                                "status": 1
+                            }
+                        }
+                    }
+                },
+                {
+                    "constant_score": {
+                        "filter": {
+                            "term": {
+                                "countryId": 6
+                            }
+                        }
+                    }
+                },
+                {
+                    "multi_match": {
+                        "query": "澳大",
+                        "fields": [
+                            "name"
+                        ]
+                    }
+                }
+            ],
+            "filter": {
+                "has_child": {
+                    "query": {
+                        "bool": {
+                            "must": {
+                                "term": {
+                                    "status": 1
+                                }
+                            }
+                        }
+                    },
+                    "child_type": "majorList"
+                }
+            }
+        }
+    }
+}
+
+]}
