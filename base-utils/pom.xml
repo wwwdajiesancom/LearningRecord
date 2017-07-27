@@ -52,7 +52,11 @@
 		<dependency>
 			<groupId>org.apache.solr</groupId>
 			<artifactId>solr-solrj</artifactId>
+<<<<<<< HEAD
 			<version>5.3.1</version>
+=======
+			<version>5.0.0</version>
+>>>>>>> 4a906f9cb53f27b3e7a713782f22bb342e7dfe0e
 		</dependency>
 
 
