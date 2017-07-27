@@ -22,16 +22,16 @@ public class RedisUtils {
 	 * @return
 	 */
 	public static boolean set(final String key, final String value) {
-		return new JedisCommand() {
+		return new JedisCallback() {
 			@Override
-			<T> T run(Jedis jedis, Class<T> cla) {
+			<T> T callback(Jedis jedis, Class<T> cla) {
 				String result = jedis.set(key, value);
 				if ("ok".equalsIgnoreCase(result)) {
 					return cla.cast(true);
 				}
 				return cla.cast(false);
 			}
-		}.exec(Boolean.class);
+		}.run(Boolean.class);
 
 	}
 
@@ -43,16 +43,16 @@ public class RedisUtils {
 	 * @return
 	 */
 	public static String get(final String key) {
-		return new JedisCommand() {
+		return new JedisCallback() {
 			@Override
-			<T> T run(Jedis jedis, Class<T> cla) {
+			<T> T callback(Jedis jedis, Class<T> cla) {
 				String result = jedis.get(key);
 				if (ArgsUtils.isEmpty(result)) {
 					return null;
 				}
 				return cla.cast(result);
 			}
-		}.exec(String.class);
+		}.run(String.class);
 	}
 
 }

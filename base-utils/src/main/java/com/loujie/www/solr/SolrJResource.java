@@ -1,9 +1,6 @@
 package com.loujie.www.solr;
 
-import java.io.IOException;
-
 import org.apache.solr.client.solrj.SolrClient;
-import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
 
 /**
@@ -27,11 +24,6 @@ public class SolrJResource {
 	 * @return
 	 */
 	public static SolrClient getSolrClient() {
-		try {
-			System.err.println(solrClient.ping().getStatus());
-		} catch (SolrServerException | IOException e) {
-			e.printStackTrace();
-		}
 		return solrClient;
 	}
 
