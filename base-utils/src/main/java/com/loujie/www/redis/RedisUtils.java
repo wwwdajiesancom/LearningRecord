@@ -22,27 +22,16 @@ public class RedisUtils {
 	 * @return
 	 */
 	public static boolean set(final String key, final String value) {
-<<<<<<< HEAD
 		return new JedisCallback() {
 			@Override
 			<T> T callback(Jedis jedis, Class<T> cla) {
-=======
-		return new JedisCommand() {
-			@Override
-			<T> T run(Jedis jedis, Class<T> cla) {
->>>>>>> 4a906f9cb53f27b3e7a713782f22bb342e7dfe0e
 				String result = jedis.set(key, value);
 				if ("ok".equalsIgnoreCase(result)) {
 					return cla.cast(true);
 				}
 				return cla.cast(false);
 			}
-<<<<<<< HEAD
 		}.run(Boolean.class);
-=======
-		}.exec(Boolean.class);
->>>>>>> 4a906f9cb53f27b3e7a713782f22bb342e7dfe0e
-
 	}
 
 	/**
@@ -53,26 +42,16 @@ public class RedisUtils {
 	 * @return
 	 */
 	public static String get(final String key) {
-<<<<<<< HEAD
 		return new JedisCallback() {
 			@Override
 			<T> T callback(Jedis jedis, Class<T> cla) {
-=======
-		return new JedisCommand() {
-			@Override
-			<T> T run(Jedis jedis, Class<T> cla) {
->>>>>>> 4a906f9cb53f27b3e7a713782f22bb342e7dfe0e
 				String result = jedis.get(key);
 				if (ArgsUtils.isEmpty(result)) {
 					return null;
 				}
 				return cla.cast(result);
 			}
-<<<<<<< HEAD
 		}.run(String.class);
-=======
-		}.exec(String.class);
->>>>>>> 4a906f9cb53f27b3e7a713782f22bb342e7dfe0e
 	}
 
 }
