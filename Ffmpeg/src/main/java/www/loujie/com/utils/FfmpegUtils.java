@@ -375,6 +375,17 @@ public class FfmpegUtils {
 			return Shell.execCommand(command, String.class);
 		}
 
+		/**
+		 * 下载文件到指定目录
+		 * 
+		 * @param url
+		 * @param outdir
+		 */
+		public static void wget_P(String url, String outdir) {
+			String command = "wget -cP " + outdir + " " + url;
+			Shell.execCommand(command);
+		}
+
 	}
 
 	/**
@@ -457,6 +468,7 @@ public class FfmpegUtils {
 						}
 						stringBuilder.append(str);
 						returnList.add(str);
+						System.out.println(str);
 						i++;
 					}
 				} while (str != null);

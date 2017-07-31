@@ -1,6 +1,8 @@
 package com.loujie.www.file;
 
 import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -23,6 +25,34 @@ public class FileDownloadUtils {
 	 * 字符类型
 	 */
 	private static final String _INPUT_CHARSET = "utf-8";
+
+	/**
+	 * 下载网络文件
+	 * 
+	 * @param networkUrl
+	 *            网络地址
+	 * @param fileName
+	 *            文件名称,没有后缀
+	 * @param outpath
+	 *            文件输出的位置
+	 */
+	public void downNetworkResource(String networkUrl, String fileName, String outpath) {
+		URL url;
+		try {
+			// 1.远程连接
+			url = new URL(networkUrl);
+			String file_suffix = getSuffix(networkUrl, ".");
+			fileName = fileName + file_suffix;
+			// 2.
+			BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(new File(outpath, fileName)));
+			// 3.下载
+			copyInputToOutput(url.openStream(), bos);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	/**
 	 * 下载网络文件

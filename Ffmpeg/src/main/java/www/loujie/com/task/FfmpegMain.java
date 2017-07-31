@@ -1,12 +1,9 @@
 package www.loujie.com.task;
 
-import java.util.Scanner;
-
+import www.loujie.com.main.Main;
 import www.loujie.com.utils.FfmpegUtils;
 
 public class FfmpegMain {
-	static Scanner scanner = new Scanner(System.in);
-
 	public static void main(String[] args) throws InterruptedException {
 		new FfmpegMain().sub_main();
 	}
@@ -23,7 +20,7 @@ public class FfmpegMain {
 		// 1.输入值
 		String type = "C";
 		System.out.print("请出入操作类型:");
-		type = scanner.nextLine();
+		type = Main.scanner.nextLine();
 		if (type == null || type.isEmpty()) {
 			type = "C";
 		}
@@ -46,23 +43,23 @@ public class FfmpegMain {
 
 	public void m3u8_encryption() {
 		System.out.print("请输入要加密m3u8的全路径:");
-		String m3u8File = scanner.nextLine();
+		String m3u8File = Main.scanner.nextLine();
 		System.out.print("请输入每隔几个值要加密一下的值:");
-		Integer modValue = scanner.nextInt();
+		Integer modValue = Main.scanner.nextInt();
 		FfmpegUtils.Ffmpeg.m3u8_cryption(m3u8File, modValue);
 	}
 
 	public void mp4_m3u8() {
 		System.out.print("请输入mp4文件的父路径:");
-		String mp4Dir = scanner.nextLine();
+		String mp4Dir = Main.scanner.nextLine();
 		System.out.print("请输入mp4文件的名称:");
-		String mp4Name = scanner.nextLine();
+		String mp4Name = Main.scanner.nextLine();
 		System.out.print("请输入要生成m3u8文件的目录:");
-		String m3u8Dir = scanner.nextLine();
+		String m3u8Dir = Main.scanner.nextLine();
 		System.out.print("请输入要生成m3u8文件的名称:");
-		String m3u8Name = scanner.nextLine();
+		String m3u8Name = Main.scanner.nextLine();
 		System.out.print("请输入生成ts文件的前缀:");
-		String tsPrefix = scanner.nextLine();
+		String tsPrefix = Main.scanner.nextLine();
 		FfmpegUtils.Ffmpeg.ffmpeg_mp4_to_hls(mp4Dir, mp4Name, m3u8Dir, m3u8Name, tsPrefix);
 	}
 

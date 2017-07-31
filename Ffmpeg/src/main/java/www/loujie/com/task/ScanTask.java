@@ -7,6 +7,7 @@ import java.util.Scanner;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import www.loujie.com.main.Main;
 import www.loujie.com.utils.FfmpegUtils;
 
 /**
@@ -18,15 +19,12 @@ import www.loujie.com.utils.FfmpegUtils;
 public class ScanTask {
 	private static final List<File> addList = new ArrayList<>();
 	private static final List<File> deleteList = new ArrayList<>();
-	private static Scanner scanner;
-
 	private static volatile Boolean isNext = true;
 
 	public static void main(String[] args) {
 		// 0.设置扫描目录
-		scanner = new Scanner(System.in);
 		System.out.print("请输入要扫描的目录:");
-		final String pathname = scanner.nextLine();
+		final String pathname = Main.scanner.nextLine();
 		// 1.定义一个任务
 		TimerTask tt = new TimerTask() {
 			@Override

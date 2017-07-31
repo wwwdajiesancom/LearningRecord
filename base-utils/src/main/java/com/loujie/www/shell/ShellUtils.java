@@ -145,6 +145,18 @@ public class ShellUtils {
 	 *
 	 */
 	public static class ShellCommon {
+
+		/**
+		 * 下载文件到指定目录
+		 * 
+		 * @param url
+		 * @param outdir
+		 */
+		public static void wget_P(String url, String outdir) {
+			String command = "wget -cP " + outdir + " " + url;
+			Shell.execCommand(command);
+		}
+
 		/**
 		 * 创建目录
 		 * 
