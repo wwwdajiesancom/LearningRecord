@@ -12,6 +12,24 @@ import redis.clients.jedis.Jedis;
  */
 public class RedisUtils {
 
+	public static boolean set(final String key, final String value, final int expireSeconds) {
+
+		return new RedisCallback() {
+			@Override
+			<T> T callback(Jedis jedis, Class<T> cla) {
+				String result = jedis.set(key, value);
+				if ("ok".equalsIgnoreCase(result)) {
+					if (expireSeconds >= 0) {
+						jedis.expire(key, expireSeconds);
+					}
+					return cla.cast(true);
+				}
+				return cla.cast(false);
+			}
+		}.run(Boolean.class);
+
+	}
+
 	/**
 	 * 设置key-value到redis中
 	 * 
@@ -22,16 +40,7 @@ public class RedisUtils {
 	 * @return
 	 */
 	public static boolean set(final String key, final String value) {
-		return new RedisCallback() {
-			@Override
-			<T> T callback(Jedis jedis, Class<T> cla) {
-				String result = jedis.set(key, value);
-				if ("ok".equalsIgnoreCase(result)) {
-					return cla.cast(true);
-				}
-				return cla.cast(false);
-			}
-		}.run(Boolean.class);
+		return set(key, value, -1);
 	}
 
 	/**
@@ -52,6 +61,41 @@ public class RedisUtils {
 				return cla.cast(result);
 			}
 		}.run(String.class);
+	}
+
+	/**
+	 * 
+	 * @param key
+	 * @param field
+	 * @param value
+	 * @param expireSeconds
+	 * @return
+	 */
+	public static boolean hset(final String key, final String field, final String value, final int expireSeconds) {
+		return new RedisCallback() {
+			@Override
+			<T> T callback(Jedis jedis, Class<T> cla) {
+				long result = jedis.hset(key, field, value);
+				if (result > 0) {
+					if (expireSeconds > 0) {
+						jedis.expire(key, expireSeconds);
+					}
+					return cla.cast(true);
+				}
+				return cla.cast(false);
+			}
+		}.run(Boolean.class);
+	}
+
+	/**
+	 * 
+	 * @param key
+	 * @param field
+	 * @param value
+	 * @return
+	 */
+	public static boolean hset(final String key, final String field, final String value) {
+		return hset(key, field, value, -1);
 	}
 
 }
