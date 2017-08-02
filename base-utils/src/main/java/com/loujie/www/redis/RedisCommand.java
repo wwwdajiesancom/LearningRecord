@@ -8,13 +8,13 @@ import redis.clients.jedis.Jedis;
  * @author loujie
  *
  */
-public abstract class JedisCallback {
+public abstract class RedisCommand {
 	private Jedis jedis = null;
 
 	/**
 	 * 初始化Jedis参数
 	 */
-	private void init() {
+	private void getJedis() {
 		jedis = RedisResource.getJedis();
 	}
 
@@ -38,7 +38,7 @@ public abstract class JedisCallback {
 	 *            要返回值类型
 	 * @return
 	 */
-	abstract <T> T callback(Jedis jedis, Class<T> cla);
+	abstract <T> T run(Jedis jedis, Class<T> cla);
 
 	/**
 	 * 启动,执行代码体的内容
@@ -47,12 +47,12 @@ public abstract class JedisCallback {
 	 *            返回值内容
 	 * @return
 	 */
-	public <T> T run(Class<T> cla) {
+	public <T> T exec(Class<T> cla) {
 		// 1.初始化
-		this.init();
+		this.getJedis();
 		try {
 			// 2.执行命令
-			return callback(jedis, cla);
+			return run(jedis, cla);
 		} finally {
 			// 关闭
 			this.close();

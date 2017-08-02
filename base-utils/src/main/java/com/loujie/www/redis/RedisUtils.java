@@ -22,7 +22,7 @@ public class RedisUtils {
 	 * @return
 	 */
 	public static boolean set(final String key, final String value) {
-		return new JedisCallback() {
+		return new RedisCallback() {
 			@Override
 			<T> T callback(Jedis jedis, Class<T> cla) {
 				String result = jedis.set(key, value);
@@ -42,7 +42,7 @@ public class RedisUtils {
 	 * @return
 	 */
 	public static String get(final String key) {
-		return new JedisCallback() {
+		return new RedisCallback() {
 			@Override
 			<T> T callback(Jedis jedis, Class<T> cla) {
 				String result = jedis.get(key);
