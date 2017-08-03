@@ -13,11 +13,10 @@ import redis.clients.jedis.Jedis;
 public class RedisUtils {
 
 	private static String key(String key) {
-		return "call_" + key;
+		return "base_" + key;
 	}
 
 	public static boolean set(final String key, final String value, final int expireSeconds) {
-
 		return new RedisCallback() {
 			@Override
 			<T> T callback(Jedis jedis, Class<T> cla) {
