@@ -12,15 +12,19 @@ import redis.clients.jedis.Jedis;
  */
 public class RedisUtils {
 
+	private static String key(String key) {
+		return "call_" + key;
+	}
+
 	public static boolean set(final String key, final String value, final int expireSeconds) {
 
 		return new RedisCallback() {
 			@Override
 			<T> T callback(Jedis jedis, Class<T> cla) {
-				String result = jedis.set(key, value);
+				String result = jedis.set(key(key), value);
 				if ("ok".equalsIgnoreCase(result)) {
 					if (expireSeconds >= 0) {
-						jedis.expire(key, expireSeconds);
+						jedis.expire(key(key), expireSeconds);
 					}
 					return cla.cast(true);
 				}
@@ -40,7 +44,7 @@ public class RedisUtils {
 	 * @return
 	 */
 	public static boolean set(final String key, final String value) {
-		return set(key, value, -1);
+		return set(key(key), value, -1);
 	}
 
 	/**
@@ -54,7 +58,7 @@ public class RedisUtils {
 		return new RedisCallback() {
 			@Override
 			<T> T callback(Jedis jedis, Class<T> cla) {
-				String result = jedis.get(key);
+				String result = jedis.get(key(key));
 				if (ArgsUtils.isEmpty(result)) {
 					return null;
 				}
@@ -75,10 +79,10 @@ public class RedisUtils {
 		return new RedisCallback() {
 			@Override
 			<T> T callback(Jedis jedis, Class<T> cla) {
-				long result = jedis.hset(key, field, value);
+				long result = jedis.hset(key(key), field, value);
 				if (result > 0) {
 					if (expireSeconds > 0) {
-						jedis.expire(key, expireSeconds);
+						jedis.expire(key(key), expireSeconds);
 					}
 					return cla.cast(true);
 				}
@@ -95,7 +99,22 @@ public class RedisUtils {
 	 * @return
 	 */
 	public static boolean hset(final String key, final String field, final String value) {
-		return hset(key, field, value, -1);
+		return hset(key(key), field, value, -1);
+	}
+
+	/**
+	 * 
+	 * @param key
+	 * @param field
+	 * @return
+	 */
+	public static String hget(final String key, final String field) {
+		return new RedisCallback() {
+			@Override
+			<T> T callback(Jedis jedis, Class<T> cla) {
+				return cla.cast(jedis.hget(key(key), field));
+			}
+		}.run(String.class);
 	}
 
 }

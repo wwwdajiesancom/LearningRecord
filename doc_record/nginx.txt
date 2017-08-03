@@ -1,0 +1,127 @@
+MIME:Multipurpose Internet Mail Extension
+	major/minor
+		text/plain
+		image/jpeg
+		
+资源:
+	URL:schedule://server[:port]/path/to/source
+	
+一次请求及相应
+	http事物:request <-----> response
+		request:
+			<url>
+			<method>
+			<version> == 协议类型
+			<headers> == <key,value>
+			<body>
+			
+		response:
+			<version>,
+			<status>  <reason phrase>==原因短语
+			<headers>
+			<body>
+			
+		协议格式:
+			文本，二进制
+			
+	method:
+		get
+		post
+		delete
+		put
+		head,
+		trace,
+		options==支持那些method
+	status:
+		1xx:信息提示的
+		2xx:成功相应类的
+		3xx:重定向类的，
+		4xx:找不到，拒绝类的；客户端错误
+		5xx:服务器端错误
+	
+	header：
+		通用首部：
+		请求首部：
+			If-Modified-Since,If-None-Match
+		相应首部：
+		实体首部：
+		扩展首部：
+			
+	I/O模型:
+		blocking IO       ==   阻塞IO
+		nonblocking IO    ==   非阻塞
+		IO multiplexing   ==   复用型IO，在内核中
+		signal driver IO  ==   事件驱动式IO
+		asynchronous IO   ==   异步IO
+		
+		
+		安装rpm包，
+		rpm -ivh
+		
+		启动nginx
+		关闭nginx -s stop
+		
+		配置指令:
+			全局指令:放置于main.
+			模块指令:放于模块中
+			
+		配置文件的组成部分:
+			主配置文件:nginx.conf
+				可以配置成多个配置文件,include导入
+				
+		配置指令(必须以;结尾)
+			directive value1[,value2,value3...]
+			支持用变量:
+				内置变量，由模块引入
+				自定义变量
+					set variable value;
+				引用时$variable;
+		
+		http section中的东西
+			Virtual Host
+				server {....}
+					location / {....}
+		http{
+			....//公用的东西
+			upstream{//负载均衡
+				....
+			}
+			
+			server{
+				...
+				server_name//服务器名称
+				root//
+				alias//别名
+				location /url/{
+					
+				}
+				location /url2/{
+					
+				}....
+			}
+			server{
+				...
+			}
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
