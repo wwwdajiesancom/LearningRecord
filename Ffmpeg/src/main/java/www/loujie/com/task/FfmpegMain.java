@@ -12,7 +12,6 @@ public class FfmpegMain {
 		System.err.println("################################");
 		System.err.println("###  A=mp4转换成m3u8           ");
 		System.err.println("###  B=对已经生成好的m3u8文件加密       ");
-		System.err.println("###  D=定时任务     ");
 		System.err.println("###  C=退出                                                    ");
 		System.err.println("################################");
 

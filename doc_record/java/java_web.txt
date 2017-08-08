@@ -1,0 +1,31 @@
+1.tomcat
+	bin,配置成Path中的路径，可以使用
+	startup
+	shutdown
+	catalina stop/start/run
+2.程序的目录结构
+	ROOT
+		WEB-INF
+			classes
+				编译后的.class文件
+				一些必要的配置文件
+			lib
+			web.xml
+		jsp页面
+		js
+		css等
+3.tomcat部署项目，在conf/Catalina/localhost下创建.xml配置文件
+<Context path=""
+	docBase="" 
+	reloadble="true "/>
+	
+4.Servlet
+	loadOnStart=1;启动顺序
+	
+	http://blog.csdn.net/zs064811/article/details/51374003
+	
+	执行步骤:
+		MyServlet1.MyServlet1()
+		MyServlet1.init()
+		MyServlet1.service()
+		MyServlet1.service()

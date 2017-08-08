@@ -60,6 +60,7 @@ MIME:Multipurpose Internet Mail Extension
 		
 		启动nginx
 		关闭nginx -s stop
+				  -s reload
 		
 		配置指令:
 			全局指令:放置于main.
@@ -104,11 +105,88 @@ MIME:Multipurpose Internet Mail Extension
 			}
 		}
 		
+		master---->worker
 		
 		
+		server{
+			listen port;
+			server_name name;
+			root /root/path/to/document
+			tcp_nodelay on|off;
+		}
 		
+		主机相关指令:
+		1.listen:
+			[ip:]port
+		2.server_name:
+			作为外部识别虚拟主机的标识，可以用正则、通配符等
+		3.tcp_nodelay:on|off,
+			对tcp长连接的处理,一般为off
+			对keepalive模式下的连接是否使用tcp_nodelay选项
+		4.tcp_nopush:on|off
+			是否启用TCP_NOPUSH或TCP_CORE选项,只有在sendfile为on时有用
+		5.sendfile on|off
+			是否启用sendfile功能,什么内存空间
+			
+		路径相关指令:
+		1.root
+			设置web资源的路径映射，用于指明请求的url所对应的文档目录路径
+			可以直接用到server中，也可用到location中
+			例如:
+			server{
+				server_name www.loujie.com
+				location /images/{
+					root /opt/var/;
+					....
+				}
+			}
+			http://www.loujie.com/images/abc.jpg---->实际abc.jpg在/opt/var目录下的images中；在这里/images/它是一个映射路径
+		2.location [ = | ~ | ~* | ^~ ] url {....}
+		  location @name{....}
+			功能：匹配用户请求的连接，匹配到时，将会用location中的模块处理
+			=：uri的精确匹配
+			~：做正则表达式匹配，区分大小写
+			~*：正则匹配，不区分大小写
+			^~：正则前部分匹配，不区分大小写
+			
+			匹配优先级:
+				1,精确最高=
+				2,^~
+				3.~|~*
+				4.不带符号的URL
+		3.alias
+			用来定义别名的，
+			只能用在Location中
+			location /image/{
+				alias /opt/var/
+			}
+			image代表的是/opt/var目录
+		4.index
+			默认主页面
+			index index.html index.jsp
+		5.error_page,
+			错误页面
+			自定义错误页面
+			
+		  error_page 404 =200 /404.html;
+		  error_page 500 502 503   /50x.html;
+		  location = /50x.html{
+		    root html;
+		  }
+		6.try_files
 		
+		7.keepalive_timeout 75s
+			超时时长,禁止长连接
+			0关闭
+		8.keepalive_disable
+			
+		yootk
 		
+		63729-TZZW1-MU3JG-OUXIU-YMIU4-OKVC6
+		63729-TZZWI-MU3JG-OUXIU-YMIU4-OKVC6
+		
+		63729-TZZW1-MU3JG-OUXIU-YMIU4-QKVC6
+		63729-TZZWI-MU3JG-OUXIU-YMIU4-QKVC6
 		
 		
 		

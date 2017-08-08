@@ -1,9 +1,6 @@
 package com.loujie.www.redis;
 
-import java.lang.reflect.Proxy;
 import java.util.Map;
-
-import com.loujie.www.util.ArgsUtils;
 
 import redis.clients.jedis.Jedis;
 
@@ -15,9 +12,8 @@ import redis.clients.jedis.Jedis;
  */
 public class RedisUtils {
 
-	
 	private static String key(String key) {
-		
+
 		return "base_" + key;
 	}
 
@@ -74,7 +70,7 @@ public class RedisUtils {
 			@Override
 			<T> T callback(Jedis jedis, Class<T> cla) {
 				String result = jedis.get(key(key));
-				if (ArgsUtils.isEmpty(result)) {
+				if (result == null || result.isEmpty()) {
 					return null;
 				}
 				return cla.cast(result);
@@ -153,6 +149,5 @@ public class RedisUtils {
 			}
 		}.run(Map.class);
 	}
-
 
 }

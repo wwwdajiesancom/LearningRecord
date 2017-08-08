@@ -1,5 +1,6 @@
 package com.loujie.www.test;
 
+import java.security.SecureRandom;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.filefilter.FileFilterUtils;
@@ -9,6 +10,7 @@ import org.junit.Test;
 
 import com.loujie.www.redis.RedisUtils;
 import com.loujie.www.rediscluster.RedisClusterUtils;
+import com.loujie.www.util.ConvertUtils;
 
 public class DemoTest {
 
@@ -36,6 +38,14 @@ public class DemoTest {
 	public void redisCluster() {
 		RedisClusterUtils.set("nameds", "jiejiejei");
 		System.out.println(RedisClusterUtils.get("nameds"));
+	}
+
+	@Test
+	public void convert() {
+		byte[] key = new byte[16];
+		SecureRandom random = new SecureRandom();
+		random.nextBytes(key);
+		System.err.println(ConvertUtils.byte2HexStr(key));
 	}
 
 }
