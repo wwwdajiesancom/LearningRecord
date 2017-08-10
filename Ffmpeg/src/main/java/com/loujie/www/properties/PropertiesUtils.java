@@ -22,7 +22,6 @@ public class PropertiesUtils {
 		}
 		// 重新加载
 		static void reload() {
-			System.out.println("PropertiesUtils.Config.reload()");
 			try {
 				config.clear();
 				config.load(PropertiesUtils.class.getResourceAsStream("/" + DEFAULT_CONFIG_NAME));
@@ -74,7 +73,6 @@ public class PropertiesUtils {
 	 * @param configName
 	 */
 	public static void setConfigName(String configName) {
-		System.out.println("PropertiesUtils.setConfigName()");
 		DEFAULT_CONFIG_NAME = configName;
 	}
 

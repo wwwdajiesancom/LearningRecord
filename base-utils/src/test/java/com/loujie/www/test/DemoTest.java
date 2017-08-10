@@ -45,7 +45,18 @@ public class DemoTest {
 		byte[] key = new byte[16];
 		SecureRandom random = new SecureRandom();
 		random.nextBytes(key);
-		System.err.println(ConvertUtils.byte2HexStr(key));
+		for (byte item : key) {
+			System.err.println(item);
+		}
+		String hexStr = ConvertUtils.byte2HexStr(key);
+		System.err.println(hexStr);
+
+		byte[] li = ConvertUtils.hexStringToBytes(hexStr);
+		System.err.println(li.length);
+
+		for (byte item : li) {
+			System.err.println(item);
+		}
 	}
 
 }

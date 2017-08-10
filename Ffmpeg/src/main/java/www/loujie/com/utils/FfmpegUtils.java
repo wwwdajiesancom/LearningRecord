@@ -10,7 +10,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
+import java.util.Random;
 import java.util.UUID;
+
+import com.loujie.www.properties.PropertiesUtils;
+import com.loujie.www.redis.RedisUtils;
+
+import www.loujie.com.entity.DirEntry;
 
 public class FfmpegUtils {
 
@@ -21,6 +27,51 @@ public class FfmpegUtils {
 	 *
 	 */
 	public static class FileUtils {
+
+		/**
+		 * 遍历直接目录
+		 * 
+		 * @param dirEntry
+		 */
+		public static void loadDirAndM3u8(DirEntry dirEntry) {
+			// 1.目录
+			File srcFile = new File(dirEntry.getPath());
+			if (srcFile.exists() && srcFile.isDirectory()) {
+				// 2.找到其它的目录
+				File[] dirFiles = srcFile.listFiles(new FileFilter() {
+					@Override
+					public boolean accept(File pathname) {
+						if (pathname.isDirectory()) {
+							return true;
+						}
+						return false;
+					}
+				});
+				// 3.找到m3u8文件
+				File[] files = srcFile.listFiles(new FileFilter() {
+					@Override
+					public boolean accept(File pathname) {
+						if (pathname.isFile() && pathname.getName().toLowerCase().endsWith(DirEntry.file_suffix.toLowerCase())) {
+							return true;
+						}
+						return false;
+					}
+				});
+				synchronized (SyncObject.Load_File_Lock) {
+					// 是否为叶子节点
+					if (dirFiles.length == 0) {
+						dirEntry.setIsLeaf(true);
+					}
+					for (File dir : dirFiles) {
+						DirEntry itemDir = new DirEntry(dir.getAbsolutePath());
+						dirEntry.getChildDirEntrys().add(itemDir);
+					}
+					for (File file : files) {
+						dirEntry.getUnchildFiles().add(file.getAbsolutePath());
+					}
+				}
+			}
+		}
 
 		/**
 		 * 获取目录下,包括所有的子目录中的文件,指定后缀的
@@ -155,6 +206,39 @@ public class FfmpegUtils {
 	 *
 	 */
 	public static class Ffmpeg {
+
+		public static void m3u8_cryption_redis(String m3u8File, int modValue) {
+			// 1.判断是否存在
+			File m3u8 = new File(m3u8File);
+			// 2.判断是否曾经加密过
+			// grep -i #EXT-X-KEY:METHOD=AES-128,URI files
+			Integer count = ShellCommon.grep_i_pattern_file_count("#EXT-X-KEY:METHOD=AES-128,URI", m3u8.getAbsolutePath());
+			if (count - 0 == 0) {
+				// 3.获取所有的ts文件
+				List<String> tsList = ShellCommon.grep_i_pattern_file_list(".ts", m3u8.getAbsolutePath());
+				// String keypath = null;
+				List<String> keyList = new ArrayList<>();
+				if (tsList != null && tsList.size() > 0) {
+					int index = 0;
+					for (String ts : tsList) {
+						// 3.1ts在哪一行
+						// grep -in ts file|awk -F : '{print $1}'
+						int number = ShellCommon.grep_in_word_file_number(ts, m3u8.getAbsolutePath());
+						// 3.2生成key文件
+						if (index % modValue == 0) {
+							// keypath = ShellCommon.openssl_rand_16(m3u8.getParent());
+							keyList = RedisUtils.getM3u8KeyPrefix(new Random().nextInt(50000));
+						}
+						// 3.3加密
+						openssl_aes128_for_ts(m3u8.getParent(), ts, index++, keyList.get(1));
+						// 3.4 插入信息在某一行
+						// n是哪一行,i是参数不需要动,....是要插入的内容
+						// sed 'ni....' m3u8
+						ShellCommon.sed_insert_info(m3u8File, number - 1, "#EXT-X-KEY:METHOD=AES-128,URI=\"" + PropertiesUtils.getProperty("ffmpeg_uri") + keyList.get(0) + "\"");
+					}
+				}
+			}
+		}
 
 		/**
 		 * 加密
@@ -468,7 +552,6 @@ public class FfmpegUtils {
 						}
 						stringBuilder.append(str);
 						returnList.add(str);
-						System.out.println(str);
 						i++;
 					}
 				} while (str != null);

@@ -1,6 +1,9 @@
 package com.loujie.www.redis;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import redis.clients.jedis.Jedis;
 
@@ -148,6 +151,27 @@ public class RedisUtils {
 				return (T) jedis.hgetAll(key(key));
 			}
 		}.run(Map.class);
+	}
+
+	@SuppressWarnings("unchecked")
+	public static List<String> getM3u8KeyPrefix(final int keyPrefix) {
+		return new RedisCallback() {
+			@Override
+			<T> T callback(Jedis jedis, Class<T> cla) {
+				Set<String> keys = jedis.keys(keyPrefix + "-*");
+				if (keys != null && keys.size() == 1) {
+					String key = keys.toArray()[0].toString();
+					String result = jedis.get(key);
+					if (result != null && !result.isEmpty()) {
+						List<String> resultList = new ArrayList<>();
+						resultList.add(key.split("-")[1]);
+						resultList.add(result);
+						return cla.cast(resultList);
+					}
+				}
+				return null;
+			}
+		}.run(List.class);
 	}
 
 }
