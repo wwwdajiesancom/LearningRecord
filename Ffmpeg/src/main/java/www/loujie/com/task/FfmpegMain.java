@@ -61,7 +61,7 @@ public class FfmpegMain {
 		}
 	}
 
-	public void m3u8_encryption_dir(String[] args) {
+	public void m3u8_encryption_dir(String[] args) throws InterruptedException {
 		// 1.输入参数
 		System.out.print("请输入要加密m3u8文件的目录:");
 		String m3u8Dir = Main.scanner.nextLine();
@@ -99,6 +99,7 @@ public class FfmpegMain {
 							bos.write(abc);
 							bos.flush();
 							bos.close();
+							logger.info("备份成功...............................");
 						}
 					} catch (InterruptedException e) {
 					} catch (FileNotFoundException e) {
@@ -115,11 +116,10 @@ public class FfmpegMain {
 		// 3.遍历
 		for_dir(srcEntry, null, modValue, threadPool, 1);
 		// 4.等待完成;主要是为了让备份完成
-		try {
+		threadPool.shutdown();
+		do {
 			Thread.sleep(3000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		} while (!threadPool.isTerminated());
 		logger.info("完成加密了");
 	}
 
@@ -160,16 +160,15 @@ public class FfmpegMain {
 		for (final Object item : childEntiry.getUnchildFiles().toArray()) {
 			addRunnableToThreadPoolExecutor(threadPool, item, childEntiry, parentEntry);
 		}
-
 	}
 
 	public void addRunnableToThreadPoolExecutor(ThreadPoolExecutor tpe, final Object item, final DirEntry childEntry, final DirEntry parentEntry) {
-		// 1.如果大于CorePoolSize*2就等待2s
+		// 1.如果大于CorePoolSize*2就等待1s
 		int imax = tpe.getCorePoolSize() << 1;
 		do {
 			if (tpe.getQueue().size() > imax) {
 				try {
-					Thread.sleep(2000);
+					Thread.sleep(1000);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
