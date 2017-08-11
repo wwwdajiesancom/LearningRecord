@@ -1,5 +1,8 @@
 package com.loujie.www.properties;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -13,6 +16,7 @@ public class PropertiesUtils {
 
 	// 配置文件的名称,是可以配置更改的
 	static String DEFAULT_CONFIG_NAME = "config.properties";
+	static String DEFAULT_CONFIG_ROOT_PATH = "";
 
 	// 采用的了内部静态了,可以实现懒加载
 	static class Config {
@@ -24,7 +28,11 @@ public class PropertiesUtils {
 		static void reload() {
 			try {
 				config.clear();
-				config.load(PropertiesUtils.class.getResourceAsStream("/" + DEFAULT_CONFIG_NAME));
+				if (DEFAULT_CONFIG_ROOT_PATH == null || DEFAULT_CONFIG_ROOT_PATH.isEmpty()) {
+					config.load(PropertiesUtils.class.getResourceAsStream("/" + DEFAULT_CONFIG_NAME));
+				} else {
+					config.load(new BufferedInputStream(new FileInputStream(new File(DEFAULT_CONFIG_ROOT_PATH, DEFAULT_CONFIG_NAME))));
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -79,7 +87,8 @@ public class PropertiesUtils {
 	/**
 	 * 重新加载配置文件到内存中
 	 */
-	public static void reload() {
+	public static void reload(String configPath) {
+		DEFAULT_CONFIG_ROOT_PATH = configPath;
 		Config.reload();
 	}
 }

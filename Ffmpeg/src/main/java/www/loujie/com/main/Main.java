@@ -5,6 +5,7 @@ import java.util.Scanner;
 
 import org.apache.log4j.Logger;
 
+import com.loujie.www.properties.PropertiesUtils;
 import com.loujie.www.redis.RedisUtils;
 
 import www.loujie.com.task.FfmpegMain;
@@ -25,6 +26,10 @@ public class Main {
 	public static Scanner scanner = new Scanner(System.in);
 
 	public static void main(String[] args) throws InterruptedException, IOException {
+		// args:0=线程数量(数字)/关闭线程池(字母);1=是否开启备份;2=config配置文件的路径
+		if (args != null && args.length >= 3) {
+			PropertiesUtils.reload(args[2]);
+		}
 		try {
 			// 如果有异常
 			Integer.parseInt(args[0]);
