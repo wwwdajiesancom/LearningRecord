@@ -110,7 +110,7 @@ public class FfmpegMain {
 		threadPool = (ThreadPoolExecutor) Executors.newFixedThreadPool(Integer.parseInt(args[0]));
 
 		// 2.3 备份数据
-		new Thread(new Runnable() {
+		Thread bak = new Thread(new Runnable() {
 			@Override
 			public void run() {
 				do {
@@ -130,7 +130,11 @@ public class FfmpegMain {
 					// 当线程池停止运行了，就结束
 				} while (!threadPool.isShutdown());
 			}
-		}).start();
+		});
+		if (args != null && args.length >= 2) {
+			if ("on".equals(args[1]))
+				bak.start();
+		}
 
 		long start = Calendar.getInstance().getTimeInMillis();
 		// 线程池
@@ -220,7 +224,7 @@ public class FfmpegMain {
 
 	public void addRunnableToThreadPoolExecutor(ThreadPoolExecutor tpe, final Object item, final DirEntry childEntry, final DirEntry parentEntry) {
 		// 1.如果大于CorePoolSize*2就等待1s
-		int imax = tpe.getCorePoolSize() << 2;
+		int imax = tpe.getCorePoolSize() << 1;
 		do {
 			if (tpe.getQueue().size() > imax) {
 				try {
