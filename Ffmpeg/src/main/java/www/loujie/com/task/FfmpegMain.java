@@ -55,6 +55,7 @@ public class FfmpegMain {
 			};
 			@Override
 			public void run() {
+				// 订阅
 				RedisUtils.subscribe(Main.thread_channel, jedisPubSub);
 				logger.info("关闭订阅:" + Main.thread_channel);
 			}
@@ -138,6 +139,7 @@ public class FfmpegMain {
 		// 4.等待完成;主要是为了让备份完成
 		if (!threadPool.isShutdown()) {
 			threadPool.shutdown();
+			// 关闭订阅
 			RedisUtils.publish(Main.thread_channel, Main.thread_channel_message);
 		}
 		do {
@@ -189,6 +191,10 @@ public class FfmpegMain {
 	 *            第几层循环
 	 */
 	public void for_dir(final DirEntry childEntiry, final DirEntry parentEntry, final int modValue, ThreadPoolExecutor threadPool, int numberC) {
+		// 当线程池出现关闭后,就关闭了
+		if (threadPool.isShutdown()) {
+			return;
+		}
 		// 1.判断是否加载了,
 		// 非叶子节点,并且尚未加载
 		if (!childEntiry.getIsLeaf() && childEntiry.getChildDirEntrys().size() == 0) {
@@ -224,7 +230,9 @@ public class FfmpegMain {
 				}
 			}
 		} while (tpe.getQueue().size() > imax);
-
+		if (tpe.isShutdown()) {
+			return;
+		}
 		// 2.增加任务
 		tpe.execute(new Runnable() {
 			@Override
@@ -239,7 +247,7 @@ public class FfmpegMain {
 					childEntry.getCompleteChildFiles().add(item.toString());
 					childEntry.getUnchildFiles().remove(item);
 					// 3.同步参数状态
-					// parentEntry.getCompleteStatus();
+					parentEntry.getCompleteStatus();
 				} catch (Exception e) {
 					logger.error("enc error:" + item);
 					childEntry.getFailChildFiles().add(item.toString());
