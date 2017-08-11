@@ -65,6 +65,9 @@ public class FfmpegMain {
 		// 1.输入参数
 		System.out.print("请输入要加密m3u8文件的目录:");
 		String m3u8Dir = Main.scanner.nextLine();
+		if (!new File(m3u8Dir).exists()) {
+			return;
+		} ;
 		System.out.print("请输入每隔几个值要加密一下的值:");
 		modValue = Main.scanner.nextInt();
 
@@ -77,6 +80,7 @@ public class FfmpegMain {
 			logger.info("loading dir:" + m3u8Dir);
 		}
 
+		final ThreadPoolExecutor threadPool = (ThreadPoolExecutor) Executors.newFixedThreadPool(Integer.parseInt(args[0]));
 		// 备份数据
 		new Thread(new Runnable() {
 			@Override
@@ -84,22 +88,9 @@ public class FfmpegMain {
 				// 备份
 				do {
 					try {
-						Thread.sleep(2000);
+						Thread.sleep(10000);
 						synchronized (SyncObject.Load_File_Lock) {
-							byte[] abc = SerializeUtils.serialize(srcEntry);
-							File bakFile = new File(srcEntry.getPath(), DirEntry.bak_file_name);
-							File bakFile2 = new File(srcEntry.getPath(), DirEntry.bak_file_name + 1);
-							if (bakFile2.exists()) {
-								bakFile2.delete();
-							}
-							if (bakFile.exists()) {
-								bakFile.renameTo(bakFile2);
-							}
-							BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(bakFile));
-							bos.write(abc);
-							bos.flush();
-							bos.close();
-							logger.info("备份成功...............................");
+							bak();
 						}
 					} catch (InterruptedException e) {
 					} catch (FileNotFoundException e) {
@@ -107,20 +98,41 @@ public class FfmpegMain {
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
-				} while (!srcEntry.getCompleteStatus());
+				} while (!threadPool.isTerminated());
 			}
 		}).start();
-
+		long start = Calendar.getInstance().getTimeInMillis();
 		// 线程池
-		ThreadPoolExecutor threadPool = (ThreadPoolExecutor) Executors.newFixedThreadPool(Integer.parseInt(args[0]));
 		// 3.遍历
 		for_dir(srcEntry, null, modValue, threadPool, 1);
 		// 4.等待完成;主要是为了让备份完成
 		threadPool.shutdown();
 		do {
-			Thread.sleep(3000);
+			Thread.sleep(100);
 		} while (!threadPool.isTerminated());
-		logger.info("完成加密了");
+		try {
+			bak();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		logger.info("完成加密了,历时:" + (Calendar.getInstance().getTimeInMillis() - start) / 1000 + "s");
+	}
+
+	public void bak() throws IOException {
+		byte[] abc = SerializeUtils.serialize(srcEntry);
+		File bakFile = new File(srcEntry.getPath(), DirEntry.bak_file_name);
+		File bakFile2 = new File(srcEntry.getPath(), DirEntry.bak_file_name + 1);
+		if (bakFile2.exists()) {
+			bakFile2.delete();
+		}
+		if (bakFile.exists()) {
+			bakFile.renameTo(bakFile2);
+		}
+		BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(bakFile));
+		bos.write(abc);
+		bos.flush();
+		bos.close();
+		logger.info("备份成功...............................");
 	}
 
 	/**
@@ -141,7 +153,6 @@ public class FfmpegMain {
 		// 1.判断是否加载了,
 		// 非叶子节点,并且尚未加载
 		if (!childEntiry.getIsLeaf() && childEntiry.getChildDirEntrys().size() == 0) {
-			logger.info(numberC + ":loading dir:" + childEntiry.getPath());
 			FfmpegUtils.FileUtils.loadDirAndM3u8(childEntiry);
 		}
 		// 1.1目录下没有东西
@@ -164,7 +175,7 @@ public class FfmpegMain {
 
 	public void addRunnableToThreadPoolExecutor(ThreadPoolExecutor tpe, final Object item, final DirEntry childEntry, final DirEntry parentEntry) {
 		// 1.如果大于CorePoolSize*2就等待1s
-		int imax = tpe.getCorePoolSize() << 1;
+		int imax = tpe.getCorePoolSize() << 2;
 		do {
 			if (tpe.getQueue().size() > imax) {
 				try {
@@ -189,11 +200,10 @@ public class FfmpegMain {
 					childEntry.getCompleteChildFiles().add(item.toString());
 					childEntry.getUnchildFiles().remove(item);
 					// 3.同步参数状态
-					parentEntry.getCompleteStatus();
+					// parentEntry.getCompleteStatus();
 				} catch (Exception e) {
 					logger.error("enc error:" + item);
 					childEntry.getFailChildFiles().add(item.toString());
-
 				}
 			}
 		});
