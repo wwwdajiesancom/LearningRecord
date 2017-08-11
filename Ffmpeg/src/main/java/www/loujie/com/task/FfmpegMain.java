@@ -228,7 +228,7 @@ public class FfmpegMain {
 		do {
 			if (tpe.getQueue().size() > imax) {
 				try {
-					Thread.sleep(1000);
+					Thread.sleep(10);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}

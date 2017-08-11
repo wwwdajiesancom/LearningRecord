@@ -41,10 +41,12 @@ public class MainSub {
 		System.err.println(numberC + ":DirEntry.failChildFiles:" + Arrays.toString(dirEntry.getFailChildFiles().toArray()));
 		System.err.println(numberC + ":DirEntry.isRoot:" + dirEntry.getIsRoot());
 		System.err.println(numberC + ":DirEntry.isLeaf:" + dirEntry.getIsLeaf());
+		System.err.println(numberC + ":DirEntry.completeStatus:" + dirEntry.getCompleteStatus());
 		System.err.println("---------------------------------------------------------------------------------------------");
-		for (DirEntry item : dirEntry.getChildDirEntrys()) {
-			println_dir(item, numberC + 1);
-		}
+		if (numberC == 1)
+			for (DirEntry item : dirEntry.getChildDirEntrys()) {
+				println_dir(item, numberC + 1);
+			}
 	}
 
 }
