@@ -2,7 +2,6 @@ package www.loujie.com.task;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -12,31 +11,60 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 import org.apache.log4j.Logger;
 
+import com.loujie.www.redis.RedisUtils;
 import com.loujie.www.serialize.SerializeUtils;
 
+import redis.clients.jedis.JedisPubSub;
 import www.loujie.com.entity.DirEntry;
 import www.loujie.com.main.Main;
 import www.loujie.com.utils.FfmpegUtils;
 import www.loujie.com.utils.SyncObject;
 
 public class FfmpegMain {
+	// 格式化
 	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+	// 整体的目录结构对象
 	private DirEntry srcEntry = null;
 
+	ThreadPoolExecutor threadPool;
+
+	// 记录日志
 	public static final Logger logger = Logger.getLogger(FfmpegMain.class);
+	// key的更换频率
 	private static int modValue = 4;
 
+	// 主函数
 	public static void main(String[] args) throws InterruptedException {
 		new FfmpegMain().sub_main(args);
 	}
 
+	// 子函数
 	public void sub_main(String[] args) throws InterruptedException {
+		// 1.启动一个线程,读取是否要关闭线程池
+		new Thread(new Runnable() {
+			JedisPubSub jedisPubSub = new JedisPubSub() {
+				@Override
+				public void onMessage(String channel, String message) {
+					if (Main.thread_channel.equals(channel) && Main.thread_channel_message.equals(message)) {
+						if (threadPool != null && !threadPool.isShutdown()) {
+							threadPool.shutdown();
+						}
+						this.unsubscribe();
+					}
+				}
+			};
+			@Override
+			public void run() {
+				RedisUtils.subscribe(Main.thread_channel, jedisPubSub);
+				logger.info("关闭订阅:" + Main.thread_channel);
+			}
+		}).start();
+
 		System.err.println("################################");
 		System.err.println("###  B=对已经生成好的m3u8文件加密       ");
 		System.err.println("###  C=退出                                                    ");
 		System.err.println("################################");
-		Thread.sleep(100);
-
+		Thread.sleep(10);
 		// 1.输入值
 		String type = "C";
 		System.out.print("请出入操作类型:");
@@ -48,11 +76,9 @@ public class FfmpegMain {
 		// 2.根据类型去处理力
 		switch (type.toUpperCase()) {
 			case "A" :
-				// MP4--m3u8
 				// mp4_m3u8();
 				break;
 			case "B" :
-				// m3u8-encryption
 				m3u8_encryption_dir(args);
 				break;
 			case "D" :
@@ -77,39 +103,47 @@ public class FfmpegMain {
 		// 2.2自己实例化
 		if (srcEntry == null) {
 			srcEntry = new DirEntry(m3u8Dir, true);
-			logger.info("loading dir:" + m3u8Dir);
 		}
 
-		final ThreadPoolExecutor threadPool = (ThreadPoolExecutor) Executors.newFixedThreadPool(Integer.parseInt(args[0]));
-		// 备份数据
+		// 实例化线程池
+		threadPool = (ThreadPoolExecutor) Executors.newFixedThreadPool(Integer.parseInt(args[0]));
+
+		// 2.3 备份数据
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				// 备份
 				do {
+					// 备份
+					synchronized (SyncObject.Load_File_Lock) {
+						try {
+							bak();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+					// 等待
 					try {
 						Thread.sleep(10000);
-						synchronized (SyncObject.Load_File_Lock) {
-							bak();
-						}
 					} catch (InterruptedException e) {
-					} catch (FileNotFoundException e) {
-						e.printStackTrace();
-					} catch (IOException e) {
-						e.printStackTrace();
 					}
-				} while (!threadPool.isTerminated());
+					// 当线程池停止运行了，就结束
+				} while (!threadPool.isShutdown());
 			}
 		}).start();
+
 		long start = Calendar.getInstance().getTimeInMillis();
 		// 线程池
 		// 3.遍历
 		for_dir(srcEntry, null, modValue, threadPool, 1);
 		// 4.等待完成;主要是为了让备份完成
-		threadPool.shutdown();
+		if (!threadPool.isShutdown()) {
+			threadPool.shutdown();
+			RedisUtils.publish(Main.thread_channel, Main.thread_channel_message);
+		}
 		do {
 			Thread.sleep(100);
 		} while (!threadPool.isTerminated());
+		// 最后一次备份
 		try {
 			bak();
 		} catch (IOException e) {
@@ -118,6 +152,11 @@ public class FfmpegMain {
 		logger.info("完成加密了,历时:" + (Calendar.getInstance().getTimeInMillis() - start) / 1000 + "s");
 	}
 
+	/**
+	 * 备份程序
+	 * 
+	 * @throws IOException
+	 */
 	public void bak() throws IOException {
 		byte[] abc = SerializeUtils.serialize(srcEntry);
 		File bakFile = new File(srcEntry.getPath(), DirEntry.bak_file_name);

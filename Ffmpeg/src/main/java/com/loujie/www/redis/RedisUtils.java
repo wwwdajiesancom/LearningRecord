@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Set;
 
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPubSub;
 
 /**
  * Redis里面的一些操作
@@ -15,9 +16,23 @@ import redis.clients.jedis.Jedis;
  */
 public class RedisUtils {
 
-	private static String key(String key) {
-
-		return "base_" + key;
+	/**
+	 * 删除键
+	 * 
+	 * @param keys
+	 * @return
+	 */
+	public static boolean delKey(final String... keys) {
+		return new RedisCallback() {
+			@Override
+			<T> T callback(Jedis jedis, Class<T> cla) {
+				Long result = jedis.del(keys);
+				if (result == null || (result - 0 == 0)) {
+					return cla.cast(false);
+				}
+				return cla.cast(true);
+			}
+		}.run(Boolean.class);
 	}
 
 	/**
@@ -35,10 +50,10 @@ public class RedisUtils {
 		return new RedisCallback() {
 			@Override
 			<T> T callback(Jedis jedis, Class<T> cla) {
-				String result = jedis.set(key(key), value);
+				String result = jedis.set((key), value);
 				if ("ok".equalsIgnoreCase(result)) {
 					if (expireSeconds >= 0) {
-						jedis.expire(key(key), expireSeconds);
+						jedis.expire((key), expireSeconds);
 					}
 					return cla.cast(true);
 				}
@@ -58,7 +73,7 @@ public class RedisUtils {
 	 * @return
 	 */
 	public static boolean set(final String key, final String value) {
-		return set(key(key), value, -1);
+		return set((key), value, -1);
 	}
 
 	/**
@@ -72,7 +87,7 @@ public class RedisUtils {
 		return new RedisCallback() {
 			@Override
 			<T> T callback(Jedis jedis, Class<T> cla) {
-				String result = jedis.get(key(key));
+				String result = jedis.get((key));
 				if (result == null || result.isEmpty()) {
 					return null;
 				}
@@ -98,10 +113,10 @@ public class RedisUtils {
 		return new RedisCallback() {
 			@Override
 			<T> T callback(Jedis jedis, Class<T> cla) {
-				long result = jedis.hset(key(key), field, value);
+				long result = jedis.hset((key), field, value);
 				if (result > 0) {
 					if (expireSeconds > 0) {
-						jedis.expire(key(key), expireSeconds);
+						jedis.expire((key), expireSeconds);
 					}
 					return cla.cast(true);
 				}
@@ -122,7 +137,7 @@ public class RedisUtils {
 	 * @return
 	 */
 	public static boolean hset(final String key, final String field, final String value) {
-		return hset(key(key), field, value, -1);
+		return hset((key), field, value, -1);
 	}
 
 	/**
@@ -138,7 +153,7 @@ public class RedisUtils {
 		return new RedisCallback() {
 			@Override
 			<T> T callback(Jedis jedis, Class<T> cla) {
-				return cla.cast(jedis.hget(key(key), field));
+				return cla.cast(jedis.hget((key), field));
 			}
 		}.run(String.class);
 	}
@@ -148,7 +163,7 @@ public class RedisUtils {
 		return new RedisCallback() {
 			@Override
 			<T> T callback(Jedis jedis, Class<T> cla) {
-				return (T) jedis.hgetAll(key(key));
+				return (T) jedis.hgetAll((key));
 			}
 		}.run(Map.class);
 	}
@@ -174,4 +189,51 @@ public class RedisUtils {
 		}.run(List.class);
 	}
 
+	/**
+	 * 订阅
+	 * 
+	 * @param channel
+	 *            订阅的频道
+	 * @param jedisPubSub
+	 *            怎么处理
+	 * @return
+	 */
+	public static Boolean subscribe(final String channel, final JedisPubSub jedisPubSub) {
+		return new RedisCallback() {
+			@Override
+			<T> T callback(Jedis jedis, Class<T> cla) {
+				jedis.subscribe(jedisPubSub, channel);
+				return cla.cast(true);
+			}
+		}.run(Boolean.class);
+	}
+
+	/**
+	 * 发布
+	 * 
+	 * @param channel
+	 *            频道
+	 * @param message
+	 *            发布信息
+	 * @return
+	 */
+	public static long publish(final String channel, final String message) {
+		return new RedisCallback() {
+			@Override
+			<T> T callback(Jedis jedis, Class<T> cla) {
+				long result = jedis.publish(channel, message);
+				return cla.cast(result);
+			}
+		}.run(Long.class);
+	}
+
+	public static boolean closeChannel(final String channel) {
+		return new RedisCallback() {
+			@Override
+			<T> T callback(Jedis jedis, Class<T> cla) {
+				
+				return cla.cast(true);
+			}
+		}.run(Boolean.class);
+	}
 }
