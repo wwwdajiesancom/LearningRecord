@@ -3,7 +3,8 @@ package www.loujie.com.main;
 import java.io.IOException;
 import java.util.Scanner;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.loujie.www.properties.PropertiesUtils;
 import com.loujie.www.redis.RedisUtils;
@@ -18,7 +19,7 @@ import www.loujie.com.task.FfmpegMain;
  */
 public class Main {
 
-	public static final Logger logger = Logger.getLogger(Main.class);
+	public static final Logger logger = LoggerFactory.getLogger(Main.class);
 
 	public static String thread_channel = "thread_channel";
 	public static String thread_channel_message = "close";

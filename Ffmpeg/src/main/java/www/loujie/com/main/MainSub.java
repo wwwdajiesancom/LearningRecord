@@ -7,11 +7,16 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Arrays;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.loujie.www.serialize.SerializeUtils;
 
 import www.loujie.com.entity.DirEntry;
 
 public class MainSub {
+
+	static Logger logger = LoggerFactory.getLogger(MainSub.class);
 
 	private static BufferedInputStream bis;
 
@@ -29,20 +34,21 @@ public class MainSub {
 		DirEntry dirEntry = SerializeUtils.unserialize(baos.toByteArray(), DirEntry.class);
 		bis.close();
 		baos.close();
+		System.err.println("000xxx");
 		// 2.输出内容
 		println_dir(dirEntry, 1);
 	}
 
 	public static void println_dir(DirEntry dirEntry, int numberC) {
-		System.err.println(numberC + ":DirEntry.path:" + dirEntry.getPath() + ",");
-		System.err.println(numberC + ":DirEntry.completeDirSize:" + dirEntry.getCompleteDirSize());
-		System.err.println(numberC + ":DirEntry.unchildFiles:" + Arrays.toString(dirEntry.getUnchildFiles().toArray()));
-		System.err.println(numberC + ":DirEntry.completeChildFiles:" + Arrays.toString(dirEntry.getCompleteChildFiles().toArray()));
-		System.err.println(numberC + ":DirEntry.failChildFiles:" + Arrays.toString(dirEntry.getFailChildFiles().toArray()));
-		System.err.println(numberC + ":DirEntry.isRoot:" + dirEntry.getIsRoot());
-		System.err.println(numberC + ":DirEntry.isLeaf:" + dirEntry.getIsLeaf());
-		System.err.println(numberC + ":DirEntry.completeStatus:" + dirEntry.getCompleteStatus());
-		System.err.println("---------------------------------------------------------------------------------------------");
+		logger.debug(numberC + ":DirEntry.path:" + dirEntry.getPath() + ",");
+		logger.info(numberC + ":DirEntry.completeDirSize:" + dirEntry.getCompleteDirSize());
+		logger.info(numberC + ":DirEntry.unchildFiles:" + Arrays.toString(dirEntry.getUnchildFiles().toArray()));
+		logger.info(numberC + ":DirEntry.completeChildFiles:" + Arrays.toString(dirEntry.getCompleteChildFiles().toArray()));
+		logger.info(numberC + ":DirEntry.failChildFiles:" + Arrays.toString(dirEntry.getFailChildFiles().toArray()));
+		logger.info(numberC + ":DirEntry.isRoot:" + dirEntry.getIsRoot());
+		logger.info(numberC + ":DirEntry.isLeaf:" + dirEntry.getIsLeaf());
+		logger.info(numberC + ":DirEntry.completeStatus:" + dirEntry.getCompleteStatus());
+		logger.info("---------------------------------------------------------------------------------------------");
 		if (numberC == 1)
 			for (DirEntry item : dirEntry.getChildDirEntrys()) {
 				println_dir(item, numberC + 1);

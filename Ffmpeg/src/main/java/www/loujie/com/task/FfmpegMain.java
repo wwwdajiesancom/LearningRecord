@@ -9,7 +9,8 @@ import java.util.Calendar;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.loujie.www.redis.RedisUtils;
 import com.loujie.www.serialize.SerializeUtils;
@@ -29,7 +30,7 @@ public class FfmpegMain {
 	ThreadPoolExecutor threadPool;
 
 	// 记录日志
-	public static final Logger logger = Logger.getLogger(FfmpegMain.class);
+	public static final Logger logger = LoggerFactory.getLogger(FfmpegMain.class);
 	// key的更换频率
 	private static int modValue = 4;
 

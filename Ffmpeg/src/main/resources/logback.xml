@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- http://www.cnblogs.com/warking/p/5710303.html -->
+<!-- scan:配置文件发生改变时,重新加载 ,默认为true -->
+<!-- scanPeriod:检测配置,默认为60秒 -->
+<!-- debug:为true,将打印出Logback内部的日志 -->
+<configuration scan="true" scanPeriod="60 seconds" debug="false">
+
+	<!-- 定义一些变量,引用${consoleLogPath} -->
+	<property name="encoderCharset" value="utf-8" />
+	<property name="logHome" value="D:/t/logs/" />
+	<!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符 -->
+	<property name="logEncoderPattern"
+		value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n" />
+	<property name="logFileNamePattern" value="-%d{yyyy-MM-dd}" />
+	<property name="logFileNamePatternZip" value="-%d{yyyy-MM-dd}.%i"></property>
+
+	<!-- 子节点,共分为3类,appender,logger,root, -->
+	<!-- ConsoleAppender 写到控制台 -->
+	<!-- FileAppender 写到日志文件中 -->
+	<!-- RollingFileAppender 滚动日志文件,先将日志记录到指定文件，当符合某个条件时，将日志记录到其他文件 -->
+
+
+	<!-- appender,设置一个写日志的规定 -->
+	<!-- name:appender的名字,可以取的有一定的意义 -->
+	<!-- class:写日志的方式,都实现了Appender接口 -->
+	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+		<!-- 1.设置日志输出位置,可以不写默认System.out -->
+		<target>System.err</target>
+		<!-- 2.设置日志格式 -->
+		<!-- 默认为PatternLayoutEncoder -->
+		<encoder>
+			<pattern>${logEncoderPattern}</pattern>
+			<charset>${encoderCharset}</charset>
+		</encoder>
+	</appender>
+
+	<appender name="info"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<encoder>
+			<Pattern>${logEncoderPattern}</Pattern>
+			<charset>${encoderCharset}</charset>
+		</encoder>
+		<file>${logHome}info.log</file>
+
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${logHome}info${logFileNamePattern}.log
+			</fileNamePattern>
+			<!-- 保存3天 -->
+			<maxHistory>30</maxHistory>
+			<!-- 超过3GB就会删除 -->
+			<totalSizeCap>3GB</totalSizeCap>
+		</rollingPolicy>
+	</appender>
+
+	<appender name="warn"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<encoder>
+			<Pattern>${logEncoderPattern}</Pattern>
+			<charset>${encoderCharset}</charset>
+		</encoder>
+		<file>${logHome}warn.log</file>
+
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${logHome}warn${logFileNamePattern}.log
+			</fileNamePattern>
+			<!-- 保存3天 -->
+			<maxHistory>30</maxHistory>
+			<!-- 超过3GB就会删除 -->
+			<totalSizeCap>3GB</totalSizeCap>
+		</rollingPolicy>
+	</appender>
+
+	<!-- logger,用来设置某一个package或class,具体要用那个appender;可以设置多个logger -->
+	<!-- name:必须,用来指定受此logger约束的某一个package或class;需要是全路径 -->
+	<!-- level:可选,设置打印的级别 -->
+	<!-- addtivity:是否向上级logger传递打印信息(相同的包),默认true -->
+	
+	<logger name="www.loujie.com" level="info" additivity="false">
+		<appender-ref ref="warn" />
+		<appender-ref ref="console" />
+	</logger>
+
+	<!-- root,它也是一个logger,但它是logger的根,所有的logger的上级 -->
+	<!-- level:设置打印日志级别,做为全局的设置 -->
+	<root>
+		<level value="debug" />
+		<appender-ref ref="console" />
+	</root>
+
+</configuration>
