@@ -17,6 +17,7 @@ import com.loujie.www.properties.PropertiesUtils;
 import com.loujie.www.redis.RedisUtils;
 
 import www.loujie.com.entity.DirEntry;
+import www.loujie.com.task.FfmpegMain;
 
 public class FfmpegUtils {
 
@@ -207,7 +208,34 @@ public class FfmpegUtils {
 	 */
 	public static class Ffmpeg {
 
-		public static void m3u8_cryption_redis(String m3u8File, int modValue) {
+		public static void m3u8_cryption_repair(File m3u8File) {
+			// 1.找到所有的ts
+			List<String> tsList = ShellCommon.grep_i_pattern_file_list(".ts", m3u8File.getAbsolutePath());
+			// 1.1找到所有加密过的ts
+			List<String> aesList = ShellCommon.grep_i_pattern_file_list("#EXT-X-KEY:METHOD=AES-128,URI", m3u8File.getAbsolutePath());
+			// 2.跳过aesList的个数
+			int t_int = aesList.size();
+			List<String> keyList = new ArrayList<>();
+			for (int i = t_int; i < tsList.size(); i++) {
+				// 3.1ts在哪一行
+				// grep -in ts file|awk -F : '{print $1}'
+				int number = ShellCommon.grep_in_word_file_number(tsList.get(i), m3u8File.getAbsolutePath());
+				// 3.2生成key文件
+				if ((i) % FfmpegMain.modValue == 0) {
+					// keypath = ShellCommon.openssl_rand_16(m3u8.getParent());
+					keyList = RedisUtils.getM3u8KeyPrefix(new Random().nextInt(50000));
+				}
+				// 3.3加密
+				String iv = UUID.randomUUID().toString().replaceAll("-", "");
+				openssl_aes128_for_ts(m3u8File.getParent(), tsList.get(i), iv, keyList.get(1));
+				// 3.4 插入信息在某一行
+				// n是哪一行,i是参数不需要动,....是要插入的内容
+				// sed 'ni....' m3u8
+				ShellCommon.sed_insert_info(m3u8File.getAbsolutePath(), number - 1, "#EXT-X-KEY:METHOD=AES-128,URI=\"" + PropertiesUtils.getProperty("ffmpeg_uri") + keyList.get(0) + "\",IV=0x" + iv);
+			}
+		}
+
+		public static void m3u8_cryption_redis(String m3u8File) {
 			// 1.判断是否存在
 			File m3u8 = new File(m3u8File);
 			// 2.判断是否曾经加密过
@@ -225,16 +253,17 @@ public class FfmpegUtils {
 						// grep -in ts file|awk -F : '{print $1}'
 						int number = ShellCommon.grep_in_word_file_number(ts, m3u8.getAbsolutePath());
 						// 3.2生成key文件
-						if (index % modValue == 0) {
+						if ((index++) % FfmpegMain.modValue == 0) {
 							// keypath = ShellCommon.openssl_rand_16(m3u8.getParent());
 							keyList = RedisUtils.getM3u8KeyPrefix(new Random().nextInt(50000));
 						}
 						// 3.3加密
-						openssl_aes128_for_ts(m3u8.getParent(), ts, index++, keyList.get(1));
+						String iv = UUID.randomUUID().toString().replaceAll("-", "");
+						openssl_aes128_for_ts(m3u8.getParent(), ts, iv, keyList.get(1));
 						// 3.4 插入信息在某一行
 						// n是哪一行,i是参数不需要动,....是要插入的内容
 						// sed 'ni....' m3u8
-						ShellCommon.sed_insert_info(m3u8File, number - 1, "#EXT-X-KEY:METHOD=AES-128,URI=\"" + PropertiesUtils.getProperty("ffmpeg_uri") + keyList.get(0) + "\"");
+						ShellCommon.sed_insert_info(m3u8File, number - 1, "#EXT-X-KEY:METHOD=AES-128,URI=\"" + PropertiesUtils.getProperty("ffmpeg_uri") + keyList.get(0) + "\",IV=0x" + iv);
 					}
 				}
 			}
@@ -248,7 +277,7 @@ public class FfmpegUtils {
 		 *            每隔modValue个ts加一次密
 		 * @return
 		 */
-		public static String m3u8_cryption(String m3u8File, int modValue) {
+		public static String m3u8_cryption(String m3u8File) {
 			// 1.判断是否存在
 			File m3u8 = new File(m3u8File);
 			if (!m3u8.exists()) {
@@ -269,14 +298,16 @@ public class FfmpegUtils {
 						// grep -in ts file|awk -F : '{print $1}'
 						int number = ShellCommon.grep_in_word_file_number(ts, m3u8.getAbsolutePath());
 						// 3.2生成key文件
-						if (index % modValue == 0)
+						if ((index++) % FfmpegMain.modValue == 0) {
 							keypath = ShellCommon.openssl_rand_16(m3u8.getParent());
+						}
 						// 3.3加密
-						openssl_aes128_for_ts(m3u8.getParent(), ts, index++, ShellCommon.hexdump_16(keypath));
+						String iv = UUID.randomUUID().toString().replaceAll("-", "");
+						openssl_aes128_for_ts(m3u8.getParent(), ts, iv, ShellCommon.hexdump_16(keypath));
 						// 3.4 插入信息在某一行
 						// n是哪一行,i是参数不需要动,....是要插入的内容
 						// sed 'ni....' m3u8
-						ShellCommon.sed_insert_info(m3u8File, number - 1, "#EXT-X-KEY:METHOD=AES-128,URI=\"" + new File(keypath).getName() + "\"");
+						ShellCommon.sed_insert_info(m3u8File, number - 1, "#EXT-X-KEY:METHOD=AES-128,URI=\"" + new File(keypath).getName() + "\",IV=0x" + iv);
 					}
 				}
 			} else {
@@ -293,12 +324,12 @@ public class FfmpegUtils {
 		 * @param index
 		 * @param encryptionKey
 		 */
-		public static void openssl_aes128_for_ts(String tsDir, String tsName, Integer index, String encryptionKey) {
+		public static void openssl_aes128_for_ts(String tsDir, String tsName, String iv, String encryptionKey) {
 			File tsFile = new File(tsDir, tsName);
 			// 加密
 			// openssl aes-128-cbc -e -in oldtsfile -out newtsfile -nosalt -iv 16_int -K encryptionKey
-			String command = "openssl aes-128-cbc -e -in " + tsFile.getAbsolutePath() + " -out " + tsFile.getAbsolutePath() + ".swp" + " -nosalt -iv " + Integer.toHexString(index) + " -K "
-					+ encryptionKey;
+			String command = "openssl aes-128-cbc -e -in " + tsFile.getAbsolutePath() + " -out " + tsFile.getAbsolutePath() + ".swp" + " -nosalt -iv " + iv + " -K " + encryptionKey;
+			// String command = "openssl aes-128-cbc -e -in " + tsFile.getAbsolutePath() + " -out " + tsFile.getAbsolutePath() + ".swp" + " -nosalt -k " + encryptionKey;
 			Shell.execCommand(command, String.class);
 			// 删除原文件
 			String command_rm = "rm -f " + tsFile.getAbsolutePath();

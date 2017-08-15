@@ -32,7 +32,7 @@ public class FfmpegMain {
 	// 记录日志
 	public static final Logger logger = LoggerFactory.getLogger(FfmpegMain.class);
 	// key的更换频率
-	private static int modValue = 4;
+	public static int modValue = 4;
 
 	// 主函数
 	public static void main(String[] args) throws InterruptedException {
@@ -69,7 +69,7 @@ public class FfmpegMain {
 		Thread.sleep(10);
 		// 1.输入值
 		String type = "C";
-		System.out.print("请出入操作类型:");
+		System.err.print("请出入操作类型:");
 		type = Main.scanner.nextLine();
 		if (type == null || type.isEmpty()) {
 			type = "C";
@@ -91,12 +91,12 @@ public class FfmpegMain {
 
 	public void m3u8_encryption_dir(String[] args) throws InterruptedException {
 		// 1.输入参数
-		System.out.print("请输入要加密m3u8文件的目录:");
+		System.err.print("请输入要加密m3u8文件的目录:");
 		String m3u8Dir = Main.scanner.nextLine();
 		if (!new File(m3u8Dir).exists()) {
 			return;
 		} ;
-		System.out.print("请输入每隔几个值要加密一下的值:");
+		System.err.print("请输入每隔几个值要加密一下的值:");
 		modValue = Main.scanner.nextInt();
 
 		// 2.读取缓存
@@ -140,6 +140,7 @@ public class FfmpegMain {
 		long start = Calendar.getInstance().getTimeInMillis();
 		// 线程池
 		// 3.遍历
+		logger.info("开始扫描........................");
 		for_dir(srcEntry, null, modValue, threadPool, 1);
 		// 4.等待完成;主要是为了让备份完成
 		if (!threadPool.isShutdown()) {
@@ -245,7 +246,7 @@ public class FfmpegMain {
 				try {
 					// 1.加密
 					String start = sdf.format(Calendar.getInstance().getTime());
-					FfmpegUtils.Ffmpeg.m3u8_cryption_redis(item.toString(), modValue);
+					FfmpegUtils.Ffmpeg.m3u8_cryption_redis(item.toString());
 					String end = sdf.format(Calendar.getInstance().getTime());
 					logger.info("start:" + start + ",end:" + end + ",enc success:" + item);
 					// 2.完成文件记录
@@ -262,23 +263,23 @@ public class FfmpegMain {
 	}
 
 	public void m3u8_encryption() {
-		System.out.print("请输入要加密m3u8的全路径:");
+		logger.info("请输入要加密m3u8的全路径:");
 		String m3u8File = Main.scanner.nextLine();
-		System.out.print("请输入每隔几个值要加密一下的值:");
-		Integer modValue = Main.scanner.nextInt();
-		FfmpegUtils.Ffmpeg.m3u8_cryption_redis(m3u8File, modValue);
+		logger.info("请输入每隔几个值要加密一下的值:");
+		modValue = Main.scanner.nextInt();
+		FfmpegUtils.Ffmpeg.m3u8_cryption_redis(m3u8File);
 	}
 
 	public void mp4_m3u8() {
-		System.out.print("请输入mp4文件的父路径:");
+		logger.info("请输入mp4文件的父路径:");
 		String mp4Dir = Main.scanner.nextLine();
-		System.out.print("请输入mp4文件的名称:");
+		logger.info("请输入mp4文件的名称:");
 		String mp4Name = Main.scanner.nextLine();
-		System.out.print("请输入要生成m3u8文件的目录:");
+		logger.info("请输入要生成m3u8文件的目录:");
 		String m3u8Dir = Main.scanner.nextLine();
-		System.out.print("请输入要生成m3u8文件的名称:");
+		logger.info("请输入要生成m3u8文件的名称:");
 		String m3u8Name = Main.scanner.nextLine();
-		System.out.print("请输入生成ts文件的前缀:");
+		logger.info("请输入生成ts文件的前缀:");
 		String tsPrefix = Main.scanner.nextLine();
 		FfmpegUtils.Ffmpeg.ffmpeg_mp4_to_hls(mp4Dir, mp4Name, m3u8Dir, m3u8Name, tsPrefix);
 	}
