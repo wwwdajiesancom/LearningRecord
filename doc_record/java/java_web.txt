@@ -17,15 +17,82 @@
 3.tomcat部署项目，在conf/Catalina/localhost下创建.xml配置文件
 <Context path=""
 	docBase="" 
-	reloadble="true "/>
+	reloadble="true" />
 	
-4.Servlet
-	loadOnStart=1;启动顺序
+4.Servlet容器：可以用来运行Servlet,Filter,Listener,Tag,JSP
+		
+5.Servlet
+	单例的
+	Servlet容器负责Servlet和客户的通信以及调用Servlet的方法
+	loadOnStart>=0;设置创建时机，在启动容器的时候就会实例化(加载)
+	执行步骤，声明周期（都是Servlet容器调用的）:
+		1)构造器：MyServlet1.MyServlet1();
+		2)init():MyServlet1.init();
+		3)service:MyServlet1.service();
+		4)destory:MyServlet1.destory();
+	url-pattern:同一个Servlet可以被映射到多个路径；映射名称不能一样，但如果都可以匹配上，选择比较精准的那个		
+		第一种，精确匹配:/abc
+		第二种，使用通配符*，有二种形式,其它的都不行
+			/abc/*:
+			*.jsp:
+6.ServletConfig
+	1)接收外部的参数，局部参数，只能在Servlet中使用：
+		<init-param>
+			<param-name></param-name>
+			<param-value></param-value>
+		</init-param>
+	2)可以获取ServletContext:
 	
-	http://blog.csdn.net/zs064811/article/details/51374003
-	
-	执行步骤:
-		MyServlet1.MyServlet1()
-		MyServlet1.init()
-		MyServlet1.service()
-		MyServlet1.service()
+7.ServletContext,对应的是当前的应用,application
+	1)通过ServletConfig.getServletContext();
+	2)可以认为ServletContext是当前Web应用的管家
+	3)可以获取到当前应用的配置信息
+		a.getInitParameter，获取全局配置信息
+			<context-param>
+				<param-name>name</param-name>
+				<param-name>jiege</param-name>
+			</context-param>
+		b.getRealPath("/");项目运行的路径
+		c.getContextPath();应用的名称
+		d.setAttribute(key,value);
+8.HTTP请求消息
+	请求的结构：
+		一个请求行、若干个消息头、实体内容，其中一些消息头和实体内容都是可选的，消息头和实体内容之间要用空行隔开
+		GET /books/java.html HTTP/1.1
+		
+		Accept:*/*
+		Accept-Language:en-us
+		Connection:keep-alive
+		
+	响应结构：
+		响应头、响应体；
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
