@@ -1,9 +1,9 @@
 1.tomcat
-	bin,配置成Path中的路径，可以使用
+	bin,配置成Path中的路径，可以更简单的使用
 	startup
 	shutdown
 	catalina stop/start/run
-2.程序的目录结构
+2.web程序的目录结构
 	ROOT
 		WEB-INF
 			classes
@@ -24,13 +24,13 @@
 5.Servlet
 	单例的
 	Servlet容器负责Servlet和客户的通信以及调用Servlet的方法
-	loadOnStart>=0;设置创建时机，在启动容器的时候就会实例化(加载)
-	执行步骤，声明周期（都是Servlet容器调用的）:
+	loadOnStart>=0;设置Servlet的创建时机，如果设置了，那么在启动容器的时候就会实例化Servlet
+	执行步骤，Servlet生命周期（都是Servlet容器调用的）:
 		1)构造器：MyServlet1.MyServlet1();
 		2)init():MyServlet1.init();
 		3)service:MyServlet1.service();
 		4)destory:MyServlet1.destory();
-	url-pattern:同一个Servlet可以被映射到多个路径；映射名称不能一样，但如果都可以匹配上，选择比较精准的那个		
+	url-pattern:同一个Servlet可以被映射到多个路径；映射名称不能有重复的，但如果都可以匹配上，选择比较精准的那个		
 		第一种，精确匹配:/abc
 		第二种，使用通配符*，有二种形式,其它的都不行
 			/abc/*:
@@ -43,8 +43,8 @@
 		</init-param>
 	2)可以获取ServletContext:
 	
-7.ServletContext,对应的是当前的应用,application
-	1)通过ServletConfig.getServletContext();
+7.ServletContext,对应的是当前的应用,
+	1)可以通过ServletConfig.getServletContext()获取;
 	2)可以认为ServletContext是当前Web应用的管家
 	3)可以获取到当前应用的配置信息
 		a.getInitParameter，获取全局配置信息
@@ -67,6 +67,241 @@
 	响应结构：
 		响应头、响应体；
 		
+9.HttpServletRequest
+	1)获取求情参数信息
+		getParameter(name);
+	2)获取请求地址
+		getRequestURI();
+		getMethod();
+		
+10.HttpServletResponse
+	1)getWriter();
+	2)setContentType("");响应类型，可以从tomcat中的web.xml中查找
+	
+	
+JSP(Java Server Page):它最终会被编译成一个class文件,它其实是一个Servlet文件
+	9大内置对象:详看HttpJspBase类的子类,也就是jsp页面解析后的.java文件,一般在work目录下
+		request,
+		response,
+		config,
+		application,
+		session,
+		page,
+		pageContext,
+		out,
+		exception:只有主动声明了才可以用<%@ page isErrorPage="true" %>
+		
+JSP元素:
+	JSP脚本片段：
+	定义:
+		<%  
+			Date date = new Date();
+			out.print(date);
+		%>
+	输出:
+		<%= date%>=out.print(date);
+	JSP中声明方法(很少使用):
+		<%!
+			public void abc(int i,int j){
+				return i + j;
+			}
+		%>
+	JSP中的注释(不会在编译的文件中出现；其它的注释会出现在代码中，会成为累赘):
+		<%-- safs  --%>
+		
+11.和属性相关的方法，setAttribute(name,object);
+					 getAttribute(name);
+					 removeAttribute(name);
+	以下都有这些方法，但代表的范围不一样
+	pageContext,当前JSP页面有效
+	request,当前这个请求里面都有效
+	seesion,当前会话都有效(浏览器打开到关闭被称为一次回话[会话有效期间,会话是有时效的])
+	application，当前项目有效
+	
+12.请求的重定向与请求的转发
+	
+	请求的转发（浏览器上的地址不会改变）:
+		request.getRequestDispatcher(path).forword(req,res)
+	
+	请求的重定向（浏览器上的地址会改变）:
+		response.sendRedirect(location)
+		
+	区别：
+		1）浏览地址栏的改变
+		2）转发仅仅发送了一次请求（用的同一个request）；
+		   而重定向发送了两次请求（用的是不同的request）;
+		3)转发只能在本项目内部（内部资源）；重定向可以到任何的资源；
+		4)forword:本web应用的根目录http://www.loujie.com/key
+		  redirect:本web应用站点的根目录:http://www.loujie.com
+	
+13:JSP指令，是为JSP引擎设计的，不会产生任何可见的输出
+	1）<%@ page 属性="值" %>
+		作用范围是整个页面
+		有一下属性:
+			language="java"
+			extends="package.class"
+	2）<%@ include 属性="值"  %>
+		静态引入，源码级包含
+		在编译的时候，将包含的内容全部的引入到现有的Servlet中；
+	3）<%@ taglib 属性="值" %>
+	
+14：JSP标签，
+	1)<jsp:include page="" />
+		动态引入，没有源码的引用（两个页面没有太大的瓜分，但共用的request,response）
+	2)<jsp:forward page="" />
+		相当于在页面上做了一个转发;request.getRequestDispatcher("").forward(req,res);
+	3)上面都可以搭配
+		<jsp:param>标签用
+		<jsp:include>
+			<jsp:param></jsp:param>
+			<jsp:param></jsp:param>
+		</jsp:include>
+		可以通过request.getParameter("name")获取；
+	4)
+		
+		
+15:关于中文乱码，
+	1.在JSP页面上输入中文的编码是UTF-8
+		<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"  %>
+		
+	2.获取请求中的中文参数值:默认参数在传输过程中为ISO-8859-1
+		a)对于POST请求:
+			request.setCharacterEncoding("utf-8");
+		b)对于GET请求:
+			可以手动的转化，
+			也可以去小修改tomcat的编码:
+				URIEncoding="utf-8"或者设置
+				useBodyEncodingForURI=true,让和POST的编码保持一致，也就是request.setCharacterEncoding("utf-8")生效了
+				
+				
+16:MVC的设计模式
+	Model-View-Controller
+	
+	
+17.Cookie
+
+	因为Http是一个无状态的协议
+	
+	cookie===点心
+	
+	cookie机制采用的是在客户端保持HTTP状态信息的方案
+	
+	Cookie是浏览器访问WEB服务器的某个资源时，由WEb服务器
+	在HTTP响应消息头中附带传送给浏览器的一个小文本文件
+	
+	一旦WEB浏览器保存了某个Cookie,那么在以后的请求WEb服务器中
+	都会在HTTP请求头中将这个cookies回传给WEB服务器
+	
+	//1.创建一个Cookie对象
+		Cookie cookie = new Cookie("jiege","hao");
+	
+		Cookie cookie2 = new Cookie("jiege2","hao2");
+		
+	//2.调用response的一个方法 把Cookie传递给客户端
+		response.addCookie(cookie);
+		response.addCookie(cookie2);
+		
+	//3.
+	cookie2.setDomain("");
+		cookie2.setMaxAge(0);//设置有效时长:
+									默认不设置，是会话级别的；
+									设置为0,是立马删除它；
+									大于0,就是有效时长了,单位为秒
+		cookie2.setPath(uri);//Cookie的作用范围
+			
+		cookie2.setHttpOnly(isHttpOnly);
+		
+		
+18：HttpSession
+	session概念：它是浏览器和服务器端的一次会话；
+	session的声明周期，什么时候创建，什么时候销毁；
+		
+	一个页面，到另一个页面，通过了Servlet
+						在Servlet中将东西存放到Session中
+			将东西写入，经过Servlet跳转到页面
+						在Servlet中将东西放入Session中
+					在页面显示东西
+					
+	JavaWEB中的相对路径及绝对路径:
+		一般在Servlet及JSP跳转的时候会出现；请注意
+	
+	重复提交：
+		需要用到Session
+		
+19.JavaBean，需要一个无参构造函数
+	BeanUtils
+	
+20.EL表达式
+	取值，从this,request,session,application;范围从小到大
+	pageScope,requestScope,sessionScope,applicationScope,param(从request.getParameter()中取参)
+	
+21.自定义标签
+	需要实现JspTag接口
+	
+	自定义标签:
+		实现SimpleTag接口或继承SimpleTagSupport
+			调用的方法有:
+				HelloTag.setJspContext(JspContext)
+				HelloTag.doTag()
+			JspContext=pageContext
+			
+			当有标签体的时候,会调用方法setJspBody(JspFragment)
+			JspFragment,它可以获取JspContext
+				invoke(Writer)方法;将标签体里面的内容输入到Writer流中
+					如果writer==null，则输入到out里面；
+			empty:没有标签体；
+			scriptless:可以包含EL表达式及其它，但不可以包含java片段脚本；
+			tagdependent:里面的表达式由标签本身解决
+			
+			当带有父标签的：
+				
+	
+	
+	例子:
+		<my:hello value="${list}" var="item">
+			${item.id }--${item.name }---${item.age }
+		</my:hello>
+		
+		private List<Map<String, Object>> value;
+		private String var;
+		@Override
+		public void doTag() throws JspException, IOException {
+			if (value != null && value.size() > 0) {
+				for (Map<String, Object> itemMap : value) {
+					this.getJspContext().setAttribute(var, itemMap);
+					this.getJspBody().invoke(null);
+				}
+			}
+		}
+		
+		  <!-- 定义一个标签 -->
+		  <tag>
+			<description>Hello tag,this is first tag</description>
+			<!-- name,tag-class,body-content必可少 -->
+			<name>hello</name>
+			<tag-class>com.loujie.tag.HelloTag</tag-class>
+			<!-- 标签体内容类型 -->
+			<body-content>scriptless</body-content>
+			
+			<!-- 属性,对应的类型写一个这样的属性,并增加getter/setter方法 -->
+			<attribute>
+				<!-- 属性名称 -->
+				<name>value</name>
+				<!-- 是否必须 -->
+				<required>false</required>
+				<!-- runtime expression value ,当前的属性是否可以接受运行时表达式 -->
+				<rtexprvalue>true</rtexprvalue>
+			</attribute>
+			
+			<attribute>
+				<name>var</name>
+				<required>false</required>
+				<rtexprvalue>false</rtexprvalue>
+			</attribute>
+		  </tag>
+		
+EL自定义函数:
+	
 		
 		
 		
