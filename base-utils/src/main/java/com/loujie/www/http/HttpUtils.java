@@ -119,7 +119,7 @@ public class HttpUtils {
 		HttpPost post = new HttpPost(url);
 		post.setConfig(RC.requestConfig);
 		// 2.设置参数及属性
-		if (jsonBody != null && jsonBody.isEmpty()) {
+		if (jsonBody != null && !jsonBody.isEmpty()) {
 			StringEntity stringEntity = new StringEntity(jsonBody.toString(), DEFAULT_CHARSET);// 解决中文乱码问题
 			stringEntity.setContentEncoding(DEFAULT_CHARSET);
 			stringEntity.setContentType("application/json");
@@ -151,7 +151,7 @@ public class HttpUtils {
 		HttpPost post = new HttpPost(url);
 		post.setConfig(RC.requestConfig);
 		// 2.设置参数及属性
-		if (jsonBody != null && jsonBody.isEmpty()) {
+		if (jsonBody != null && !jsonBody.isEmpty()) {
 			StringEntity stringEntity = new StringEntity(jsonBody.toString(), DEFAULT_CHARSET);// 解决中文乱码问题
 			stringEntity.setContentEncoding(DEFAULT_CHARSET);
 			stringEntity.setContentType("application/json");

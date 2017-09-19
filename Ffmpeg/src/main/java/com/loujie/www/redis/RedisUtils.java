@@ -192,17 +192,17 @@ public class RedisUtils {
 	/**
 	 * 订阅
 	 * 
-	 * @param channel
-	 *            订阅的频道
 	 * @param jedisPubSub
 	 *            怎么处理
+	 * @param channels
+	 *            订阅的频道
 	 * @return
 	 */
-	public static Boolean subscribe(final String channel, final JedisPubSub jedisPubSub) {
+	public static Boolean subscribe(final JedisPubSub jedisPubSub, final String... channels) {
 		return new RedisCallback() {
 			@Override
 			<T> T callback(Jedis jedis, Class<T> cla) {
-				jedis.subscribe(jedisPubSub, channel);
+				jedis.subscribe(jedisPubSub, channels);
 				return cla.cast(true);
 			}
 		}.run(Boolean.class);
@@ -227,13 +227,4 @@ public class RedisUtils {
 		}.run(Long.class);
 	}
 
-	public static boolean closeChannel(final String channel) {
-		return new RedisCallback() {
-			@Override
-			<T> T callback(Jedis jedis, Class<T> cla) {
-				
-				return cla.cast(true);
-			}
-		}.run(Boolean.class);
-	}
 }

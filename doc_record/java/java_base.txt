@@ -1,0 +1,319 @@
+java基础目录:
+	1.语言基础：
+	2.面向对象：
+	3.基础工具：
+	4.容器类：
+	5.高级应用：
+	
+1.java语言的特点：
+	1）面向对象编程
+	3）跨平台，一次编译，多平台运行
+	2）垃圾回收机制
+	4）支持多线程
+	5）没有复杂的指针操作；采用了简单的引用类型来描述内存的操作
+	
+	
+2.JDK的安装及配置
+
+CLASSPATH:
+	java执行时找.class文件时，需要加载的路径
+注释：
+	//
+	/*  */
+	/** */
+
+关键字与标识符：
+	java有两个未用到的关键字:goto,const;
+	java有三个特殊含义的标记:true,false,null;
+	JDK1.4之后增加了assert关键字；
+	JDK1.5之后增加了enum关键字;
+	
+3.java的基本数据类型(不牵扯到内存分配问题):
+	数值型--整型:默认0，默认都是int类型
+		long,int(4),short,byte
+	数值型--浮点型:默认0.0，默认的都是double类型的
+		float,double
+	字符型:默认'\u0000'
+		char
+		一个字符==2个字节；
+		UNICODE编码；
+	布尔型:默认false
+		boolean
+引用数据类型:默认null
+	array[],
+	类,
+	接口，
+
+String,
+	字符串==多一个字符组成的数组
+	大小字符相差32;	
+	
+4.运算符,
+	位运算：&，|，<<，>>
+
+5.语句控制
+	顺序，
+		if(){}else if(){} else(){}
+	循环，
+		do{}while();while(){};for();
+	分支:
+		switch(){};
+	
+6.方法的定义
+	方法的重载,(reload)
+		同一个方法名称，但是参数类型或个数不一致；
+	递归调用
+		循环体，
+		结束体
+		
+7.面向对象（核心）
+	封装，保护内部结构的安全性
+	继承， 在已有的程序结构上继续扩展新的功能
+	多态：在指定一个概念范围内的满足
+	
+	类，它是整体事物的一个一个统称；对象，针对的是某一类事物的称呼。
+	类，
+		成员变量（属性:Field），
+		构造方法，
+		方法(Method)
+	接口，
+	抽象类，
+	内部类，
+	final,static
+	
+	内存分析:
+		堆内存：保存每一个对象的属性内容，堆内存需要用关键字new才可以获取分配内存空间(动态分配的)
+			代码块内存,它是堆内存的一部分；
+			
+		栈内存：保存的是一个堆内存的地址。
+		
+8.数组
+	数组的操作:
+		1.数组拷贝
+			System.arraycopy();
+		2.数组排序
+			Arrays.sort(arr);
+			
+	
+	String,
+		很多语言当中，都没有提供字符串的概念，很多的语言中都是使用字符数组来描述的概念。
+		字符串其实就是一个匿名对象；它是系统封装的
+		两种实例化方式:
+			直接赋值，
+			构造方法赋值；
+		两种实例化方式的区别：
+			直接赋值==将匿名的字符串对象取了一个名字；
+				在堆内存中开辟一块空间存放它（匿名字符串对象）；
+				String stra = "abc";
+				String strb = "abc";
+				String strc = "abc";
+				System.err.println(stra==strb);//true
+				System.err.println(stra==strc);//true
+				System.err.println(strc==strb);//true
+		字符串的比较：
+			只要用到了new，都会被分配空间的
+			String stra = "abc";
+			String strb = new String(stra);
+			String strc = strb;
+			System.err.println(stra == strb);// false
+			System.err.println(strb == strc);// true
+			System.err.println(stra == strc);// false
+		字符串常量一旦定义，就不可改变了；
+		字符串的拆分:
+		
+this关键字，
+
+构造块：
+	在构造方法之前执行；new时，每次都执行；
+静态块；
+	
+内部类：
+	
+9.链表
+	单项链表，
+		保存自己的数据
+		下一个节点的引用
+		
+		通过分析：
+			用户操作过程中，根本不关系Node节点；
+			Node节点的关系，不应该由用户来维护；
+			class Link {
+				private Node root;// 根节点
+				private Node last;// 最终节点
+				/**
+				 * 向链表中增加数据
+				 * 
+				 * @param data
+				 * @return
+				 */
+				public boolean addData(String data) {
+					Node tempNode = new Node(data);
+					if (root == null) {
+						root = tempNode;
+						last = root;
+						return true;
+					}
+					// 向链表中插入数据
+					return setNext(tempNode);
+				}
+
+				/**
+				 * 递归向最后一个节点设置数据
+				 * 
+				 * @param currentNode
+				 * @param nextNode
+				 * @return
+				 */
+				private synchronized boolean setNext(Node nextNode) {
+					last.setNext(nextNode);
+					last = nextNode;
+					return true;
+				}
+
+				/**
+				 * 输出链表数据
+				 */
+				public void printLink() {
+					printFor(root);
+				}
+
+				private void printFor(Node currentNode) {
+					if (currentNode == null) {
+						return;
+					}
+					System.err.println(currentNode.getData());
+					printFor(currentNode.getNext());
+				}
+
+				/**
+				 * 节点
+				 * 
+				 * @author loujie
+				 *
+				 */
+				class Node {
+					private Object data;// 保存的数据
+
+					private Node next;// 下一个节点
+
+					public Node(Object data) {
+						this.data = data;
+					}
+
+					public Object getData() {
+						return this.data;
+					}
+
+					public Node getNext() {
+						return this.next;
+					}
+
+					public void setNext(Node next) {
+						this.next = next;
+					}
+
+					public void addNode(Node next) {
+						if (this.next == null) {
+							this.next = next;
+						} else {
+							this.next.addNode(next);
+						}
+					}
+					
+					public void removeNode(Node preNode,Object data){
+						
+					}
+				}
+			}
+	
+	
+		
+	双向链表，
+		保存自己的数据
+		下一个节点的引用
+		上一个节点的引用
+		
+		
+10.继承，
+	
+	
+	
+11.文件操作:
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+		
+java反射:一般都是来写框架了
+	common-beanutils.jar;
+	反射就是 加载类，并解剖出类的组成部分(构造还输，成员变量，方法)
+	
+	属性描述器:BeanInfo,PropertyDescriptor(它是通过getter,setter获取的);
+		BeanInfo beanInfo = Introspector.getBeanInfo(Dog.class);
+		PropertyDescriptor[] pds = beanInfo.getPropertyDescriptors();
+
+		for (PropertyDescriptor pd : pds) {
+			System.err.println(pd.getName());
+		}
+		
+		可以使用PropertyDescriptor来操作这些属性；
+	
+泛型:Generic
+
+Xml（Extensible Markup Language）语言（可扩展标记语言）:
+	解析:dom(官方的),sax(xml社区)两种方式
+		采用dom的话,会将xml都加载到内存中，变成一个Document对象
+			但是dom对文档的crud比较方便
+		sax:它是从上向下读取，适合读取（消耗内存不大）；不适合做crud
+		
+		Jaxp(sun),Jdom,dom4j
+		
+JVM虚拟机内存调整设置:
+	默认最大是64M的内存；修改参数配置-Xmxn
+	OutOfMemoryError:Java heap space;
+	
+非对称加密RSA:
+	数字证书，
+	数字签名：
+	
+	keytool -genkey -alias tomcat -keyalg RSA
+	
+	
+Http协议:
+	客户端连接上了web服务器后，若想获取服务器中的某个web资源，
+	就需要遵守一定的通讯格式，http协议用于定义客户端与web服务器通讯的格式；
+	
+	
+	
+	
+	
+java多线程:
+	
+	线程同步，安全问题
+	
+	并行与并发:
+	并行：指两个或多个事件在同一时刻点发生；
+	并发：指两个或多个事件在同一时间段内发生；
+	
+	多线程的优势：
+		1.多任务
+		
+	线程不安全：
+		因为涉及了同时访问同一个资源的情况，
+	同步方法及代码块
+	也可以用Lock,Lock更强大比同步方法及同步代码块：
+		
+	

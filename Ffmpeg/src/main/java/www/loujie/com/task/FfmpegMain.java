@@ -57,7 +57,7 @@ public class FfmpegMain {
 			@Override
 			public void run() {
 				// 订阅
-				RedisUtils.subscribe(Main.thread_channel, jedisPubSub);
+				RedisUtils.subscribe(jedisPubSub, Main.thread_channel);
 				logger.info("关闭订阅:" + Main.thread_channel);
 			}
 		}).start();
