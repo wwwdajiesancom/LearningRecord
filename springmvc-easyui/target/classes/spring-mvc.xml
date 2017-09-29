@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+	
+	<!-- 1.启动默认配置(它是启动了HandlerMapping,HandlerAdapter) -->
+	<mvc:annotation-driven></mvc:annotation-driven>
+	
+	<!-- 2.扫描�? -->
+	<context:component-scan base-package="com.loujie.easyui" use-default-filters="false">
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+	</context:component-scan>
+	<!-- 3.自动注入Controller -->
+	<context:annotation-config></context:annotation-config>
+	
+	<!-- 4.配置ViewResoler -->
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/view" />	
+		<property name="suffix" value=".jsp" />
+	</bean>
+	
+	<!-- 5.配置�?些静态的文件 -->
+	<mvc:resources location="/static/" mapping="/static/**" />
+	
+	<!-- 6.拦截�? -->
+	
+	<!-- 7.上传文件配置 -->
+	
+	<!-- 8.全局异常配置 -->
+</beans>

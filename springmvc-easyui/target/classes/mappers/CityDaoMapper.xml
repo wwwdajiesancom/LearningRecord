@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.loujie.springmvc.dao.CityDao">
+
+	<!-- 1.定义的ResultMap -->
+
+	<!-- 2.定义表名�? -->
+	<sql id="table">city</sql>
+	<sql id="tables">city a</sql>
+
+	<!-- 3.�?要查询的字段及添加�?�排�? -->
+	<sql id="column">
+		a.`id`,
+		a.`name`,
+		a.`name_int`,
+		a.`type`,
+		a.`country_id`,
+		a.`sort`,
+		a.`status`,
+		a.`created_at`,
+		a.`updated_at`
+	</sql>
+
+	<!-- 3.2查询条件 -->
+	<sql id="where">
+		<if test="id != null">
+			and a.id = #{id}
+		</if>
+	</sql>
+
+	<!-- 3.3排序 -->
+	<sql id="order"></sql>
+
+	<!-- 4.查询模块 -->
+	<select id="findOne" resultType="City" parameterType="java.util.Map">
+		select
+		<include refid="column" />
+		from
+		<include refid="tables" />
+		where 1 = 1
+		<include refid="where"/>
+		<include refid="order"/>
+	</select>
+	
+	<select id="findList" resultType="City" parameterType="java.util.Map">
+		select
+		<include refid="column" />
+		from
+		<include refid="tables" />
+		where 1 = 1
+		<include refid="where"/>
+		<include refid="order"/>
+	</select>
+	
+	<!-- 5.插入模块 -->
+
+	<!-- 6.更新模块 -->
+	<update id="updateCity">
+		update 
+		<include refid="table"/>
+		set name = #{name}
+		where id = #{id}
+	</update>
+	
+	<!-- 7.删除模块 -->
+
+</mapper>
