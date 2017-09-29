@@ -439,6 +439,217 @@ EL自定义函数:
 	
 	
 Spring:
+	Spring是什么？
+		为什么要有Spring,为解决企业应用开发的复杂性（耦合性）；
+		轻量级：从大小，消耗都是轻量级的、并且Spring是非侵入性的--基于Spring开发的应用中的对象不依赖Spring的API
+		依赖注入(DI-dependecy injection、IOC)
+		面向切面编程(AOP)
+		
+		容器：Spring是一个容器，因为它包含并且管理应用对象的生命周期
+	
+	
+	Spring功能：
+		面向接口的编程，
+		目的：创建对象并组装对象之间的关系；
+		基础jar(core,bean,context,spel)
+				AOP,
+				
+		ApplicationContextWare实现接口，它可以
+	
+		BeanNameGenerator，beanName的命名策略；需要无参构造方法；
+	
+	HelloWorld:
+		采用ApplicationContext获取getBean
+		Bean需要有构造方法及容器的set方法；这样可以知道Spring的调用顺序；
+		
+		
+	IOC,DI：其思想是反转资源获取的方向。
+		容器主动地将资源送给它所管理的组件，组件做需要做的仅是选择一种合适的方式来接收；
+		DI与IOC是一样的，只是另一种表达方式。依赖注入
+	
+	IOC的前生---分离接口与实现（生成HTML或PDF格式的不同报表）
+				工厂模式
+				
+	属性值注入：如果有特殊字符,需要用到<![CDATA[VALUE]]>
+	
+	注入,手动注入，自动注入（根据名称byName，类型byType，构造函数constructor）
+	
+	PropertyPlaceholderConfigurer，导入外部配置文件,可以用context空间里面的一个标签；
+	
+	SPel表达式：#{...};可以调用静态方法#{T(java.lang.Integer).MAX};也可以调用变量中的属性，方法等
+	
+	bean的生命周期：有一个所有Bean的后置处理类,BeanPostProcessor,有两个方法,前置方法，后置方法
+		1.构造函数，HelloWorld.HelloWorld()
+		2.setter，HelloWorld.setName()
+		3.前置方法，MyBeanPostProcessor.postProcessBeforeInitialization(HelloWorld [name=jiege, desc=woshigehaoren],helloWorld)
+		4.初始化方法，HelloWorld.init_method()
+		5.后置方法,MyBeanPostProcessor.postProcessAfterInitialization(HelloWorld [name=jiege, desc=woshigehaoren],helloWorld)
+		6.销毁,HelloWorld.destory()
+		
+Spring,注解
+	组件扫描
+		<context:component-scan base-package="com.loujie.www.annocation"
+		annotation-config="true" />
+		如果扫描多个的话，用逗号(,)隔开
+		
+		
+		
+Mybatis框架：
+	以下是流程：
+		1.SqlMapConfig.xml,mybatis全局的配置文件
+			配置数据源、事物等mybatis的运行环境
+		2.配置多个mapper.xml，它是映射关系
+		
+		3.SqlSessionFactory(会话工厂),根据配置文件创建
+			作用：创建SqlSession
+		
+		4.SqlSession(会话)，是一个接口
+			作用：操作数据库（发出sql增加，删除，修改，查询）
+		
+		5.Exector(执行器)，是一个接口（两个实现，基本执行器、缓存执行器）
+			作用：SqlSession内部通过执行器操作数据库
+			
+		6.mappedstatement(底层封装对象)
+			作用：对操作数据库存储封装，包括SQL，输入，参数，输出
+		
+		7.操作mysql
+	
+	
+	
+	
+Spring-MVC框架:
+	1.什么事SpringMVC?
+		访问：User--->Controller--->Model---->View---->User--->...
+		具体：
+		User---
+			(request,)-
+			(前端控制器，DispatcherServlet)-
+			(请求HandlerMapping,通过它找到Handler)-
+			(请求查找Handler,
+				返回一个HandlerExecutionChain(HandlerInterecptor1,HandlerInterceptor2,Handler),
+				这里面会执行拦截器；
+				当然最主要的还是Handler，
+				然后会有一个Handler适配器,HandlerAdapter，它是为了执行Handler的
+			)-
+		-->Controller
+		-->Model
+			-(ModelAndView，模型与视图的结合体)-
+			-视图渲染（试图解析器：ViewResolver）
+		-->View（jsp,freemarker,excel,doc等）
+		
+	2.SpringMVC中的组件：
+		1.前端控制器：DispatcherServlet
+			作用是接收请求，响应结果，相当于一个转发器
+		2.处理器映射器HandlerMapping
+			作用是根据请求的url查找到Handler
+		3.处理器适配器：HandlerAdapter
+			作用是按照特定的规则(HandlerAdapter的规则)去执行Handler
+		4.试图解析器（View Resolver）
+			作用是进行视图解析，根据逻辑视图名解析成真正的视图(view)
+		5.视图，View(Jsp,pdf,freemarker,等)
+			View是一个接口，实现类支持jsp,pdf,等
+			
+	3.配置web.xml配置文件，
+		<!-- The front controller of this Spring Web application, responsible for handling all application requests -->
+		<servlet>
+			<servlet-name>springDispatcherServlet</servlet-name>
+			<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+			<init-param>
+				<param-name>contextConfigLocation</param-name>
+				<param-value>classpath:xml-spring-mvc.xml</param-value>
+			</init-param>
+			<load-on-startup>1</load-on-startup>
+		</servlet>
+
+		<!-- Map all requests to the DispatcherServlet for handling -->
+		<servlet-mapping>
+			<servlet-name>springDispatcherServlet</servlet-name>
+			<!-- 
+				第一种：*.action,过滤以.action结尾的url地址
+				第二种:/,过滤所有的url,但不包括jsp页面;因此要对一些静态资源(如:js,css,等)进行例外
+				第三种:/*,这种是错误的配置，因为他会过滤jsp文件；会形成死循环
+			 -->
+			<url-pattern>/</url-pattern>
+		</servlet-mapping>
+			
+		
+	4.xml-spring-mvc.xml配置文件中，需要配置如下东西：
+		
+		4.1映射处理器：HandlerMapping,它是查找Handler		
+			<bean
+			class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping"></bean>
+		4.2处理器适配器,HandlerAdapter,它是执行处理器了；不过看了源代码,所有的Handler必须实现Controller接口
+			<bean
+			class="org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter"></bean>		
+		4.3视图解析器,ViewResolver,它是解析ModelAndView
+			<bean
+			class="org.springframework.web.servlet.view.InternalResourceViewResolver"></bean>
+		4.4配置处理器Handler,他需要实现Controller接口
+			<bean class="com.loujie.web.controller.HelloWorldController" name="/helloworld.action"></bean>
+		
+	5.anno-spring-mvc.xml，使用注解的配置文件：
+		它同样需要配置上述的东西，
+		5.1映射处理器：HandlerMapping,它是查找Handler，它在3.1之后使用的
+			<bean
+			class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"></bean>
+		5.2处理器适配器,HandlerAdapter,它是执行处理器了
+			<bean
+			class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter"></bean>
+		5.3视图解析器,ViewResolver,它是解析ModelAndView
+			<bean
+			class="org.springframework.web.servlet.view.InternalResourceViewResolver"></bean>
+		5.4
+		
+		同时也可以使用简便的方式设置映射处理器，处理器适配器
+		<mvc:annotation-driven></mvc:annotation-driven>
+		同时该标签，还加载了很多的其它配置，开发的时候用这个
+	
+	6.源码分析：
+		6.1.找到DispatcherServlet---doDispatcher(...)方法；
+	    6.2.
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	

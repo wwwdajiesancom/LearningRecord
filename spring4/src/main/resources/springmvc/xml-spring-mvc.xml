@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd">
+
+	<!-- 访问步骤： User(用户)，发出请求，进入到DispatcherServlet里面， 找到HandlerMapping,根据HandlerMapping找到了Handler， 
+		需要一个Handler的适配器,HandlerAdapter,它执行Handler， 找到Controller方法，执行相关业务，然后要返回ModelAndView, 
+		需要一个ViewResolver到达view层，然后展示信息 -->
+		
+	<!-- 4.配置Handler,这个类需要我们自己写,根据设置的处理器适配器,需要实现Controller接口 -->
+	<bean class="com.loujie.web.controller.HelloWorldController" name="/helloworld.action"></bean>
+	
+	<!-- 1.影射处理器：HandlerMapping -->
+	<bean
+		class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping"></bean>
+
+	<!-- 2.处理器适配器,HandlerAdapter -->
+
+	<bean
+		class="org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter"></bean>
+
+	<!-- 3.视图解析器:ViewResolver -->
+
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver"></bean>
+
+</beans>

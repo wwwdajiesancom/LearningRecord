@@ -10,8 +10,7 @@ public class SolrTest {
 
 	@Test
 	public void solr1() {
-		System.err.println(ArgsUtils.formatDate(new Date(1505727000000l), "yyyy-MM-dd HH:mm:ss"));
-		System.err.println(ArgsUtils.parseDate("2017-09-18 11:06:33", "yyyy-MM-dd HH:mm:ss").getTime());
+		System.err.println(ArgsUtils.formatDate(new Date(1505874660000L), "yyyy-MM-dd HH:mm:ss"));
 	}
 
 }

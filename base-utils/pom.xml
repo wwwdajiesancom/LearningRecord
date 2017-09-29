@@ -84,8 +84,8 @@
 			<type>pom</type>
 		</dependency>
 
-		
-<!-- https://mvnrepository.com/artifact/com.janeluo/ikanalyzer -->
+
+		<!-- https://mvnrepository.com/artifact/com.janeluo/ikanalyzer -->
 		<dependency>
 			<groupId>com.janeluo</groupId>
 			<artifactId>ikanalyzer</artifactId>
