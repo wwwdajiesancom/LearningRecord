@@ -34,6 +34,7 @@ public class TestController {
 	@ResponseBody
 	public Object test(@PathVariable Integer id, String name) {
 		try {
+			System.err.println("oxoxox");
 			City city = cityServiceImpl.findOne(id, name);
 			return city;
 		} catch (Exception e) {
