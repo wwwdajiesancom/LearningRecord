@@ -3,13 +3,22 @@
                       http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
 	version="3.0">
 
+	<!-- spring配置文件加载,使用监听器 -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>classpath:spring-global.xml</param-value>
+	</context-param>
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+
 	<!-- 配置SpringMvc的中央控制器 -->
 	<servlet>
 		<servlet-name>springDispatcherServlet</servlet-name>
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
 		<init-param>
 			<param-name>contextConfigLocation</param-name>
-			<param-value>spring-mvc.xml</param-value>
+			<param-value>classpath:spring-mvc.xml</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
@@ -18,6 +27,10 @@
 		<servlet-name>springDispatcherServlet</servlet-name>
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
-
+	
+	<!-- 首页配置 -->
+	<welcome-file-list>
+		<welcome-file>/index</welcome-file>
+	</welcome-file-list>
 
 </web-app>
