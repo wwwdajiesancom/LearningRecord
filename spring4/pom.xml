@@ -39,7 +39,7 @@
 	</profiles>
 
 	<dependencies>
-
+		<!-- jutil测试 -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>

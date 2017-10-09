@@ -613,8 +613,20 @@ Spring-MVC框架:
 	
 	
 	
-	
-	
+easyui:
+	1.下载相关文件
+		1.1引入jquery.js文件
+		1.2引入jquery.easyui.js文件，同时也引入lang-zh_CN.js文件
+		1.3引入样式jquery.css及icon.css文件
+		
+	2.easyui存在2种加载方式
+		2.1使用class的加载方式
+		2.2使用js的加载方式
+		
+	3.$.parser,easyui的界面渲染器
+		3.1$.parser.auto=false;#关闭自动渲染
+		3.2$.parser.parse();#渲染页面上所有的easyui组件
+		3.3$.parser.parse("#dia1");#渲染id=dia1的easyui组件【注意:不能直接渲染组件，该组件需要定义parent，才可以】
 	
 	
 	

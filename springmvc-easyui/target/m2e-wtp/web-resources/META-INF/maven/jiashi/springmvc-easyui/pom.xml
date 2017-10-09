@@ -84,6 +84,13 @@
 			<scope>provided</scope>
 		</dependency>
 
+		<!-- jstl -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jstl</artifactId>
+			<version>1.2</version>
+		</dependency>
+
 		<!-- logback -->
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
@@ -131,6 +138,14 @@
 			<artifactId>jackson-databind</artifactId>
 			<version>2.9.1</version>
 		</dependency>
+
+		<!-- mybatis分页插件 -->
+		<dependency>
+			<groupId>com.github.pagehelper</groupId>
+			<artifactId>pagehelper</artifactId>
+			<version>5.1.2</version>
+		</dependency>
+
 	</dependencies>
 	<build>
 		<finalName>springmvc-easyui</finalName>
@@ -163,7 +178,6 @@
 				<artifactId>tomcat7-maven-plugin</artifactId>
 				<version>2.2</version>
 				<configuration>
-					<!-- <skip>true</skip> -->
 					<port>80</port>
 					<path>/</path>
 					<uriEncoding>UTF-8</uriEncoding>

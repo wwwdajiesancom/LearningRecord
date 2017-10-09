@@ -9,7 +9,7 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.3.xsd">
-	
+
 	<!-- 配置数据�?,dbcp -->
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
@@ -27,17 +27,31 @@
 		<!-- 加载全局配置文件 -->
 		<property name="configLocation" value="classpath:mybatis/SqlMapConfig.xml" />
 		<!-- 扫描model,使用别名 -->
-		<property name="typeAliasesPackage" value="${mybatis.typeAliasesPackage}" />
+		<property name="typeAliasesPackage"
+			value="com.loujie.easyui.entity" />
 		<!-- 扫描mapper配置文件 -->
 		<property name="mapperLocations" value="classpath:mappers/**/*.xml" />
-		<!-- <property name="plugins"> <array> <bean class="com.github.pagehelper.PageHelper"> 
-			<property name="properties"> <value> dialect=hsqldb </value> </property> 
-			</bean> </array> </property> -->
+		<property name="plugins">
+			<array>
+				<bean class="com.github.pagehelper.PageInterceptor">
+					<property name="properties">
+						<value>
+							helperDialect=mysql
+							reasonable=true
+							supportMethodsArguments=true
+							params=count=countSql
+							autoRuntimeDialect=true
+						</value>
+					</property>
+				</bean>
+			</array>
+		</property>
 	</bean>
 
 	<!-- 配置mapper的扫描器 -->
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<property name="basePackage" value="com.loujie.easyui.dao" />
+		<property name="basePackage"
+			value="com.loujie.easyui.dao" />
 		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
 	</bean>
 
