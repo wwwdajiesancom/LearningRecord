@@ -34,4 +34,17 @@ public class EasyUIController {
 		return "/2/" + path + "/" + easyuiModel;
 	}
 
+	/**
+	 * 2.easyui-windows窗体
+	 * 
+	 * @param path
+	 * @param easyuiModel
+	 * @return
+	 */
+	@RequestMapping(value = "/3/{path}/{easyuiModel}")
+	public String threeStudy(@PathVariable String path, @PathVariable String easyuiModel) {
+
+		return "/3/" + path + "/" + easyuiModel;
+	}
+
 }

@@ -22,10 +22,10 @@
 		<tr>
 			<td> <a href="${contextPath}/easyui/2/panel/panel" target="_blank">1.面板(panel)</a> </td>
 			<td> <a href="${contextPath}/easyui/2/tabs/tabs" target="_blank">2.选项卡(tabs)</a> </td>
-			<td> <a href="${contextPath}/easyui/2/size/size" target="_blank">3.动态调整大小(resizable)</a> </td>
-			<td> <a href="${contextPath}/easyui/2/tooltip/tooltip" target="_blank">4.消息提示框(tooltip)</a> </td>
-			<td> <a href="${contextPath}/easyui/2/linkbutton/linkbutton" target="_blank">5.按钮(linkbutton)</a> </td>
-			<td> <a href="${contextPath}/easyui/2/progressbar/progressbar" target="_blank">6.进度条(progressbar)</a> </td>
+			<td> <a href="${contextPath}/easyui/2/accordion/accordion" target="_blank">3.分类组件(accordion)</a> </td>
+			<td> <a href="${contextPath}/easyui/2/layout/layout" target="_blank">4.布局组件(layout)</a> </td>
+			<td>  </td>
+			<td>  </td>
 		</tr>
 	</table>
 	
