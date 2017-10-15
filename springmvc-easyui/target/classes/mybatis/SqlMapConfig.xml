@@ -3,13 +3,13 @@
   PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
-	<!-- 全局setting配置,根据�?求添�? -->
+	<!-- 全局setting配置,根据需求添加 -->
 	<settings>
-		<!-- 使用jdbc的getGeneratedkeys 获取数据库自动自增的主键�? -->
+		<!-- 使用jdbc的getGeneratedkeys 获取数据库自动自增的主键值 -->
 		<setting name="useGeneratedKeys" value="true" />
-		<!-- 使用列别名替换列�? -->
+		<!-- 使用列别名替换列名 -->
 		<setting name="useColumnLabel" value="true" />
-		<!-- �?启驼峰命名转�? -->
+		<!-- 开启驼峰命名转换 -->
 		<setting name="mapUnderscoreToCamelCase" value="true" />
 	</settings>
 

@@ -27,6 +27,14 @@
 			<td>  </td>
 			<td>  </td>
 		</tr>
+		<tr>
+			<td> <a href="${contextPath}/easyui/3/window/window" target="_blank">1.窗体(window)</a> </td>
+			<td> <a href="${contextPath}/easyui/3/dialog/dialog" target="_blank">2.对话框(dialog)</a> </td>
+			<td> <a href="${contextPath}/easyui/3/messager/messager" target="_blank">3.提示框(messager)</a> </td>
+			<td>  </td>
+			<td>  </td>
+			<td>  </td>
+		</tr>
 	</table>
 	
 </body>
