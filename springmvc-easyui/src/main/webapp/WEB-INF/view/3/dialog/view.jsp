@@ -1,11 +1,25 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
+<script type="text/javascript"
+	src="${contextPath}/static/js/exec-bind.js"></script>
 
-<form id="freightfit" method="post" title="运费设置">
-	起送金额:<input class="easyui-numberbox" style="width: 204px;"
-		name="sendmoney" required="true">元<br> 
-	运费设置:<input
-		type="radio" name="is_have" value="0" id="freight_no">免运费 <input
-		type="radio" name="is_have" value="1" id="freight_yes">收运费<br>
+
+<form action="${contextPath}/ajax/dialog/view.json" id="from_id" method="post">
+	<table>
+		<tr>
+			<td>姓名：</td>
+			<td><input type="text" name="name" class="easyui-validatebox" zauto="true"
+				required="true" /></td>
+		</tr>
+		<tr>
+			<td>Email：</td>
+			<td><input type="text" name="email" class="easyui-validatebox" zauto="true"
+				validType="email" /></td>
+		</tr>
+	</table>
 </form>
-
+<script type="text/javascript">
+<!--
+	
+//-->
+</script>

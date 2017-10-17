@@ -9,42 +9,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class EasyUIController {
 
 	/**
-	 * 1.easyui基组件,自己是独立的
+	 * 1easyui基组件,自己是独立的 2easyui布局组件 3easyui-windows窗体4easyui-menu.button
 	 * 
+	 * @param index
 	 * @param path
 	 * @param easyuiModel
 	 * @return
 	 */
-	@RequestMapping(value = "/1/{path}/{easyuiModel}")
-	public String oneStudy(@PathVariable String path, @PathVariable String easyuiModel) {
+	@RequestMapping(value = "/{index}/{path}/{easyuiModel}")
+	public String twoStudy(@PathVariable String index, @PathVariable String path, @PathVariable String easyuiModel) {
 
-		return "/1/" + path + "/" + easyuiModel;
-	}
-
-	/**
-	 * 2.easyui布局组件
-	 * 
-	 * @param path
-	 * @param easyuiModel
-	 * @return
-	 */
-	@RequestMapping(value = "/2/{path}/{easyuiModel}")
-	public String twoStudy(@PathVariable String path, @PathVariable String easyuiModel) {
-
-		return "/2/" + path + "/" + easyuiModel;
-	}
-
-	/**
-	 * 2.easyui-windows窗体
-	 * 
-	 * @param path
-	 * @param easyuiModel
-	 * @return
-	 */
-	@RequestMapping(value = "/3/{path}/{easyuiModel}")
-	public String threeStudy(@PathVariable String path, @PathVariable String easyuiModel) {
-
-		return "/3/" + path + "/" + easyuiModel;
+		return "/" + index + "/" + path + "/" + easyuiModel;
 	}
 
 }

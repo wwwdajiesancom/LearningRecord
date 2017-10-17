@@ -14,6 +14,11 @@
 <script type="text/javascript"
 	src="${easyuiContextPath}/${easyuiDirPath}/locale/easyui-lang-zh_CN.js"></script>
 	
+	
+<%-- 自己定义的扩展js --%>
+<script type="text/javascript" src="${easyuiContextPath}/static/js/extra.js"></script>
+	
+	
 <%-- easyui-1.3.5-css --%>
 <link type="text/css" rel="stylesheet" href="${easyuiContextPath}/${easyuiDirPath}/themes/default/easyui.css" />
 <link type="text/css" rel="stylesheet" href="${easyuiContextPath}/${easyuiDirPath}/themes/icon.css" />

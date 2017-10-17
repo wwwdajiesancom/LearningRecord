@@ -10,7 +10,7 @@
 <script type="text/javascript">
 <!--
 	//window,它依赖了panel,resizable,draggable
-	//属性modal=true;后面添加一个墓碑,其它的就不可以操作了
+	//属性modal=true;后面添加一个div,其它的就不可以操作了
 //-->
 </script>
 </head>

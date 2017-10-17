@@ -14,39 +14,11 @@ function DialogExtra(dialogId_,options_){
 	//2.定义一些常用的方法
 	
 	/**
-	 * 判断是否为空
-	 * 分为两种判断：
-	 * 第一种是传递一个参数,为string,boolean,number
-	 * 第二种是传递二个参数,第一个参数为{},第二个为string(其实是一个键值)
-	 */
-	this.isEmpty = function(isEmpty_options,isEmpty_jsonkey){
-		//1.先判断第一个参数
-		if(isEmpty_options==undefined||isEmpty_options==null||isEmpty_options==''){
-			return true;
-		}
-		//2.如果类型分为object,就需要用到第二个参数了
-		if(typeof (isEmpty_options) == "object"){
-			if(_this.isEmpty(isEmpty_jsonkey)){
-				return false;
-			}
-			var _value = isEmpty_options[isEmpty_jsonkey];
-			if(_this.isEmpty(_value)){
-				return true;
-			}
-			//不为空
-			return false;
-		}
-		//3.可能是string,number,boolean
-		return false;
-	}
-	
-	
-	/**
 	 * 初始化方法
 	 * init_options={dialogId:"dialog的Id"}
 	 */
 	this.init = function(init_options){
-		if(!_this.isEmpty(init_options,"dialogId")){			
+		if(!Extra.isEmpty(init_options,"dialogId")){			
 			_this.id = _this.setId(init_options["dialogId"]);
 		}
 	}
@@ -56,7 +28,7 @@ function DialogExtra(dialogId_,options_){
 	 * 
 	 */
 	this.setId = function(setId_dialogId){
-		if(!_this.isEmpty(setId_dialogId)){			
+		if(!Extra.isEmpty(setId_dialogId)){			
 			_this.id = "#" + setId_dialogId;
 		}
 	}
@@ -86,28 +58,92 @@ function DialogExtra(dialogId_,options_){
 	}
 	
 	/**
-	 * 保存form表单信息
-	 * selector=a[tag='save'];选择器
-	 * 可扩展,
+	 * 找到form表单
 	 */
-	this.save = function(save_a){
+	this.getForm = function(a_){
 		//1.找到form表单(怎么找呢？【可以分为2中,一种是直接找,另一种是根据Id查找】;Id从什么地方而来呢？【从选择器的属性中来，属性名字叫做form_id】)
 		//2.找到form表单,先选取第二种,如果没有form_id,再用第一中方法
 		var $form;
-		var form_id = $(save_a).attr('form_id');
-		if(form_id==undefined){
-			$form = $(_this.id).closest("div").find('form:eq(0)');
+		var form_id = $(a_).attr("form_id");
+		if(Extra.isEmpty(form_id)){
+			$form = $(_this.id).closest("div").find("form:eq(0)");
 		}else{
-			$form = $('#'+form_id);			
+			$form = $("#"+form_id);
 		}
+		return $form;
+	}
+	
+	/**
+	 * 保存form表单信息
+	 * selector=a[tag='save'];选择器
+	 * 可扩展,
+	 * form_id:save标签的一个属性,标记是一个form表单的id
+	 * 
+	 * 对form表单的要求:
+	 * 	action,method,必填
+	 *  contentType=json;可选,如果是这种类型,提交的contentType:application/json,默认为"application/x-www-form-urlencoded"
+	 *  callbackSuccess:可选,成功后的回调函数,有一个默认的（解释：因为ajax的返回值结构不一定，所以提供了一种自定义的处理函数，该函数的参数就是ajax的返回结果：function(result){}）
+	 *  callbackSubSuccess:可选,使用默认的回调函数,但是在后台执行成功的时候,调用该回调函数（解释：默认的函数可以处理固定的结构，但是成功之后的操作就不知道了，所以这个函数是处理成功之后的操作的,没有参数,function(){}）
+	 *  callbackParam:可选,参数的处理函数,返回一个{};因为ajax的参数有时候比较复杂,需要单独的处理,function(){return {};}
+	 *  callbackSubParam:可选,参数处理的部分函数,返回一个{},还使用默认的参数处理,但是因为一些特殊的参数不好处理,就交给自定一的参数函数处理,最终将她们合并了，function(){return {};}
+	 *  
+	 *  
+	 * eoptions={},额外的参数:
+	 * 
+	 * progress.text:可选,ajax调用前的提示信息,
+	 * 
+	 * 
+	 */
+	this.save = function(save_a,eoptions){
+		//1.找到form表单
+		var $form = _this.getForm(save_a);
 		if($form==undefined){
 			return;
 		}
-		//3.提交
-		//valid
-		//处理返回结果
-		//提示
-		//是否要关闭dialog
+		//2.验证form表单
+		if(!ExtraAjax.validForm($form))return;
+		
+		//3.ajax参数收集
+		var ajaxOptions = ExtraAjax.ajaxOptions($form,eoptions);
+		
+		//设置默认的回调函数
+		ajaxOptions["defaultCallbackSuccess"] = _this.ajaxSuccessDialog;
+		
+		//4.ajax调用
+		ExtraAjax.ajax(ajaxOptions);
+	}
+		
+	/**
+	 * ajax调用成功后执行的方法
+	 * result:ajax成功返回的值
+	 * options,可能携带了一些东西
+	 */
+	this.ajaxSuccessDialog = function(result,options){
+		try{
+			//1.后台是否执行成功
+			if(result.success){
+				var msg = "保存成功.";
+				if(!Extra.isEmpty(result,"msg"))msg=result["msg"];
+				
+				//提示
+				$.messager.alert("成功提示",msg,"info");
+				
+				//额外工作
+				_this.close();
+				
+				//额外函数调用
+				if(!Extra.isEmpty(options,"callbackSubSuccess")){
+					var callbackSubSuccess = options["callbackSubSuccess"];
+					callbackSubSuccess();
+				}				
+			}else{
+				var msg = "保存失败.";
+				if(!Extra.isEmpty(result,"msg"))msg = result["msg"];
+				
+				//提示
+				$.messager.alert("失败提示",msg,"error");
+			}
+		}catch(e){}
 	}
 	
 	/**
@@ -132,7 +168,7 @@ function DialogExtra(dialogId_,options_){
 	 * selector=[a[tag='close'],a[tag='closeAndTip']]
 	 */
 	this.btClose = function(){
-		if(!_this.isEmpty(_this.options(),"buttons")){
+		if(!Extra.isEmpty(_this.options(),"buttons")){
 			//绑定bt中的close事件,直接关闭dialog
 			
 			$(_this.options()["buttons"]).find("a[tag='close']").each(function(){
@@ -162,7 +198,7 @@ function DialogExtra(dialogId_,options_){
 	 * selector=a[tag='save'] or a[tag='update']
 	 */
 	this.btSave = function(){
-		if(!_this.isEmpty(_this.options(),"buttons")){
+		if(!Extra.isEmpty(_this.options(),"buttons")){
 			//绑定bt中的保存事件,
 			$(_this.options()["buttons"]).find("a[tag='save']").each(function(){
 				if($(this).attr("bindclick")==undefined){					
@@ -215,7 +251,7 @@ function DialogExtra(dialogId_,options_){
 	 * eventName事件名称,
 	 */
 	this.bindEvent = function(eventName){
-		if(_this.isEmpty(eventName)){
+		if(Extra.isEmpty(eventName)){
 			return false;
 		}
 		switch(eventName){
