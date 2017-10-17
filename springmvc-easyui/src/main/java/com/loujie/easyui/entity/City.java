@@ -7,23 +7,19 @@ public class City implements Serializable {
 
 	private static final long serialVersionUID = -8953992750396305155L;
 
-	private Integer id;// 主键,自增Id
+	private Integer id;//
 
-	private String name;// 城市名称
+	private Integer parentId;//
 
-	private String nameInt;// 外文城市名称
+	private String name;
 
-	private Long type;// 类型
+	private Integer level;//
 
-	private Integer countryId;// 国家Id
+	private String abbr;//
 
-	private Integer sort;// 排序
+	private Date createdAt;//
 
-	private Integer status;// 状态:0=无效;1=正常
-
-	private Date createdAt;// 创建时间
-
-	private Date updatedAt;// 更新时间
+	private Date updatedAt;//
 
 	public Integer getId() {
 		return id;
@@ -31,6 +27,14 @@ public class City implements Serializable {
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	public Integer getParentId() {
+		return parentId;
+	}
+
+	public void setParentId(Integer parentId) {
+		this.parentId = parentId;
 	}
 
 	public String getName() {
@@ -41,44 +45,20 @@ public class City implements Serializable {
 		this.name = name;
 	}
 
-	public String getNameInt() {
-		return nameInt;
+	public Integer getLevel() {
+		return level;
 	}
 
-	public void setNameInt(String nameInt) {
-		this.nameInt = nameInt;
+	public void setLevel(Integer level) {
+		this.level = level;
 	}
 
-	public Long getType() {
-		return type;
+	public String getAbbr() {
+		return abbr;
 	}
 
-	public void setType(Long type) {
-		this.type = type;
-	}
-
-	public Integer getCountryId() {
-		return countryId;
-	}
-
-	public void setCountryId(Integer countryId) {
-		this.countryId = countryId;
-	}
-
-	public Integer getSort() {
-		return sort;
-	}
-
-	public void setSort(Integer sort) {
-		this.sort = sort;
-	}
-
-	public Integer getStatus() {
-		return status;
-	}
-
-	public void setStatus(Integer status) {
-		this.status = status;
+	public void setAbbr(String abbr) {
+		this.abbr = abbr;
 	}
 
 	public Date getCreatedAt() {

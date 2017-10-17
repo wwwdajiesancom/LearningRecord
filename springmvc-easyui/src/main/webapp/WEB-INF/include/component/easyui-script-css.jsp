@@ -20,5 +20,8 @@
 	
 	
 <%-- easyui-1.3.5-css --%>
-<link type="text/css" rel="stylesheet" href="${easyuiContextPath}/${easyuiDirPath}/themes/default/easyui.css" />
+<link type="text/css" rel="stylesheet" href="${easyuiContextPath}/${easyuiDirPath}/themes/bootstrap/easyui.css" />
 <link type="text/css" rel="stylesheet" href="${easyuiContextPath}/${easyuiDirPath}/themes/icon.css" />
+
+<link type="text/css" rel="stylesheet" href="${easyuiContextPath}/static/css/easyui-extra.css" />
+

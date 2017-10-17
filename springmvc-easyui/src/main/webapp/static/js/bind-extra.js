@@ -79,6 +79,14 @@ var BindExtra = {
 					a_val = "保存";
 				}
 				break;
+			case "save":
+				if(!Extra.isEmpty(options_,"value")){
+					a_val = options_["value"];
+					delete options_["value"];
+				}else{					
+					a_val = "更新";
+				}
+				break;	
 			case "close":
 				if(!Extra.isEmpty(options_,"value")){
 					a_val = options_["value"];
@@ -146,6 +154,55 @@ var BindExtra = {
 	},
 }
 
+var Easyui = {
+	createEasyuiDialog:function ($this){
+		// dialog的Id
+		var bind_id = Extra.guid();
+		// 1.找到相关的属性方法
+		var attr = $this.attr("attr");
+		// 格式化
+		var attrOptions = BindExtra.getAttr(attr);
+		// 弹出框的buttons属性
+		var buttons = $this.attr("buttons");
+		var buttons_html = BindExtra.getButtonsHtml(bind_id,buttons);
+		attrOptions["buttons"] = "#"+bind_id+"_bt";
+		
+		if(Extra.isEmpty(attrOptions,"href")){
+			attrOptions["href"] = $this.attr("fhref");
+		}
+		
+		// 2.给当前的容器增加一个dialog代码
+		// 生成dialog的Html
+		var dialog_html = BindExtra.createDialog(bind_id,attrOptions,buttons_html);
+		if($this.closest("div").length==0){
+			if($this.closest("body").length==0){
+				if($this.closest("form").length==0){
+					// 不知道父元素是什么,不做处理了
+					return false;
+				}else{
+					$this.closest("form").append(dialog_html);
+				}
+			}else{
+				$this.closest("body").append(dialog_html);
+			}
+		}else{
+			$this.closest("div").append(dialog_html);
+		}
+		
+		// 3.dialog初始化
+		//渲染bt
+		$.parser.parse("#" + bind_id + "_bt");
+		//生成dialog
+		$("#"+bind_id).dialog(attrOptions);
+
+		// 绑定其它的事件
+		try{
+		 	return new DialogExtra(bind_id);					
+		}catch(e){}
+		
+	}		
+};
+
 /**
  * easyui事件绑定方法
  * 例子:
@@ -156,7 +213,7 @@ var BindExtra = {
  * attr:存放属性;例子如下:attr="width:500px;height:250px;"
  * attr中的属性,最好别有（冒号，分号）,就是不要有多余的,除了必要的时候,不要带
  * 
- * buttons:存放dialog拥有的按钮,例子如下:buttons="save[value:保存],close[value:关闭;]"
+ * buttons:存放dialog拥有的按钮,例子如下:buttons="save[value:保存],close[value:关闭;],update"
  * buutons中不要带多余的东西,如果想修改a中的内容就按照close中的模版修改;value代表的是a中的内容,可以携带其它的属性,这些属性都会添加到a中
  * 
  * toolbar:存放dialog的最上面的按钮，例子:toolbar="add" 这个功能暂时不实现了
@@ -169,45 +226,7 @@ function easyui_dialog_event_bind(){
 		if($(this).attr("bindclick")==undefined){
 			$(this).attr("bindclick",true);
 			$(this).bind("click",function(){
-				// dialog的Id
-				var bind_id = Extra.guid();
-				// 1.找到相关的属性方法
-				var attr = $(this).attr("attr");
-				// 格式化
-				var attrOptions = BindExtra.getAttr(attr);
-				// 弹出框的buttons属性
-				var buttons = $(this).attr("buttons");
-				var buttons_html = BindExtra.getButtonsHtml(bind_id,buttons);
-				attrOptions["buttons"] = "#"+bind_id+"_bt";
-				
-				// 2.给当前的容器增加一个dialog代码
-				// 生成dialog的Html
-				var dialog_html = BindExtra.createDialog(bind_id,attrOptions,buttons_html);
-				if($(this).closest("div").length==0){
-					if($(this).closest("body").length==0){
-						if($(this).closest("form").length==0){
-							// 不知道父元素是什么,不做处理了
-							return false;
-						}else{
-							$(this).closest("form").append(dialog_html);
-						}
-					}else{
-						$(this).closest("body").append(dialog_html);
-					}
-				}else{
-					$(this).closest("div").append(dialog_html);
-				}
-				
-				// 3.dialog初始化
-				//渲染bt
-				$.parser.parse("#" + bind_id + "_bt");
-				//生成dialog
-				$("#"+bind_id).dialog(attrOptions);
-
-				// 绑定其它的事件
-				try{
-					new DialogExtra(bind_id);					
-				}catch(e){}
+				Easyui.createEasyuiDialog($(this));
 				return false;
 			});		
 		}
@@ -226,7 +245,7 @@ function easyui_dialog_event_bind(){
 function easyui_input_bind(){
 	$(":input[zauto='true']").each(function(){
 		$(this).attr("zauto","false");
-		$(this).css("height","25px").css("width","220px");
+		$(this).addClass("ztextbox");
 	});
 	
 }

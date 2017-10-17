@@ -2,9 +2,15 @@
 	pageEncoding="utf-8"%>
 <script type="text/javascript"
 	src="${contextPath}/static/js/exec-bind.js"></script>
-
-
-<form action="${contextPath}/ajax/dialog/view.json" id="from_id" method="post" callbackSuccess="" callbackSubSuccess="" callbackParam="" callbackSubParam="">
+<script type="text/javascript">
+<!--
+	function test_gatagrid_valid(){
+		alert("abc");
+		return false;
+	}
+//-->
+</script>
+<form action="${contextPath}/ajax/datagrid/add.json" id="from_id" method="post" callbackValid="" callbackSuccess="" callbackSubSuccess="" callbackParam="" callbackSubParam="">
 	<table>
 		<tr>
 			<td>姓名：</td>

@@ -225,6 +225,76 @@ var Extra = {
 				if(this.isEmpty(json[keys[i]])){return "";}
 				return getVal(json[keys[i]],keys,i+1);
 			}
+		},formatDate:function(nowDate,format){
+			if(this.isEmpty(nowDate)){
+				return nowDate;
+			}
+			var value = "";
+			try{
+				var l_nowDate = nowDate;
+				if(l_nowDate==undefined){
+					l_nowDate = new Date();
+				}
+				l_nowDate = new Date(l_nowDate);
+				var l_year = l_nowDate.getFullYear();		
+				var l_month = l_nowDate.getMonth()+1;
+				if(l_month<10)l_month = "0" + l_month;		
+				var l_day = l_nowDate.getDate();
+				if(l_day<10)l_day = "0"+l_day;		
+				var l_hours = l_nowDate.getHours();
+				if(l_hours<10)l_hours = "0"+l_hours;		
+				var l_minutes = l_nowDate.getMinutes();
+				if(l_minutes<10)l_minutes = "0"+l_minutes;		
+				var l_seconds = l_nowDate.getSeconds();
+				if(l_seconds<10)l_seconds = "0"+l_seconds;		
+				var _format = format;
+				
+				if(_format==undefined){
+					_format = 'yyyy-MM-dd';
+				}
+				var _formats = _format.split(' ');
+				var _f1;
+				var _f2;
+				if(_formats.length==2){
+					_f1 = _formats[0].split('-');
+					_f2 = _formats[1].split(':');
+				}
+				if(_formats.length==1){
+					if(_formats[0].split('-').length>1){
+						_f1 = _formats[0].split('-');	
+					}else{
+						_f2 = _formats[0].split(':');	
+					}
+				}
+				function l_switch(key){
+					switch(key){
+						case 'yyyy':return l_year;
+						case 'MM':return l_month;
+						case 'dd':return l_day;
+						case 'HH':return l_hours;
+						case 'mm':return l_minutes;
+						case 'ss':return l_seconds;
+					};
+				}
+				if(_f1!=undefined&&_f1.length>0){
+					for(var i in _f1){
+						value += l_switch(_f1[i]);
+						if(parseInt(i)!=(_f1.length-1)){
+							value += '-';
+						}
+					}
+				}
+				if(_f2!=undefined&&_f2.length>0){
+					if(value!=''){value += ' ';}
+					for(var j in _f2){
+						value += l_switch(_f2[j]);
+						if(parseInt(j)!=(_f2.length-1)){
+							value += ':';
+						}
+					}
+				}
+			}catch(e){}
+			return value;
 		},
 };
 
@@ -236,7 +306,13 @@ var ExtraAjax = {
 		 * 	validType:easyui,验证方式
 		 */
 		validForm : function($form,options){
-			//验证分为不同的方式,可以是easyui的验证,也可以是其它插件的,当前的情况我们只写一种就是easyui的验证
+			//1.看是否存在验证函数
+			if(!Extra.isEmpty($form.attr("callbackValid"))){
+				var callbackValid = $form.attr("callbackValid");
+				callbackValid = eval(callbackValid);
+				return callbackValid();
+			}
+			//2.验证分为不同的方式,可以是easyui的验证,也可以是其它插件的,当前的情况我们只写一种就是easyui的验证
 			//1.设置验证方式
 			var validType = "easyui";
 			if(!Extra.isEmpty(options,"validType")){
@@ -280,7 +356,7 @@ var ExtraAjax = {
 						data = callbackSubParam();
 					}
 					//form表单中的
-					var params = $form.serializeArray();
+					var params = $form.find(":input[name]:enabled").serializeArray();
 					if(params.length>0){
 						for(var i in params){
 							var item = params[i];

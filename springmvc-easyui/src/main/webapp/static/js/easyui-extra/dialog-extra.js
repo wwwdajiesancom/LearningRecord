@@ -10,7 +10,12 @@ function DialogExtra(dialogId_,options_){
 	//1.定义一些常用的变量
 	var _this = this;//当前function
 	this.id = "#"+dialogId_;//dialog的Id
-	
+	this.envOptions = {
+			success_msg:"保存成功.",
+			fail_msg:"保存失败.",
+			evnCallbackSuccess:function(){},
+			evnCallbackFail:function(){}
+	};
 	//2.定义一些常用的方法
 	
 	/**
@@ -75,6 +80,10 @@ function DialogExtra(dialogId_,options_){
 	
 	/**
 	 * 保存form表单信息
+	 * form的例子：
+	 * <form action="${contextPath}/ajax/dialog/view.json" id="from_id" contentType="" method="post" callbackValid="" callbackSuccess="" callbackSubSuccess="" callbackParam="" callbackSubParam="">
+
+	 * 
 	 * selector=a[tag='save'];选择器
 	 * 可扩展,
 	 * form_id:save标签的一个属性,标记是一个form表单的id
@@ -86,7 +95,7 @@ function DialogExtra(dialogId_,options_){
 	 *  callbackSubSuccess:可选,使用默认的回调函数,但是在后台执行成功的时候,调用该回调函数（解释：默认的函数可以处理固定的结构，但是成功之后的操作就不知道了，所以这个函数是处理成功之后的操作的,没有参数,function(){}）
 	 *  callbackParam:可选,参数的处理函数,返回一个{};因为ajax的参数有时候比较复杂,需要单独的处理,function(){return {};}
 	 *  callbackSubParam:可选,参数处理的部分函数,返回一个{},还使用默认的参数处理,但是因为一些特殊的参数不好处理,就交给自定一的参数函数处理,最终将她们合并了，function(){return {};}
-	 *  
+	 *  callbackValid:验证函数,作为form表单的验证,function(){return false;}
 	 *  
 	 * eoptions={},额外的参数:
 	 * 
@@ -112,7 +121,7 @@ function DialogExtra(dialogId_,options_){
 		//4.ajax调用
 		ExtraAjax.ajax(ajaxOptions);
 	}
-		
+	
 	/**
 	 * ajax调用成功后执行的方法
 	 * result:ajax成功返回的值
@@ -122,7 +131,7 @@ function DialogExtra(dialogId_,options_){
 		try{
 			//1.后台是否执行成功
 			if(result.success){
-				var msg = "保存成功.";
+				var msg = _this.envOptions["success_msg"];
 				if(!Extra.isEmpty(result,"msg"))msg=result["msg"];
 				
 				//提示
@@ -135,13 +144,24 @@ function DialogExtra(dialogId_,options_){
 				if(!Extra.isEmpty(options,"callbackSubSuccess")){
 					var callbackSubSuccess = options["callbackSubSuccess"];
 					callbackSubSuccess();
-				}				
+				}
+				
+				//环境定义的函数
+				if(!Extra.isEmpty(_this.envOptions,"evnCallbackSuccess")){
+					_this.envOptions["evnCallbackSuccess"]();
+				}
+				
 			}else{
-				var msg = "保存失败.";
+				var msg = _this.envOptions["fail_msg"];
 				if(!Extra.isEmpty(result,"msg"))msg = result["msg"];
 				
 				//提示
 				$.messager.alert("失败提示",msg,"error");
+				
+				//环境定义的函数
+				if(!Extra.isEmpty(_this.envOptions,"evnCallbackFail")){
+					_this.envOptions["evnCallbackFail"]();
+				}
 			}
 		}catch(e){}
 	}
@@ -150,9 +170,10 @@ function DialogExtra(dialogId_,options_){
 	 * 更新form表单
 	 * 可扩展,
 	 */
-	this.update = function(){
-		
-		_this.save();
+	this.update = function(a_update){
+		var eoptions = {};
+		eoptions["progress.text"] = "更新中....";
+		_this.save(a_update);
 	}
 	
 	
@@ -168,10 +189,10 @@ function DialogExtra(dialogId_,options_){
 	 * selector=[a[tag='close'],a[tag='closeAndTip']]
 	 */
 	this.btClose = function(){
-		if(!Extra.isEmpty(_this.options(),"buttons")){
+		var options = _this.options();
+		if(!Extra.isEmpty(options,"buttons")){
 			//绑定bt中的close事件,直接关闭dialog
-			
-			$(_this.options()["buttons"]).find("a[tag='close']").each(function(){
+			$(options["buttons"]).find("a[tag='close']").each(function(){
 				if($(this).attr("bindclick")==undefined){					
 					$(this).attr("bindclick",true).bind('click',function(){
 						_this.close();
@@ -179,7 +200,7 @@ function DialogExtra(dialogId_,options_){
 				}
 			});
 			//绑定bt中的closeAndTip事件,关闭dialog并提示
-			$(_this.options()["buttons"]).find("a[tag='closeAndTip']").each(function(){
+			$(options["buttons"]).find("a[tag='closeAndTip']").each(function(){
 				if($(this).attr("bindclick")==undefined){
 					$(this).attr("bindclick",true).bind('click',function(){
 						//TODO tip,提示
@@ -198,9 +219,10 @@ function DialogExtra(dialogId_,options_){
 	 * selector=a[tag='save'] or a[tag='update']
 	 */
 	this.btSave = function(){
-		if(!Extra.isEmpty(_this.options(),"buttons")){
+		var options = _this.options();
+		if(!Extra.isEmpty(options,"buttons")){
 			//绑定bt中的保存事件,
-			$(_this.options()["buttons"]).find("a[tag='save']").each(function(){
+			$(options["buttons"]).find("a[tag='save']").each(function(){
 				if($(this).attr("bindclick")==undefined){					
 					$(this).attr("bindclick",true).bind('click',function(){
 						_this.save($(this));
@@ -208,7 +230,7 @@ function DialogExtra(dialogId_,options_){
 				}
 			});
 			//绑定bt中的更新事件,
-			$(_this.options()["buttons"]).find("a[tag='update']").each(function(){
+			$(options["buttons"]).find("a[tag='update']").each(function(){
 				if($(this).attr("bindclick")==undefined){					
 					$(this).attr("bindclick",true).bind('click',function(){
 						_this.update($(this));

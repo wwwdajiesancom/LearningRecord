@@ -8,24 +8,41 @@ package com.loujie.util.page;
  */
 public class PageCon extends BaseDto {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -3062178248154198511L;
 
-	protected Integer page_number;// 第几页,默认0
+	private static final int default_page_size = 20;// 默认一页显示条数
 
-	protected Integer page_size;// 每页多少条,默认36
+	private static final int default_page_number_diff = 0;// 如果默认页数从1开始就为0;如果从0开始就为1
+
+	protected Integer page_number;// 第几页,默认1
+
+	protected Integer page_size;// 每页多少条,默认default_page_size
 
 	protected String sort;// 那个字段排序
 
 	protected String order;// 如何排序
 
+	public void setPage(Integer page) {
+		this.setPageNum(page);
+	}
+
+	public Integer getPage() {
+		return this.getPageNum();
+	}
+
+	public void setRows(Integer rows) {
+		this.setPageSize(rows);
+	}
+
+	public Integer getRows() {
+		return this.getPageSize();
+	}
+
 	public Integer getPageNum() {
 		if (this.page_number == null || this.page_number < 0) {
 			return 1;
 		}
-		return (page_number + 1);
+		return (page_number + default_page_number_diff);
 	}
 
 	public void setPageNum(Integer page_number) {
@@ -34,7 +51,7 @@ public class PageCon extends BaseDto {
 
 	public Integer getPageSize() {
 		if (this.page_size == null || this.page_size <= 0) {
-			return 36;
+			return default_page_size;
 		}
 		return page_size;
 	}

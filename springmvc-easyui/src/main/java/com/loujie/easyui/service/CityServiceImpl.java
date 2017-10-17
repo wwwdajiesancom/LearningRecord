@@ -11,6 +11,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.loujie.easyui.dao.CityDao;
 import com.loujie.easyui.entity.City;
+import com.loujie.easyui.param.QueryCityParam;
 import com.loujie.util.page.PageCon;
 import com.loujie.util.page.PageResult;
 
@@ -20,11 +21,13 @@ public class CityServiceImpl {
 	@Resource
 	private CityDao cityDao;
 
-	public PageResult findPage(PageCon pageCon) {
+	public PageResult findPage(QueryCityParam param) {
 
 		Map<String, Object> conditionMap = new HashMap<>();
+		conditionMap.put("ElikeName", param.getName());
+		conditionMap.put("id", param.getId());
 
-		Page<Object> page = PageHelper.startPage(pageCon.getPageNum(), pageCon.getPageSize());
+		Page<Object> page = PageHelper.startPage(param.getPageNum(), param.getPageSize());
 
 		cityDao.findList(conditionMap);
 

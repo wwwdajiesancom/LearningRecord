@@ -11,18 +11,19 @@
 	<!-- 3.需要查询的字段及添加、排序 -->
 	<sql id="column">
 		a.`id`,
+		a.`parent_id`,
 		a.`name`,
-		a.`name_int`,
-		a.`type`,
-		a.`country_id`,
-		a.`sort`,
-		a.`status`,
+		a.`level`,
+		a.`abbr`,
 		a.`created_at`,
 		a.`updated_at`
 	</sql>
 
 	<!-- 3.2查询条件 -->
 	<sql id="where">
+		<if test="ElikeName != null and ElikeName != ''">
+			and a.name like concat('%',#{ElikeName},'%')
+		</if>
 		<if test="id != null">
 			and a.id = #{id}
 		</if>

@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.loujie.easyui.entity.City;
+import com.loujie.easyui.param.QueryCityParam;
 import com.loujie.easyui.service.CityServiceImpl;
-import com.loujie.util.page.PageCon;
 import com.loujie.util.page.PageResult;
 
 @Controller
@@ -20,7 +20,7 @@ public class TestController {
 
 	@RequestMapping(value = "/list")
 	@ResponseBody
-	public Object List(PageCon pageCon) {
+	public Object List(QueryCityParam pageCon) {
 		try {
 			PageResult pageResult = cityServiceImpl.findPage(pageCon);
 			return pageResult;
