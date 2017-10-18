@@ -79,7 +79,7 @@ var BindExtra = {
 					a_val = "保存";
 				}
 				break;
-			case "save":
+			case "update":
 				if(!Extra.isEmpty(options_,"value")){
 					a_val = options_["value"];
 					delete options_["value"];

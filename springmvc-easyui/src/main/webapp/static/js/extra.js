@@ -9,6 +9,22 @@ var Extra = {
 			return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
 		},
 		/**
+		 * 获取href中的参数
+		 * 例如：http://www.loujie.com/test/{id}?name={name}&age={age}
+		 * 获取id,name,age
+		 */
+		getHrefParam:function(href){
+			var result = [];
+			if(!this.isEmpty(href)){
+				var reg = /\{([\w\d_]+)\}/ig;
+				var r = "";
+				while(r=reg.exec(href)){
+					result.push(r[1]);
+				}
+			}
+			return result;
+		},
+		/**
 		 * 转换成int类型
 		 */
 		int:function(str){
@@ -390,7 +406,6 @@ var ExtraAjax = {
 			var options = {};
 			
 			//1.额外参数
-			options["progress.text"] = "保存中...";
 			if(!Extra.isEmpty(eoptions,"progress.text")){
 				options["progress.text"] = eoptions["progress.text"];
 			}
@@ -481,16 +496,48 @@ var ExtraAjax = {
 						if(!Extra.isEmpty(options,"callbackSuccess")){
 							eval(options["callbackSuccess"])(result);
 						}else{						
-							options["defaultCallbackSuccess"](result,options);
+							if(!Extra.isEmpty(options,"defaultCallbackSuccess")){
+								options["defaultCallbackSuccess"](result,options);
+							}else{
+								ExtraAjax.ajaxSuccess(result,options);
+							}
 						}
 					}catch(e){
-						console.log(e);
+						console.log("Extra.ajax:"+e);
 					}
 				},
 				error : function(xhr, textStatus, errorThrown) {
-					this.ajaxError();
+					ExtraAjax.ajaxError();
 				},
 			});
 		},
+		/**
+		 * ajax调用成功后执行的方法 result:ajax成功返回的值 options,可能携带了一些东西
+		 */
+		ajaxSuccess : function(result, options) {
+			try {
+				// 1.后台是否执行成功
+				if (result.success) {
+					var msg = "成功";
+					if(!Extra.isEmpty(options,"success_msg"))msg=options["success_msg"];
+					if (!Extra.isEmpty(result, "msg")){msg = result["msg"];}						
+					// 提示
+					$.messager.alert("成功提示", msg, "info");
+					// 额外函数调用
+					if (!Extra.isEmpty(options, "callbackSubSuccess")) {
+						var callbackSubSuccess = options["callbackSubSuccess"];
+						callbackSubSuccess();
+					}
+				} else {
+					var msg = "失败";
+					if(!Extra.isEmpty(options,"fail_msg"))msg=options["fail_msg"];
+					if (!Extra.isEmpty(result, "msg")){msg = result["msg"];}						
+					// 提示
+					$.messager.alert("失败提示", msg, "error");					
+				}
+			} catch (e) {
+				console.log("Extra.ajaxSucess:"+e);
+			}
+		}
 		
 };

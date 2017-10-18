@@ -58,7 +58,7 @@
 		var columns = [ [ {
 			title : "代码",
 			field : "id",
-			sortable:true,
+			checkbox:true,
 		}, {
 			title : "名称",
 			field : "name",
@@ -94,9 +94,10 @@
 	<!-- datagrid的toolbar部分代码 -->
 	<div id="${test_datagrid}_tb"  style="display: none;">
 		<div>
+			<a href="#" fhref="${contextPath}/jsp/dialog/view.html?id={id}" attr="title:添加测试;width:350;height:250;" buttons="close" class="easyui-linkbutton" tag="view" >视图</a>
 			<a href="#" fhref="${contextPath}/jsp/datagrid/add.html" attr="title:添加测试;width:350;height:250;" buttons="save,close" class="easyui-linkbutton" tag="add" >添加</a>
-			<a href="#" fhref="${contextPath}/jsp/datagrid/update.html" attr="width:350;height:250;" buttons="save[value:修改],close" class="easyui-linkbutton" tag="update" >修改</a>
-			<a href="#" class="easyui-linkbutton" tag="deletes" >删除</a>		
+			<a href="#" fhref="${contextPath}/jsp/datagrid/update.html?id={id}" attr="width:350;height:250;" buttons="update[value:修改],close" class="easyui-linkbutton" tag="update" >修改</a>
+			<a href="#" class="easyui-linkbutton" tag="deletes" action="${contextPath}/ajax/datagrid/delete.json?ids={id}" >删除</a>		
 		</div>
 		<div>
 			<table id="${test_datagrid}_tb_search">

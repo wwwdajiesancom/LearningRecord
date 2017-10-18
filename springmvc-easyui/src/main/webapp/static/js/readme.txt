@@ -15,9 +15,9 @@ dialog-extra.js
 			this.envOptions = {
 				success_msg : "保存成功.",//做为一个成功时默认提示
 				fail_msg : "保存失败.",//做为一个失败时默认提示
-				evnCallbackSuccess : function() {
+				callbackPostSuccess : function() {
 				},//在执行完所有的成功方法后,执行它,算是一个后置成功函数
-				evnCallbackFail : function() {
+				callbackPostFail : function() {
 				},//在执行完所有的失败方法后,执行它,算是一个后置成功函数
 				defaultCallbackSuccess:_this.ajaxSuccessDialog(result,{})//默认ajaxSuccess方法
 			};

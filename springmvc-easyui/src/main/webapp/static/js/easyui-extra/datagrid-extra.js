@@ -156,7 +156,7 @@ function DatagridExtra(datagridId,options_,eoptions_){
 				ctrlSelect:false,// 是否要启动Ctrl键,进行多选；不过在singleSelect=true时失效
 				
 				// 与选择checkbox有关系
-				checkOnSelect:false,// 如果为true，当用户点击行的时候该复选框就会被选中或取消选中。
+				checkOnSelect:true,// 如果为true，当用户点击行的时候该复选框就会被选中或取消选中。
 									// 如果为false，当用户仅在点击该复选框的时候才会呗选中或取消。
 				selectOnCheck:false,// 如果为true，单击复选框将永远选择行。
 									// 如果为false，选择行将不选中复选框。
@@ -306,10 +306,9 @@ function DatagridExtra(datagridId,options_,eoptions_){
 		//1.弹出dialog
 		var dialog = Easyui.createEasyuiDialog($this,{});
 		
-		//2.添加一些额外操作
-		dialog.envOptions["evnCallbackSuccess"] = function(){
+		//2.添加后置函数
+		dialog.envOptions["callbackPostSuccess"] = function(){
 			_this.reload();
-			alert("add.datagrid.reload();");
 		}
 		return false;		
 	}
@@ -331,16 +330,43 @@ function DatagridExtra(datagridId,options_,eoptions_){
 	}
 	
 	/**
+	 * 处理href,返回正常的数据信息
+	 */
+	this.hrefHandler = function(href,rowData){
+		var params = Extra.getHrefParam(href);
+		for(var i in params){
+			href = Extra.replaceAll(href,"{"+params[i]+"}",rowData[params[i]]);
+		}
+		return href;
+	}
+	
+	/**
 	 * 更新
 	 */
 	this.update = function($this){
-		//1.弹出dialog
-		var dialog = Easyui.createEasyuiDialog($this);
-		//2.添加一些额外操作
-		dialog.envOptions["evnCallbackSuccess"] = function(){
-			_this.reload();
-			alert("update.datagrid.reload();");
+		//1.可以用getChecked方法,不过谨慎考虑选择了用getSelections
+		var selectArr = $(_this.id).datagrid('getSelections');// 我们用这个
+		if(selectArr.length==0){selectArr = $(_this.id).datagrid('getChecked');}
+		if (selectArr.length != 1) {
+			$.messager.alert('警告', '请选中一行要修改的数据！', 'warning');
+			return false;
 		}
+		
+		//2.定一个url处理函数
+		var options = {
+			callbackHref:function(href){
+				return _this.hrefHandler(href,selectArr[0]);
+			}
+		};
+		
+		//1.弹出dialog
+		var dialog = Easyui.createEasyuiDialog($this,options);
+		
+		//2.添加后置函数
+		dialog.envOptions["callbackPostSuccess"] = function(){
+			_this.reload();
+		}
+		
 		return false;
 	}
 	
@@ -361,11 +387,36 @@ function DatagridExtra(datagridId,options_,eoptions_){
 	}
 	
 	/**
-	 * 视图
+	 * 视图的显示
+	 * 
+	 * 获取了参数，
+	 * 弹出了框
+	 * 
 	 */
-	this.view = function($this){
+	this.view = function($this){		
+		//1.可以用getChecked方法,不过谨慎考虑选择了用getSelections
+		var selectArr = $(_this.id).datagrid('getSelections');// 我们用这个
+		if(selectArr.length==0){selectArr = $(_this.id).datagrid('getChecked');}
+		if (selectArr.length != 1) {
+			$.messager.alert('警告', '请选中一行要显示的数据！', 'warning');
+			return false;
+		}
+		
+		//2.定一个url处理函数
+		var options = {
+			callbackHref:function(href){
+				return _this.hrefHandler(href,selectArr[0]);
+			}
+		};
+		
 		//1.弹出dialog
-		var dialog = Easyui.createEasyuiDialog($this);
+		var dialog = Easyui.createEasyuiDialog($this,options);	
+		
+		//2.添加后置函数,这里面它是不需要这个函数的,不过为了保险起见,还是加上去了
+		dialog.envOptions["callbackPostSuccess"] = function(){
+			_this.reload();
+		}
+		
 		return false;
 	}
 	
@@ -385,8 +436,54 @@ function DatagridExtra(datagridId,options_,eoptions_){
 		}
 	}
 	
+	/**
+	 * 批量删除
+	 * 
+	 * 绑定到此按钮上默认是有提示的,tip=true
+	 * 
+	 */
 	this.deletes = function($this){
+		//1.可以用getSelections方法,不过谨慎考虑选择了用getChecked
+		var checkedArr = $(_this.id).datagrid('getChecked');// 我们用这个
+		if (checkedArr.length <= 0) {
+			$.messager.alert('警告', '请至少选择一行要删除的数据！', 'warning');
+			return false;
+		}
 		
+		//2.删除
+		$.messager.confirm('确认删除','您确定要删除选中的记录吗？',function(flag){
+			//1.是否要执行
+			if(!flag)return false;
+			//2.寻找ajax参数
+			var href = "";
+			if(!Extra.isEmpty($this.attr("fhref"))){href=$this.attr("fhref");}
+			if(!Extra.isEmpty($this.attr("action"))){href=$this.attr("action")}
+			
+			var params = Extra.getHrefParam(href);
+			for(var i in params){
+				var param = [];
+				for(var j in checkedArr){
+					param.push(checkedArr[j][params[i]]);
+				}
+				href=Extra.replaceAll(href,"{"+params[i]+"}",param.toString());
+			}			
+			var type="post";
+			if(!Extra.isEmpty($this.attr("method"))){type=$this.attr("method")}
+			
+			var options = {};
+			options["url"]=href;
+			options["type"]=type;
+			options["progress.text"]="删除中....";
+			options["callbackSubSuccess"]=function(result){
+				_this.reload();
+			}			
+			
+			//3.ajax调用
+			ExtraAjax.ajax(options);
+			
+		});
+		
+		return false;
 	}
 	
 	this.bindEvent = function(eventName){
@@ -402,6 +499,9 @@ function DatagridExtra(datagridId,options_,eoptions_){
 				break;
 			case "tbDeletes":
 				_this.tbDeletes();
+				break;
+			case "tbView":
+				_this.tbView();
 				break;
 		}
 		
@@ -442,6 +542,8 @@ function DatagridExtra(datagridId,options_,eoptions_){
 	this.bindEvent("tbUpdate");
 	//删除
 	this.bindEvent("tbDeletes");
+	//删除
+	this.bindEvent("tbView");
 }
 
 
