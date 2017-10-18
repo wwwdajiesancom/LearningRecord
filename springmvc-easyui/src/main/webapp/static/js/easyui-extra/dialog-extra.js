@@ -107,6 +107,7 @@ function DialogExtra(dialogId_, options_) {
 	 * 
 	 */
 	this.save = function(save_a, eoptions) {
+		if(Extra.isEmpty(eoptions)){eoptions={};}
 		// 1.找到form表单
 		var $form = _this.getForm(save_a);
 		if ($form == undefined) {

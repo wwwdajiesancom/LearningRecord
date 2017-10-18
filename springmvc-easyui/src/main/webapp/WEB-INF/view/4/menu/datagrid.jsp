@@ -76,12 +76,13 @@
 		
 		var options_ = {
 			title : "测试table",
-			
 			columns : columns,
 			
 		};
 		
 		var datagrid = new DatagridExtra("test_datagrid",options_);
+		
+		var datagrid2 = new DatagridExtra("test_datagrid2",options_);
 
 	});
 //-->
@@ -94,10 +95,39 @@
 	<!-- datagrid的toolbar部分代码 -->
 	<div id="${test_datagrid}_tb"  style="display: none;">
 		<div>
-			<a href="#" fhref="${contextPath}/jsp/dialog/view.html?id={id}" attr="title:添加测试;width:350;height:250;" buttons="close" class="easyui-linkbutton" tag="view" >视图</a>
-			<a href="#" fhref="${contextPath}/jsp/datagrid/add.html" attr="title:添加测试;width:350;height:250;" buttons="save,close" class="easyui-linkbutton" tag="add" >添加</a>
-			<a href="#" fhref="${contextPath}/jsp/datagrid/update.html?id={id}" attr="width:350;height:250;" buttons="update[value:修改],close" class="easyui-linkbutton" tag="update" >修改</a>
-			<a href="#" class="easyui-linkbutton" tag="deletes" action="${contextPath}/ajax/datagrid/delete.json?ids={id}" >删除</a>		
+			<a href="#" action="${contextPath}/jsp/dialog/view.html?id={id}" attr="title:添加测试;width:350;height:250;" buttons="save,close" class="easyui-linkbutton" tag="view" >视图</a>
+			<a href="#" action="${contextPath}/jsp/datagrid/add.html" attr="title:添加测试;width:350;height:250;" buttons="save,close" class="easyui-linkbutton" tag="add" >添加</a>
+			<a href="#" action="${contextPath}/jsp/datagrid/update.html?id={id}" attr="width:350;height:250;" buttons="update[value:修改],close" class="easyui-linkbutton" tag="update" >修改</a>
+			<a href="#" class="easyui-linkbutton" tag="deletes" action="${contextPath}/ajax/datagrid/delete.json?ids={id}&name={name}" >删除</a>		
+		</div>
+		<div>
+			<table id="${test_datagrid}_tb_search">
+				<tr>
+					<td>名称：</td>
+					<td>
+						<input type="text" name="name" zauto="true" />
+					</td>
+					<td>
+						编号：
+					</td>
+					<td>
+						<input type="text" name="id" zauto="true" />
+					</td>
+					<td>
+						<a href="#" class="easyui-linkbutton" tag="search" >查询</a>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	
+	<!-- datagrid的toolbar部分代码 -->
+	<div id="${test_datagrid}_tb2"  style="display: none;">
+		<div>
+			<a href="#" action="${contextPath}/jsp/dialog/view.html?id={id}" attr="title:添加测试;width:350;height:250;" buttons="save,close" class="easyui-linkbutton" tag="view" >视图</a>
+			<a href="#" action="${contextPath}/jsp/datagrid/add.html" attr="title:添加测试;width:350;height:250;" buttons="save,close" class="easyui-linkbutton" tag="add" >添加</a>
+			<a href="#" action="${contextPath}/jsp/datagrid/update.html?id={id}" attr="width:350;height:250;" buttons="update[value:修改],close" class="easyui-linkbutton" tag="update" >修改</a>
+			<a href="#" class="easyui-linkbutton" tag="deletes" action="${contextPath}/ajax/datagrid/delete.json?ids={id}&name={name}" >删除</a>		
 		</div>
 		<div>
 			<table id="${test_datagrid}_tb_search">
@@ -124,8 +154,12 @@
 	<table id="${datagridId}" toolbar="#${test_datagrid}_tb" action="${contextPath}/ajax/findpage.json">
 		
 	</table>
-
-
+	
+	<!-- datagrid代码 -->
+	<table id="${datagridId}2" toolbar="#${test_datagrid}_tb2" action="${contextPath}/ajax/findpage.json">
+		
+	</table>
+	
 	<%-- 
 		<table class="easyui-datagrid">
 			<!-- thead不可缺少 -->

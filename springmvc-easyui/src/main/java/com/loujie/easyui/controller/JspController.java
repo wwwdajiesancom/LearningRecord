@@ -18,6 +18,8 @@ public class JspController {
 	@RequestMapping(value = "/dialog/view")
 	public String dialogview(HttpServletRequest request, Model model) {
 
+		
+		
 		return dialogview;
 	}
 

@@ -62,6 +62,7 @@ public class AjaxController {
 
 		System.err.println(ids);
 		System.err.println(this.getClass().getName() + ".datagridDelete");
+		System.out.println(request.getParameter("name"));
 
 		ResultDto resultDto = new ResultDto();
 

@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <c:set var="easyuiDirPath" value="static/jquery-easyui-1.3.5"></c:set>
 <c:set var="easyuiContextPath" value="${pageContext.request.contextPath}"></c:set>
 

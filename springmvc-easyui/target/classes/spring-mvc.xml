@@ -10,7 +10,7 @@
 	<!-- 1.启动默认配置(它是启动了HandlerMapping,HandlerAdapter) -->
 	<mvc:annotation-driven></mvc:annotation-driven>
 	
-	<!-- 2.扫描包 -->
+	<!-- 2.扫描�? -->
 	<context:component-scan base-package="com.loujie.easyui" use-default-filters="false">
 		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
 	</context:component-scan>
@@ -24,10 +24,10 @@
 		<property name="suffix" value=".jsp" />
 	</bean>
 	
-	<!-- 5.配置一些静态的文件 -->
+	<!-- 5.配置�?些静态的文件 -->
 	<mvc:resources location="/static/" mapping="/static/**" />
 	
-	<!-- 6.拦截器 -->
+	<!-- 6.拦截�? -->
 	
 	<!-- 7.上传文件配置 -->
 	
