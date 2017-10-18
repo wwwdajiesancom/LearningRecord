@@ -26,7 +26,7 @@
 </head>
 <body>
 	
-	<a href="#" class="easyui-linkbutton" tag="dialog" buttons="save,close" attr="modal:true;width:350px;height: 250px;href:${contextPath}/jsp/dialog/view.html;">打开一个dialog</a>
+	<a href="#" class="easyui-linkbutton" tag="dialog" buttons="save,close" attr="modal:true;width:350px;height: 250px;href:${contextPath}/jsp/dialog/view.html;">动态创建一个dialog</a>
 	
 	<a href="#" class="easyui-linkbutton" id="open_dialog" >打开本页面的dialog</a>
 	

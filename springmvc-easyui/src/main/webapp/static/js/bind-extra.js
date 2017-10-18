@@ -154,8 +154,35 @@ var BindExtra = {
 	},
 }
 
+/**
+ * easyui的组件动态创建
+ */
 var Easyui = {
-	createEasyuiDialog:function ($this){
+	/**
+	 * $this,包含的属性：
+	 *例子：<a href="#" class="easyui-linkbutton" tag="dialog" buttons="save,close" attr="modal:true;width:350px;height: 250px;href:${contextPath}/jsp/dialog/view.html;">打开一个dialog</a> 
+	 * 
+	 * tag:dialog,标记它可以打开一个dialog
+	 * 
+	 * dialog加载内容所需的地址,有3种加载方式
+	 * fhref:打开的dialog中加载内容所用到的url地址
+	 * action:打开的dialog中加载内容所用到的url地址
+	 * attr="content:'http://www.baidu.com'",它主要是为了加载其它项目的地址的,上面的只能添加站内地址
+	 * 
+	 * attr,他是dialog的属性集合,例子:attr="width:200;height:200;modal:true;"
+	 * 
+	 * buttons:它是dialog下面的bt按钮集合,它里面只有3种值[save,update,close],其中save,update都会提交表单;close会关闭删除dialog
+	 * 例子:buttons="save,close[value:取消;formid:form_test_id;id:close_dialog_id]";其中value是标签的显示内容;其它的都是标签的属性
+	 * 
+	 * 
+	 * options_:{} 携带一些动态的处理
+	 * 
+	 * callbackHref：这是一个处理href参数的函数,function(href){return new_href;}
+	 * 
+	 * callbackDynamic：这是一个动态的函数,主要是为了处理dialog属性用的,function(attrOptions){}
+	 * 
+	 */
+	createEasyuiDialog:function ($this,options_){
 		// dialog的Id
 		var bind_id = Extra.guid();
 		// 1.找到相关的属性方法
@@ -167,8 +194,22 @@ var Easyui = {
 		var buttons_html = BindExtra.getButtonsHtml(bind_id,buttons);
 		attrOptions["buttons"] = "#"+bind_id+"_bt";
 		
-		if(Extra.isEmpty(attrOptions,"href")){
+		//两种设置href的方式
+		if(Extra.isEmpty(attrOptions,"href")&&!Extra.isEmpty($this.attr("fhref"))){
 			attrOptions["href"] = $this.attr("fhref");
+		}		
+		if(Extra.isEmpty(attrOptions,"href")&&!Extra.isEmpty($this.attr("action"))){
+			attrOptions["href"] = $this.attr("action");
+		}
+		
+		//有些href需要加工处理,所以外部提供了一个处理函数
+		if(!Extra.isEmpty(options_,"callbackHref")){
+			attrOptions["href"] = options_["callbackHref"](attrOptions["href"]);
+		}
+		
+		//动态的函数调用
+		if(!Extra.isEmpty(options_,"callbackDynamic")){
+			options_["callbackDynamic"](attrOptions);
 		}
 		
 		// 2.给当前的容器增加一个dialog代码
@@ -208,7 +249,7 @@ var Easyui = {
  * 例子:
  * <a href="#" class="easyui-linkbutton" tag="dialog" buttons="save,close" attr="modal:true;width:350px;height: 250px;href:${contextPath}/jsp/dialog/view.html;">打开一个dialog</a>
  * 
- * tag:目标,标记当前按钮想干什么,可以打开dialog等.[dialog,]
+ * tag:dialog,标记它可以打开一个dialog
  * 
  * attr:存放属性;例子如下:attr="width:500px;height:250px;"
  * attr中的属性,最好别有（冒号，分号）,就是不要有多余的,除了必要的时候,不要带
@@ -226,7 +267,7 @@ function easyui_dialog_event_bind(){
 		if($(this).attr("bindclick")==undefined){
 			$(this).attr("bindclick",true);
 			$(this).bind("click",function(){
-				Easyui.createEasyuiDialog($(this));
+				Easyui.createEasyuiDialog($(this),{});
 				return false;
 			});		
 		}

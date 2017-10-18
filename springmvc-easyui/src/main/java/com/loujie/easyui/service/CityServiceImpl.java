@@ -12,7 +12,6 @@ import com.github.pagehelper.PageHelper;
 import com.loujie.easyui.dao.CityDao;
 import com.loujie.easyui.entity.City;
 import com.loujie.easyui.param.QueryCityParam;
-import com.loujie.util.page.PageCon;
 import com.loujie.util.page.PageResult;
 
 @Service

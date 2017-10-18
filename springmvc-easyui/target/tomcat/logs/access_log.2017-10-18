@@ -1,0 +1,12 @@
+127.0.0.1 - - [18/Oct/2017:13:36:26 +0800] "GET / HTTP/1.1" 200 2672 http-bio-80-exec-1 3272
+127.0.0.1 - - [18/Oct/2017:13:36:26 +0800] "GET /static/js/extra.js HTTP/1.1" 304 - http-bio-80-exec-3 15
+127.0.0.1 - - [18/Oct/2017:13:36:26 +0800] "GET /static/css/easyui-extra.css HTTP/1.1" 304 - http-bio-80-exec-4 27
+127.0.0.1 - - [18/Oct/2017:13:36:27 +0800] "GET /static/css/easyui-extra.css HTTP/1.1" 200 117 http-bio-80-exec-8 15
+127.0.0.1 - - [18/Oct/2017:13:36:27 +0800] "GET /static/js/extra.js HTTP/1.1" 200 13822 http-bio-80-exec-7 17
+127.0.0.1 - - [18/Oct/2017:13:36:27 +0800] "GET /favicon.ico HTTP/1.1" 404 949 http-bio-80-exec-6 4
+127.0.0.1 - - [18/Oct/2017:13:36:29 +0800] "GET /easyui/4/menu/datagrid HTTP/1.1" 200 4152 http-bio-80-exec-6 559
+127.0.0.1 - - [18/Oct/2017:13:36:29 +0800] "GET /static/js/easyui-extra/datagrid-extra.js HTTP/1.1" 200 10888 http-bio-80-exec-5 6
+127.0.0.1 - - [18/Oct/2017:13:36:29 +0800] "GET /static/js/bind-extra.js HTTP/1.1" 200 9588 http-bio-80-exec-3 12
+127.0.0.1 - - [18/Oct/2017:13:36:29 +0800] "GET /static/js/easyui-extra/dialog-extra.js HTTP/1.1" 304 - http-bio-80-exec-6 7
+127.0.0.1 - - [18/Oct/2017:13:36:29 +0800] "GET /static/js/easyui-extra/dialog-extra.js HTTP/1.1" 200 8324 http-bio-80-exec-9 3
+127.0.0.1 - - [18/Oct/2017:13:36:30 +0800] "POST /ajax/findpage.json HTTP/1.1" 200 1242 http-bio-80-exec-8 1211

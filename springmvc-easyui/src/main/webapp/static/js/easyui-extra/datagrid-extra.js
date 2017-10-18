@@ -300,8 +300,12 @@ function DatagridExtra(datagridId,options_,eoptions_){
 	 * 
 	 */
 	this.add = function($this){
+		//0.可以设置一个前置处理url的函数
+		//也可以设置一个动态的处理属性的函数
+		
 		//1.弹出dialog
-		var dialog = Easyui.createEasyuiDialog($this);
+		var dialog = Easyui.createEasyuiDialog($this,{});
+		
 		//2.添加一些额外操作
 		dialog.envOptions["evnCallbackSuccess"] = function(){
 			_this.reload();
@@ -337,6 +341,31 @@ function DatagridExtra(datagridId,options_,eoptions_){
 			_this.reload();
 			alert("update.datagrid.reload();");
 		}
+		return false;
+	}
+	
+	/**
+	 * 绑定视图事件
+	 */
+	this.tbView = function(){
+		var options = _this.options();
+		if(!Extra.isEmpty(options,"toolbar")){
+			$(options["toolbar"]).find("a[tag='view']").each(function(){
+				if($(this).attr("bindclick")==undefined){					
+					$(this).attr("bindclick",true).bind('click',function(){
+						_this.view($(this));
+					});
+				}
+			});
+		}
+	}
+	
+	/**
+	 * 视图
+	 */
+	this.view = function($this){
+		//1.弹出dialog
+		var dialog = Easyui.createEasyuiDialog($this);
 		return false;
 	}
 	

@@ -24,8 +24,3 @@
 		</tr>
 	</table>
 </form>
-<script type="text/javascript">
-<!--
-	
-//-->
-</script>

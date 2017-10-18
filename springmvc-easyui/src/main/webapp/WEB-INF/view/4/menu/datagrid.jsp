@@ -7,14 +7,6 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <%@include file="/WEB-INF/include/component/easyui-script-css.jsp"%>
 
-<script type="text/javascript"
-	src="${contextPath}/static/js/easyui-extra/dialog-extra.js"></script>
-<script type="text/javascript"
-	src="${contextPath}/static/js/easyui-extra/datagrid-extra.js"></script>
-
-<script type="text/javascript"
-	src="${contextPath}/static/js/bind-extra.js"></script>
-
 <title>easyui-分页table(datagrid)</title>
 <script type="text/javascript">
 <!--
@@ -87,9 +79,6 @@
 			
 			columns : columns,
 			
-			multiSort:true,
-			
-			
 		};
 		
 		var datagrid = new DatagridExtra("test_datagrid",options_);
@@ -99,9 +88,10 @@
 </script>
 </head>
 <body>
-
+	<!-- 设置datagrid的Id -->
 	<c:set value="test_datagrid" var="datagridId"></c:set>
-
+	
+	<!-- datagrid的toolbar部分代码 -->
 	<div id="${test_datagrid}_tb"  style="display: none;">
 		<div>
 			<a href="#" fhref="${contextPath}/jsp/datagrid/add.html" attr="title:添加测试;width:350;height:250;" buttons="save,close" class="easyui-linkbutton" tag="add" >添加</a>
@@ -129,6 +119,7 @@
 		</div>
 	</div>
 	
+	<!-- datagrid代码 -->
 	<table id="${datagridId}" toolbar="#${test_datagrid}_tb" action="${contextPath}/ajax/findpage.json">
 		
 	</table>

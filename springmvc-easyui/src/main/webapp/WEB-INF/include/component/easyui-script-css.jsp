@@ -17,6 +17,16 @@
 	
 <%-- 自己定义的扩展js --%>
 <script type="text/javascript" src="${easyuiContextPath}/static/js/extra.js"></script>
+
+<%-- 自定义的一些封装好的方法 --%>
+<script type="text/javascript"
+	src="${contextPath}/static/js/easyui-extra/dialog-extra.js"></script>
+<script type="text/javascript"
+	src="${contextPath}/static/js/easyui-extra/datagrid-extra.js"></script>
+
+<%-- 一些绑定 --%>
+<script type="text/javascript"
+	src="${contextPath}/static/js/bind-extra.js"></script>
 	
 	
 <%-- easyui-1.3.5-css --%>
