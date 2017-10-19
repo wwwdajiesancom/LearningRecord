@@ -3,6 +3,12 @@
  */
 var Row = {
 	/**
+	 * 根据datagrid中的一个小元素获取datagridTable对象
+	 */
+	getDatagridTable:function($this){
+		return $($this).closest("div.datagrid").find("table[id][binddatagrid]");
+	},
+	/**
 	 * 视图展示
 	 * 在a标签中使用,绑定到click事件上
 	 * <a href="#" 
@@ -11,7 +17,7 @@ var Row = {
 	 *		fhref=""        它需要是真路径,不能包含了参数
 	 *		action="" 
 	 *		buttons="save,close" 
-	 *		attr="modal:true;width:350px;height: 250px;href:${contextPath}/jsp/dialog/view.html;"
+	 *		params="modal:true;width:350px;height: 250px;href:${contextPath}/jsp/dialog/view.html;"
 	 *	>
 	 *
 	 * @param $this,当前的a标签,其实就是this
@@ -20,7 +26,7 @@ var Row = {
 	view:function($this,i){
 		$this = $($this);
 		// 1.弹出dialog
-		var dialog = Easyui.createEasyuiDialog($this,options);	
+		var dialog = Easyui.createEasyuiDialog($this,{});	
 		
 		// 2.添加后置函数,这里面它是不需要这个函数的,不过为了保险起见,还是加上去了
 		dialog.envOptions["callbackPostSuccess"] = function(){
@@ -36,11 +42,11 @@ var Row = {
 	update:function($this,i){
 		$this = $($this);
 		// 1.弹出dialog
-		var dialog = Easyui.createEasyuiDialog($this,options);
+		var dialog = Easyui.createEasyuiDialog($this,{});
 		
 		// 2.添加后置函数
 		dialog.envOptions["callbackPostSuccess"] = function(){
-			try{$this.closest("table[id][binddatagrid]").datagrid("reload");}catch(e){console.log("Row.update:"+e);}
+			try{$("#"+Row.getDatagridTable($this).attr("id")).datagrid("reload");}catch(e){console.log("Row.update:"+e);}
 		}
 		return false;
 	},
@@ -70,7 +76,7 @@ var Row = {
 			options["type"]=type;
 			options["progress.text"]="删除中....";
 			options["callbackSubSuccess"]=function(result){
-				try{$this.closest("table[id][binddatagrid]").datagrid("reload");}catch(e){console.log("Row.delete:"+e);}
+				try{$("#"+Row.getDatagridTable($this).attr("id")).datagrid("reload");}catch(e){console.log("Row.delete:"+e);}
 			}			
 			// 3.ajax调用
 			ExtraAjax.ajax(options);
@@ -88,7 +94,7 @@ var Row = {
 	 */
 	other:function($this,i,callbackOther){
 		$this = $($this);
-		var datagridId = $this.closest("table[id][binddatagrid]").attr("id");
+		var datagridId = this.getDatagridTable($this).attr("id");
 		try{callbackOther = eval(callbackOther); callbackOther($this,i,row,datagridId);}catch(e){}
 		try{$("#"+datagridId).datagrid("reload");}catch(e){}
 		return false;
@@ -183,7 +189,7 @@ function DatagridExtra(datagridId,options_,eoptions_){
 			// 获取声明datagrid所需要的参数
 			var datagridOptions = _this.datagridOptions();
 			// 1.声明datagrid
-			$(_this.id).datagrid(datagridOptions);			
+			$(_this.id).attr("binddatagrid",true).datagrid(datagridOptions);			
 		}
 	}
 	

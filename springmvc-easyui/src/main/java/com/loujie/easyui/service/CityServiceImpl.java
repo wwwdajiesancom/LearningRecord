@@ -2,6 +2,7 @@ package com.loujie.easyui.service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
@@ -12,6 +13,7 @@ import com.github.pagehelper.PageHelper;
 import com.loujie.easyui.dao.CityDao;
 import com.loujie.easyui.entity.City;
 import com.loujie.easyui.param.QueryCityParam;
+import com.loujie.util.ArgsUtils;
 import com.loujie.util.page.PageResult;
 
 @Service
@@ -37,22 +39,30 @@ public class CityServiceImpl {
 		Map<String, Object> conditionMap = new HashMap<String, Object>();
 		conditionMap.put("id", id);
 		City city = cityDao.findOne(conditionMap);
-		if ("jiege".equals(city.getName())) {
-			city.setName(name);
-			cityDao.updateCity(city);
-		}
-		if ("error".equals(name)) {
-			throw new RuntimeException("name is not error");
-		}
+
 		return city;
 	}
 
-	public int updateCity(City city) {
-		int result = cityDao.updateCity(city);
-		if ("error".equals(city.getName())) {
-			throw new RuntimeException("name is not error");
+	public boolean updateCity(City city) {
+		cityDao.updateCity(city);
+
+		return true;
+	}
+
+	public boolean delete(Set<Integer> ids) {
+		if (!ArgsUtils.isEmpty(ids)) {
+			for (Integer id : ids) {
+				if (!ArgsUtils.isEmpty(id)) {
+					cityDao.delete(id);
+				}
+			}
 		}
-		return result;
+		return true;
+	}
+
+	public boolean save(City city) {
+		cityDao.save(city);
+		return true;
 	}
 
 }

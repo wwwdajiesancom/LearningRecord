@@ -1,5 +1,8 @@
 package com.loujie.easyui.controller;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,8 +10,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.loujie.easyui.entity.City;
 import com.loujie.easyui.param.QueryCityParam;
 import com.loujie.easyui.service.CityServiceImpl;
+import com.loujie.util.ArgsUtils;
 import com.loujie.util.page.PageResult;
 import com.loujie.util.result.ResultDto;
 
@@ -19,69 +24,48 @@ public class AjaxController {
 	@Autowired
 	private CityServiceImpl cityServiceImpl;
 
-	@RequestMapping(value = "/dialog/view")
-	@ResponseBody
-	public ResultDto dialogview(HttpServletRequest request) {
-
-		System.err.println(request.getParameter("name"));
-		System.err.println(request.getParameter("email"));
-
-		ResultDto resultDto = new ResultDto();
-
-		return resultDto;
-
-	}
-
-	@RequestMapping(value = "/datagrid/add")
-	@ResponseBody
-	public ResultDto datagridAdd(HttpServletRequest request) {
-
-		System.err.println(this.getClass().getName() + ".datagridAdd");
-
-		ResultDto resultDto = new ResultDto();
-
-		return resultDto;
-
-	}
-
-	@RequestMapping(value = "/datagrid/update")
-	@ResponseBody
-	public ResultDto datagridUpdate(HttpServletRequest request) {
-
-		System.err.println(this.getClass().getName() + ".datagridUpdate");
-
-		ResultDto resultDto = new ResultDto();
-
-		return resultDto;
-
-	}
-
-	@RequestMapping(value = "/datagrid/delete")
-	@ResponseBody
-	public ResultDto datagridDelete(HttpServletRequest request, String ids) {
-
-		System.err.println(ids);
-		System.err.println(this.getClass().getName() + ".datagridDelete");
-		System.out.println(request.getParameter("name"));
-
-		ResultDto resultDto = new ResultDto();
-
-		return resultDto;
-
-	}
-
 	@RequestMapping("/findpage")
 	@ResponseBody
 	public ResultDto findpage(HttpServletRequest request, QueryCityParam param) {
+		ResultDto resultDto = new ResultDto();
+		PageResult pageResult = cityServiceImpl.findPage(param);
+		resultDto.initPage(pageResult);
+		return resultDto;
+	}
 
+	@RequestMapping("/datagrid/add")
+	@ResponseBody
+	public ResultDto add(HttpServletRequest request, City city) {
 		ResultDto resultDto = new ResultDto();
 
-		PageResult pageResult = cityServiceImpl.findPage(param);
-
-		resultDto.initPage(pageResult);
+		cityServiceImpl.save(city);
 
 		return resultDto;
+	}
 
+	@RequestMapping("/datagrid/update")
+	@ResponseBody
+	public ResultDto update(HttpServletRequest request, City city) {
+		ResultDto resultDto = new ResultDto();
+
+		cityServiceImpl.updateCity(city);
+
+		return resultDto;
+	}
+
+	@RequestMapping("/datagrid/delete")
+	@ResponseBody
+	public ResultDto delete(HttpServletRequest request, String id) {
+		ResultDto resultDto = new ResultDto();
+		if (!ArgsUtils.isEmpty(id)) {
+			Set<Integer> idSet = new HashSet<>();
+			for (String item : id.split(",")) {
+				if (!ArgsUtils.isEmpty(item)) {
+					idSet.add(ArgsUtils.parseInteger(item, -1));
+				}
+			}
+		}
+		return resultDto;
 	}
 
 }

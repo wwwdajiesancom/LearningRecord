@@ -11,9 +11,7 @@
 	<!-- 3.需要查询的字段及添加、排序 -->
 	<sql id="column">
 		a.`id`,
-		a.`parent_id`,
 		a.`name`,
-		a.`level`,
 		a.`abbr`,
 		a.`created_at`,
 		a.`updated_at`
@@ -54,6 +52,20 @@
 	</select>
 	
 	<!-- 5.插入模块 -->
+	<insert id="save" keyProperty="id">
+		insert into 
+		<include refid="table" />(
+			`name`,
+			`abbr`,
+			`created_at`,
+			`updated_at`
+		)values(
+			#{name},
+			#{abbr},
+			#{createdAt},
+			#{updatedAt}
+		)
+	</insert>
 
 	<!-- 6.更新模块 -->
 	<update id="updateCity">
@@ -64,5 +76,10 @@
 	</update>
 	
 	<!-- 7.删除模块 -->
+	<delete id="delete">
+		delete from 
+		<include refid="table" />
+		where id = #{id}
+	</delete>
 
 </mapper>

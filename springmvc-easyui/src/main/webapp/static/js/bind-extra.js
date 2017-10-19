@@ -160,16 +160,16 @@ var BindExtra = {
 var Easyui = {
 	/**
 	 * $this,包含的属性：
-	 *例子：<a href="#" class="easyui-linkbutton" tag="dialog" buttons="save,close" attr="modal:true;width:350px;height: 250px;href:${contextPath}/jsp/dialog/view.html;">打开一个dialog</a> 
+	 *例子：<a href="#" class="easyui-linkbutton" tag="dialog" buttons="save,close" params="modal:true;width:350px;height: 250px;href:${contextPath}/jsp/dialog/view.html;">打开一个dialog</a> 
 	 * 
 	 * tag:dialog,标记它可以打开一个dialog
 	 * 
 	 * dialog加载内容所需的地址,有3种加载方式
 	 * fhref:打开的dialog中加载内容所用到的url地址
 	 * action:打开的dialog中加载内容所用到的url地址
-	 * attr="content:'http://www.baidu.com'",它主要是为了加载其它项目的地址的,上面的只能添加站内地址
+	 * params="content:'http://www.baidu.com'",它主要是为了加载其它项目的地址的,上面的只能添加站内地址
 	 * 
-	 * attr,他是dialog的属性集合,例子:attr="width:200;height:200;modal:true;"
+	 * params,他是dialog的属性集合,例子:params="width:200;height:200;modal:true;"
 	 * 
 	 * buttons:它是dialog下面的bt按钮集合,它里面只有3种值[save,update,close],其中save,update都会提交表单;close会关闭删除dialog
 	 * 例子:buttons="save,close[value:取消;formid:form_test_id;id:close_dialog_id]";其中value是标签的显示内容;其它的都是标签的属性
@@ -186,7 +186,7 @@ var Easyui = {
 		// dialog的Id
 		var bind_id = Extra.guid();
 		// 1.找到相关的属性方法
-		var attr = $this.attr("attr");
+		var attr = $this.attr("params");
 		// 格式化
 		var attrOptions = BindExtra.getAttr(attr);
 		// 弹出框的buttons属性
@@ -247,12 +247,12 @@ var Easyui = {
 /**
  * easyui事件绑定方法
  * 例子:
- * <a href="#" class="easyui-linkbutton" tag="dialog" buttons="save,close" attr="modal:true;width:350px;height: 250px;href:${contextPath}/jsp/dialog/view.html;">打开一个dialog</a>
+ * <a href="#" class="easyui-linkbutton" tag="dialog" buttons="save,close" params="modal:true;width:350px;height: 250px;href:${contextPath}/jsp/dialog/view.html;">打开一个dialog</a>
  * 
  * tag:dialog,标记它可以打开一个dialog
  * 
- * attr:存放属性;例子如下:attr="width:500px;height:250px;"
- * attr中的属性,最好别有（冒号，分号）,就是不要有多余的,除了必要的时候,不要带
+ * params:存放属性;例子如下:params="width:500px;height:250px;"
+ * params中的属性,最好别有（冒号，分号）,就是不要有多余的,除了必要的时候,不要带
  * 
  * buttons:存放dialog拥有的按钮,例子如下:buttons="save[value:保存],close[value:关闭;],update"
  * buutons中不要带多余的东西,如果想修改a中的内容就按照close中的模版修改;value代表的是a中的内容,可以携带其它的属性,这些属性都会添加到a中

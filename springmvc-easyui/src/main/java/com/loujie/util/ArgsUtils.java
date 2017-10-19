@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -180,6 +181,13 @@ public class ArgsUtils {
 		}
 	}
 
+	public static boolean isEmpty(Set<?> args) {
+		if(args==null||args.size()==0) {
+			return true;
+		}
+		return false;
+	}
+	
 	/**
 	 * 判断List是否为空
 	 * 
