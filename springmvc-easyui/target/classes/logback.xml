@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- http://www.cnblogs.com/warking/p/5710303.html -->
-<!-- scan:配置文件发生改变�?,重新加载 ,默认为true -->
-<!-- scanPeriod:�?测配�?,默认�?60�?  -->
-<!-- debug:为true,将打印出Logback内部的日�? -->
+<!-- scan:配置文件发生改变时,重新加载 ,默认为true -->
+<!-- scanPeriod:检测配置,默认为60秒  -->
+<!-- debug:为true,将打印出Logback内部的日志 -->
 <configuration scan="true" scanPeriod="60 seconds" debug="false">
 	
-	<!-- 定义�?些变�?,引用${consoleLogPath} -->
+	<!-- 定义一些变量,引用${consoleLogPath} -->
 	<property name="encoderCharset" value="utf-8" />
 	<property name="consoleLogPath" value="logs/console.log" />
 	<property name="consoleEncoderPattern" value="%date{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger{36} - %msg%n" />
@@ -18,14 +18,14 @@
 	<property name="rollingLogPathPatternZip" value="logs/rolling-%d{yyyy-MM-dd}.%i.log.zip" />
 	<property name="rollingEncoderPattern" value="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%5level] [%thread] %logger{0} %msg%n" />
 	
-	<!-- 子节�?,共分�?3�?,appender,logger,root, -->
-	<!-- ConsoleAppender 写到控制�? -->
-	<!-- FileAppender 写到日志文件�?  -->
-	<!-- RollingFileAppender 滚动日志文件,先将日志记录到指定文件，当符合某个条件时，将日志记录到其他文�? -->
+	<!-- 子节点,共分为3类,appender,logger,root, -->
+	<!-- ConsoleAppender 写到控制台 -->
+	<!-- FileAppender 写到日志文件中  -->
+	<!-- RollingFileAppender 滚动日志文件,先将日志记录到指定文件，当符合某个条件时，将日志记录到其他文件 -->
 	
 	
-	<!-- appender,设置�?个写日志的规�? -->
-	<!-- name:appender的名�?,可以取的有一定的意义 -->
+	<!-- appender,设置一个写日志的规定 -->
+	<!-- name:appender的名字,可以取的有一定的意义 -->
 	<!-- class:写日志的方式,都实现了Appender接口 -->
 	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
 		<!-- 1.设置日志输出位置,可以不写默认System.out -->
@@ -43,7 +43,7 @@
 		<file>${fileLogPath}</file>
 		<!-- append: true,日志被追加到文件结尾; false,清空现存文件;默认是true -->
 		<append>true</append>
-		<!-- prudent:是否要安全写�?(有锁),true速度慢，效率�? -->
+		<!-- prudent:是否要安全写入(有锁),true速度慢，效率低 -->
 		<prudent>false</prudent>
 		<filter class="ch.qos.logback.classic.filter.LevelFilter">
 			<!-- LevelFilter: 级别过滤器，根据日志级别进行过滤 -->
@@ -67,7 +67,7 @@
 
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 			<fileNamePattern>${rollingLogPathPattern}</fileNamePattern>
-			<!-- 保存3�? -->
+			<!-- 保存3天 -->
 			<maxHistory>3</maxHistory>
 			<!-- 超过3GB就会删除 -->
 			<totalSizeCap>3GB</totalSizeCap>
@@ -84,17 +84,17 @@
 
 		<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
 			<fileNamePattern>${rollingLogPathPatternZip}</fileNamePattern>
-			<!-- 保存60�? -->
+			<!-- 保存60天 -->
 			<maxHistory>60</maxHistory>
 			<!-- 超过3GB就会删除 -->
 			<totalSizeCap>3GB</totalSizeCap>
-			<!-- �?100MB�?个文�?,%i就是参数 -->
+			<!-- 每100MB一个文件,%i就是参数 -->
 			<maxFileSize>100MB</maxFileSize>
 		</rollingPolicy>
 	</appender>
 	
-	<!-- root,它也是一个logger,但它是logger的根,�?有的logger的上�? -->
-	<!-- level:设置打印日志级别,做为全局的设�? -->
+	<!-- root,它也是一个logger,但它是logger的根,所有的logger的上级 -->
+	<!-- level:设置打印日志级别,做为全局的设置 -->
 	<root level="debug">
 		<appender-ref ref="console" />
 	</root>

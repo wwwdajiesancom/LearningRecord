@@ -64,17 +64,11 @@ var Row = {
 			// 1.是否要执行
 			if(!flag)return false;
 			// 2.寻找ajax参数
-			var href = "";
-			if(!Extra.isEmpty($this.attr("fhref"))){href=$this.attr("fhref");}
-			if(!Extra.isEmpty($this.attr("action"))){href=$this.attr("action")}
-			
-			var type="post";
-			if(!Extra.isEmpty($this.attr("method"))){type=$this.attr("method")}
-			
-			var options = {};
-			options["url"]=href;
-			options["type"]=type;
+			var options = ExtraAjax.ajaxOptions($this);
 			options["progress.text"]="删除中....";
+			options["success_msg"]="删除成功";
+			options["fail_msg"]="删除失败";
+			//定义外部回调函数
 			options["callbackSubSuccess"]=function(result){
 				try{$("#"+Row.getDatagridTable($this).attr("id")).datagrid("reload");}catch(e){console.log("Row.delete:"+e);}
 			}			
@@ -268,6 +262,8 @@ function DatagridExtra(datagridId,options_,eoptions_){
 	 */
 	this.datagridAttrOptions = function(){
 		var options = {
+				fit:true,//全屏,分页部分在最下面
+				
 				striped:true,// 显示斑马线
 				rownumbers:true,// 显示行号
 				
@@ -563,10 +559,10 @@ function DatagridExtra(datagridId,options_,eoptions_){
 			// 1.是否要执行
 			if(!flag)return false;
 			// 2.寻找ajax参数
-			var href = "";
-			if(!Extra.isEmpty($this.attr("fhref"))){href=$this.attr("fhref");}
-			if(!Extra.isEmpty($this.attr("action"))){href=$this.attr("action")}
+			var options = ExtraAjax.ajaxOptions($this);
 			
+			//url填充
+			var href = options["url"];
 			var params = Extra.getHrefParam(href);
 			for(var i in params){
 				var param = [];
@@ -574,21 +570,16 @@ function DatagridExtra(datagridId,options_,eoptions_){
 					param.push(checkedArr[j][params[i]]);
 				}
 				href=Extra.replaceAll(href,"{"+params[i]+"}",param.toString());
-			}			
-			var type="post";
-			if(!Extra.isEmpty($this.attr("method"))){type=$this.attr("method")}
-			
-			var options = {};
-			options["url"]=href;
-			options["type"]=type;
+			}
+			options["url"]=href;			
 			options["progress.text"]="删除中....";
+			options["success_msg"]="删除成功";
+			options["fail_msg"]="删除失败";
 			options["callbackSubSuccess"]=function(result){
 				_this.reload();
 			}			
-			
 			// 3.ajax调用
 			ExtraAjax.ajax(options);
-			
 		});
 		
 		return false;
@@ -663,6 +654,3 @@ function DatagridExtra(datagridId,options_,eoptions_){
 	}
 	
 }
-
-
-

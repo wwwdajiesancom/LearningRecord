@@ -345,7 +345,7 @@ var ExtraAjax = {
 		 * ajax的错误提示
 		 */
 		ajaxError : function(){
-			$.messager.alert('服务器异常', '服务器链接异常！', 'warning');		
+			ExtraAjax.ajaxTip('服务器异常', '服务器链接异常！', 'warning');		
 		},
 		
 		/**
@@ -432,7 +432,6 @@ var ExtraAjax = {
 			if(!Extra.isEmpty($form.attr("callbackSubSuccess"))){
 				options["callbackSubSuccess"]=$form.attr("callbackSubSuccess");
 			}
-			
 			return options;
 		},
 		/**
@@ -517,27 +516,91 @@ var ExtraAjax = {
 		ajaxSuccess : function(result, options) {
 			try {
 				// 1.后台是否执行成功
-				if (result.success) {
-					var msg = "成功";
-					if(!Extra.isEmpty(options,"success_msg"))msg=options["success_msg"];
-					if (!Extra.isEmpty(result, "msg")){msg = result["msg"];}						
+				if (ExtraAjax.ajaxSuccessStatus(result)) {
+					//获取提示信息
+					var msg = ExtraAjax.ajaxSuccessMsg(result,options);
 					// 提示
-					$.messager.alert("成功提示", msg, "info");
-					// 额外函数调用
-					if (!Extra.isEmpty(options, "callbackSubSuccess")) {
-						var callbackSubSuccess = options["callbackSubSuccess"];
-						callbackSubSuccess();
-					}
+					ExtraAjax.ajaxTip("成功提示", msg, "info");
+					// 函数调用外部子函数
+					ExtraAjax.ajaxSuccessSubCallback(options);
 				} else {
-					var msg = "失败";
-					if(!Extra.isEmpty(options,"fail_msg"))msg=options["fail_msg"];
-					if (!Extra.isEmpty(result, "msg")){msg = result["msg"];}						
+					//获取失败提示信息
+					var msg = ExtraAjax.ajaxFailMsg(result,options);					
 					// 提示
-					$.messager.alert("失败提示", msg, "error");					
+					ExtraAjax.ajaxTip("失败提示", msg, "error");			
 				}
 			} catch (e) {
 				console.log("Extra.ajaxSucess:"+e);
 			}
+		},	
+		/**
+		 * 判断ajax调用的后台执行是否成功
+		 */
+		ajaxSuccessStatus:function(result){
+			try{
+				if(result.success){
+					return true;
+				}
+			}catch(e){}
+			return false;
+		},
+		/**
+		 * ajax调用后台成功执行过程中,执行的一个外部提供的子函数
+		 */
+		ajaxSuccessSubCallback:function(options){
+			if (!Extra.isEmpty(options, "callbackSubSuccess")) {
+				var callbackSubSuccess = eval(options["callbackSubSuccess"]);
+				callbackSubSuccess();
+			}
+		},
+		/**
+		 * ajax调用后台成功执行过程中,执行的一个后置成功函数
+		 */
+		ajaxSuccessPostCallback:function(options){
+			if (!Extra.isEmpty(options, "callbackPostSuccess")) {
+				var callbackPostSuccess = eval(options["callbackPostSuccess"]);
+				callbackPostSuccess();
+			}
+		},
+		/**
+		 * ajax调用后台成功执行过程中,执行的一个后置失败函数
+		 */
+		ajaxFailPostCallback:function(options){
+			if (!Extra.isEmpty(options, "callbackPostFail")) {
+				var callbackPostFail = eval(options["callbackPostFail"]);
+				callbackPostFail();
+			}
+		},
+		/**
+		 * 获取ajax调用后台成功的返回信息,这个是惊醒提示的
+		 */
+		ajaxSuccessMsg:function(result,options){
+			var msg = "成功";
+			if(!Extra.isEmpty(options,"success_msg"))msg=options["success_msg"];
+			if (!Extra.isEmpty(result, "msg")){msg = result["msg"];}
+			return msg;
+		},
+		/**
+		 * 获取ajax调用后台失败的返回信息,这个是惊醒提示的
+		 */
+		ajaxFailMsg:function(result,options){
+			var msg = "失败";
+			if(!Extra.isEmpty(options,"fail_msg"))msg=options["fail_msg"];
+			if (!Extra.isEmpty(result, "msg")){msg = result["msg"];}
+			return msg;
+		},
+		/**
+		 * ajax的提示
+		 * 
+		 */
+		ajaxTip:function(title,msg,icon){
+			$.messager.show(
+				{
+					title : title,
+					msg : msg,
+					timeout : 2000,
+					showType : 'slide'
+				}		
+			);
 		}
-		
 };

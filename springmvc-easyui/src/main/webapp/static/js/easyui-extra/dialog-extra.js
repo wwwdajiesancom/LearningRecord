@@ -13,12 +13,12 @@ function DialogExtra(dialogId_, options_) {
 	var _this = this;// 当前function
 	this.id = "#" + dialogId_;// dialog的Id
 	this.envOptions = {
-		success_msg : "保存成功.",
-		fail_msg : "保存失败.",
+		success_msg : "成功.",
+		fail_msg : "失败.",
 		callbackPostSuccess : function() {
-		},
+		},//后置成功函数
 		callbackPostFail : function() {
-		},
+		},//后置失败函数
 		defaultCallbackSuccess:_this.ajaxSuccessDialog
 	};
 	// 2.定义一些常用的方法
@@ -117,9 +117,9 @@ function DialogExtra(dialogId_, options_) {
 		if (!ExtraAjax.validForm($form))
 			return;
 
-		eoptions["progress.text"] = "保存中....";
-		_this.envOptions["success_msg"]="保存成功";
-		_this.envOptions["fail_msg"]="保存失败";
+		eoptions["progress.text"] = save_a.text()+"中....";
+		_this.envOptions["success_msg"]=save_a.text()+"成功";
+		_this.envOptions["fail_msg"]=save_a.text()+"失败";
 		
 		// 3.ajax参数收集
 		var ajaxOptions = ExtraAjax.ajaxOptions($form, eoptions);
@@ -127,8 +127,6 @@ function DialogExtra(dialogId_, options_) {
 		// 设置默认的回调函数
 		ajaxOptions["defaultCallbackSuccess"] = _this.ajaxSuccessDialog;
 
-		
-		
 		// 4.ajax调用
 		ExtraAjax.ajax(ajaxOptions);
 	}
@@ -139,40 +137,25 @@ function DialogExtra(dialogId_, options_) {
 	this.ajaxSuccessDialog = function(result, options) {
 		try {
 			// 1.后台是否执行成功
-			if (result.success) {
-				var msg = _this.envOptions["success_msg"];
-				if (!Extra.isEmpty(result, "msg"))
-					msg = result["msg"];
-
+			if(ExtraAjax.ajaxSuccessStatus(result)){
+				var msg = ExtraAjax.ajaxSuccessMsg(result,_this.envOptions);
 				// 提示
-				$.messager.alert("成功提示", msg, "info");
+				ExtraAjax.ajaxTip("成功提示", msg, "info");
 
 				// 额外工作
 				_this.close();
 
 				// 额外函数调用
-				if (!Extra.isEmpty(options, "callbackSubSuccess")) {
-					var callbackSubSuccess = options["callbackSubSuccess"];
-					callbackSubSuccess();
-				}
-
-				// 环境定义的函数
-				if (!Extra.isEmpty(_this.envOptions, "callbackPostSuccess")) {
-					_this.envOptions["callbackPostSuccess"]();
-				}
-
+				ExtraAjax.ajaxSuccessSubCallback(options);
+				//后置函数
+				ExtraAjax.ajaxSuccessPostCallback(_this.envOptions);
 			} else {
-				var msg = _this.envOptions["fail_msg"];
-				if (!Extra.isEmpty(result, "msg"))
-					msg = result["msg"];
-
+				//失败提示信息
+				var msg = ExtraAjax.ajaxFailMsg(result,_this.envOptions);
 				// 提示
-				$.messager.alert("失败提示", msg, "error");
-
-				// 环境定义的函数
-				if (!Extra.isEmpty(_this.envOptions, "callbackPostFail")) {
-					_this.envOptions["callbackPostFail"]();
-				}
+				ExtraAjax.ajaxTip("失败提示", msg, "error");
+				//后置函数
+				ExtraAjax.ajaxFailPostCallback(_this.envOptions);
 			}
 		} catch (e) {
 		}
@@ -181,12 +164,30 @@ function DialogExtra(dialogId_, options_) {
 	/**
 	 * 更新form表单 可扩展,
 	 */
-	this.update = function(a_update) {
-		var eoptions = {};
-		eoptions["progress.text"] = "更新中....";
-		_this.envOptions["success_msg"]="更新成功";
-		_this.envOptions["fail_msg"]="更新失败";
-		_this.save(a_update,eoptions);
+	this.update = function(a_update,eoptions) {
+		if(Extra.isEmpty(eoptions)){eoptions={};}
+		// 1.找到form表单
+		var $form = _this.getForm(a_update);
+		if ($form == undefined) {
+			return;
+		}
+		
+		// 2.验证form表单
+		if (!ExtraAjax.validForm($form))
+			return;
+
+		eoptions["progress.text"] = a_update.text()+"中....";
+		_this.envOptions["success_msg"]=a_update.text()+"成功";
+		_this.envOptions["fail_msg"]=a_update.text()+"失败";
+		
+		// 3.ajax参数收集
+		var ajaxOptions = ExtraAjax.ajaxOptions($form, eoptions);
+
+		// 设置默认的回调函数
+		ajaxOptions["defaultCallbackSuccess"] = _this.ajaxSuccessDialog;
+
+		// 4.ajax调用
+		ExtraAjax.ajax(ajaxOptions);
 	}
 
 	/**

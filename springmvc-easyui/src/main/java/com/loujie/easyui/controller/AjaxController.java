@@ -1,5 +1,6 @@
 package com.loujie.easyui.controller;
 
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -37,7 +38,9 @@ public class AjaxController {
 	@ResponseBody
 	public ResultDto add(HttpServletRequest request, City city) {
 		ResultDto resultDto = new ResultDto();
-
+		
+		city.setCreatedAt(Calendar.getInstance().getTime());
+		city.setUpdatedAt(Calendar.getInstance().getTime());
 		cityServiceImpl.save(city);
 
 		return resultDto;
@@ -57,14 +60,15 @@ public class AjaxController {
 	@ResponseBody
 	public ResultDto delete(HttpServletRequest request, String id) {
 		ResultDto resultDto = new ResultDto();
+		Set<Integer> idSet = new HashSet<>();
 		if (!ArgsUtils.isEmpty(id)) {
-			Set<Integer> idSet = new HashSet<>();
 			for (String item : id.split(",")) {
 				if (!ArgsUtils.isEmpty(item)) {
 					idSet.add(ArgsUtils.parseInteger(item, -1));
 				}
 			}
 		}
+		cityServiceImpl.delete(idSet);
 		return resultDto;
 	}
 
