@@ -72,6 +72,12 @@
 			formatter: function(value,row,index){
 				return Extra.formatDate(value,"yyyy-MM-dd HH:mm:ss");
 			}
+		},{
+			title : "操作",
+			field: "opt",
+			formatter: function(value,row,index){
+				return "<a href='#' class='easyui-linkbutton' action='${contextPath}/jsp/dialog/view.html?id="+row['id']+"' onClick='return sds(this);' >View</a>";
+			}
 		}] ];
 		
 		var options_ = {
@@ -85,6 +91,12 @@
 		var datagrid2 = new DatagridExtra("test_datagrid2",options_);
 
 	});
+	
+	function sds(this_){
+		alert("bbb");
+		return false;
+	}
+	
 //-->
 </script>
 </head>

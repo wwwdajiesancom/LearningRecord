@@ -163,4 +163,17 @@ exec-bind.js
 			查询部分,也一样
 			
 		3.datagrid行之中的操作：
+			操作的标签,与上面的a标签属性一致,但需要添加click事件,
+			一共定义了4种：Row.view(this,i),Row.update(this,i),Row.del(this,i),Row.other(this,i,callbackOther($this,i,datagridId));
+			例如:
+				 * <a href="#" 
+				 *		class="easyui-linkbutton" 
+				 *		tag="view"      可选
+				 *		fhref=""        它需要是真路径,不能包含了参数
+				 *		action="" 
+				 *		buttons="save,close" 
+				 *		attr="modal:true;width:350px;height: 250px;href:${contextPath}/jsp/dialog/view.html;"
+				 *      onClick="return Row.view(this,i);"
+				 *	>
+			
 			

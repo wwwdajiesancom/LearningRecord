@@ -1,4 +1,102 @@
 /**
+ * 定义了行里面常用的操作
+ */
+var Row = {
+	/**
+	 * 视图展示
+	 * 在a标签中使用,绑定到click事件上
+	 * <a href="#" 
+	 *		class="easyui-linkbutton" 
+	 *		tag="view"      可选
+	 *		fhref=""        它需要是真路径,不能包含了参数
+	 *		action="" 
+	 *		buttons="save,close" 
+	 *		attr="modal:true;width:350px;height: 250px;href:${contextPath}/jsp/dialog/view.html;"
+	 *	>
+	 *
+	 * @param $this,当前的a标签,其实就是this
+	 * @param i第几行
+	 */
+	view:function($this,i){
+		$this = $($this);
+		// 1.弹出dialog
+		var dialog = Easyui.createEasyuiDialog($this,options);	
+		
+		// 2.添加后置函数,这里面它是不需要这个函数的,不过为了保险起见,还是加上去了
+		dialog.envOptions["callbackPostSuccess"] = function(){
+		}
+		return false;
+	},
+	/**
+	 * 修改行信息
+	 * 
+	 * @param $this,当前的a标签,其实就是this
+	 * @param i第几行
+	 */
+	update:function($this,i){
+		$this = $($this);
+		// 1.弹出dialog
+		var dialog = Easyui.createEasyuiDialog($this,options);
+		
+		// 2.添加后置函数
+		dialog.envOptions["callbackPostSuccess"] = function(){
+			try{$this.closest("table[id][binddatagrid]").datagrid("reload");}catch(e){console.log("Row.update:"+e);}
+		}
+		return false;
+	},
+	/**
+	 * 删除行信息
+	 * 
+	 * @param $this,当前的a标签,其实就是this
+	 * @param i第几行
+	 */
+	del:function($this,i){
+		$this = $($this);
+
+		// 2.删除
+		$.messager.confirm('确认删除','您确定要删除该行记录吗？',function(flag){
+			// 1.是否要执行
+			if(!flag)return false;
+			// 2.寻找ajax参数
+			var href = "";
+			if(!Extra.isEmpty($this.attr("fhref"))){href=$this.attr("fhref");}
+			if(!Extra.isEmpty($this.attr("action"))){href=$this.attr("action")}
+			
+			var type="post";
+			if(!Extra.isEmpty($this.attr("method"))){type=$this.attr("method")}
+			
+			var options = {};
+			options["url"]=href;
+			options["type"]=type;
+			options["progress.text"]="删除中....";
+			options["callbackSubSuccess"]=function(result){
+				try{$this.closest("table[id][binddatagrid]").datagrid("reload");}catch(e){console.log("Row.delete:"+e);}
+			}			
+			// 3.ajax调用
+			ExtraAjax.ajax(options);
+		});
+		
+		return false;
+	},
+	/**
+	 * 其它的操作,这里面可以添加一些前置及后置函数
+	 * 
+	 * @param $this,代表了a标签
+	 * @param i,第几行,可以在formatter中得到
+	 * @callbackOther 这是一个回调函数,可以执行一些东西
+	 * 		function($this,i,datagridId){}
+	 */
+	other:function($this,i,callbackOther){
+		$this = $($this);
+		var datagridId = $this.closest("table[id][binddatagrid]").attr("id");
+		try{callbackOther = eval(callbackOther); callbackOther($this,i,row,datagridId);}catch(e){}
+		try{$("#"+datagridId).datagrid("reload");}catch(e){}
+		return false;
+	}
+}
+
+
+/**
  * 定义列类
  * 
  * @param title
@@ -41,7 +139,17 @@ function DatagridColumn(title,field,width){
 	return columns;
 }
 
-
+/**
+ * 创建DatagridExtra对象,不过里面不执行初始化操作
+ * 
+ * @param datagridId
+ *            datagrid的Id
+ * @returns
+ */
+function Datagrid(datagridId){
+	
+	return new DatagridExtra(datagridId,{},{init:false});
+}
 
 /**
  * 自定义 datagrid它需要设置action,获取数据的url
@@ -57,20 +165,26 @@ function DatagridColumn(title,field,width){
  * @param eoptions_
  *            其它的参数{}
  * 
+ * init:是否要执行初始化操作，默认true
+ * 
  * @returns
  */
 function DatagridExtra(datagridId,options_,eoptions_){
 	var _this = this;
 	this.id = "#" + datagridId;
+	if(Extra.isEmpty(eoptions_)){eoptions_={}}
+	if(Extra.isEmpty(eoptions_,"init")){eoptions_["init"]=true;}
 	
 	/**
 	 * 初始化,声明成datagrid
 	 */
 	this.init = function(){
-		// 获取声明datagrid所需要的参数
-		var datagridOptions = _this.datagridOptions();
-		// 1.声明datagrid
-		$(_this.id).datagrid(datagridOptions);		
+		if(Extra.isEmpty($(_this.id).attr("binddatagrid"))){
+			// 获取声明datagrid所需要的参数
+			var datagridOptions = _this.datagridOptions();
+			// 1.声明datagrid
+			$(_this.id).datagrid(datagridOptions);			
+		}
 	}
 	
 	/**
@@ -85,7 +199,7 @@ function DatagridExtra(datagridId,options_,eoptions_){
 		// 4.设置获取数据的url
 		var dataOptions = _this.copy(_this.datagridDataOptions(),result,"c");
 		// 5.字段数组
-		var columnOptions = _this.copy(_this.datagridColumnOptions(),result,"c");		
+		var columnOptions = _this.copy(_this.datagridColumnOptions(),result,"c");
 		return result;
 	};
 	
@@ -185,7 +299,9 @@ function DatagridExtra(datagridId,options_,eoptions_){
 	 * 
 	 */
 	this.datagridDataOptions = function(){
-		var options = {loadMsg : "加载中......",url:''
+		var options = {
+				loadMsg : "加载中......",
+				url:''
 			// ,loadFilter:undefined,//处理url返回的json数据{total:100,rows:[{},{},{},{}]};这里不需要处理,除非特殊的
 		};
 		// 从属性中获取,属性可以是action,也可以是url
@@ -221,50 +337,34 @@ function DatagridExtra(datagridId,options_,eoptions_){
 	}
 	
 	/*
-	 * toolbar中的查询
-	 *<div id="${test_datagrid}_tb"  style="display: none;">
-	 *	<div>
-	 *		<a href="#" class="easyui-linkbutton" tag="add" >添加</a>
-	 *		<a href="#" class="easyui-linkbutton" tag="update" >修改</a>
-	 *		<a href="#" class="easyui-linkbutton" tag="deletes" >删除</a>		
-	 *	</div>
-	 *	<div>
-	 *		<table id="${test_datagrid}_tb_search">
-	 *			<tr>
-	 *				<td>名称：</td>
-	 *				<td>
-	 *					<input type="text" name="name" zauto="true" />
-	 *				</td>
-	 *				<td>
-	 *					编号：
-	 *				</td>
-	 *				<td>
-	 *					<input type="text" name="id" zauto="true" />
-	 *				</td>
-	 *				<td>
-	 *					<a href="#" class="easyui-linkbutton" tag="search" parentId="${test_datagrid}_tb_search" callbackParam="">查询</a>
-	 *				</td>
-	 *			</tr>
-	 *		</table>
-	 *	</div>
-	 *</div>
-	 *
-	 *
-	 *查看a[tag='search']部分,其中除了tag,其它的附加参数都可缺省
-	 *
-	 *parentId：标记了parent的Id,这样就可以容易查找input了
-	 *callbackParam:一个处理参数的函数,因为一些特殊的原因,parent中的input不容易变成{}对象,就专门写一个函数处理
-	 *
+	 * toolbar中的查询 <div id="${test_datagrid}_tb" style="display: none;"> <div>
+	 * <a href="#" class="easyui-linkbutton" tag="add" >添加</a> <a href="#"
+	 * class="easyui-linkbutton" tag="update" >修改</a> <a href="#"
+	 * class="easyui-linkbutton" tag="deletes" >删除</a> </div> <div> <table
+	 * id="${test_datagrid}_tb_search"> <tr> <td>名称：</td> <td> <input
+	 * type="text" name="name" zauto="true" /> </td> <td> 编号： </td> <td> <input
+	 * type="text" name="id" zauto="true" /> </td> <td> <a href="#"
+	 * class="easyui-linkbutton" tag="search"
+	 * parentId="${test_datagrid}_tb_search" callbackParam="">查询</a> </td>
+	 * </tr> </table> </div> </div>
+	 * 
+	 * 
+	 * 查看a[tag='search']部分,其中除了tag,其它的附加参数都可缺省
+	 * 
+	 * parentId：标记了parent的Id,这样就可以容易查找input了
+	 * callbackParam:一个处理参数的函数,因为一些特殊的原因,parent中的input不容易变成{}对象,就专门写一个函数处理
+	 * 
 	 */
 	this.search = function($this){
-		//1.找到$this的父对像,方便查找里面的input
+		// 1.找到$this的父对像,方便查找里面的input
+		$this = $($this);
 		var $parent;
 		if(!Extra.isEmpty($this.attr("parentId"))){
 			$parent = $("#"+$this.attr("parentId"));
 		}else{
 			$parent = $this.closest("table");
 		}
-		//2.找到里面的参数
+		// 2.找到里面的参数
 		var param = {};
 		if(!Extra.isEmpty($this.attr("callbackParam"))){
 			var callbackParam = $this.attr("callbackParam");
@@ -273,7 +373,7 @@ function DatagridExtra(datagridId,options_,eoptions_){
 		}else{
 			param = ExtraAjax.ajaxData($parent);
 		}
-		//3.查询
+		// 3.查询
 		$(_this.id).datagrid('load', param);
 		return false;
 	}
@@ -300,13 +400,13 @@ function DatagridExtra(datagridId,options_,eoptions_){
 	 * 
 	 */
 	this.add = function($this){
-		//0.可以设置一个前置处理url的函数
-		//也可以设置一个动态的处理属性的函数
-		
-		//1.弹出dialog
+		// 0.可以设置一个前置处理url的函数
+		// 也可以设置一个动态的处理属性的函数
+		$this = $($this);
+		// 1.弹出dialog
 		var dialog = Easyui.createEasyuiDialog($this,{});
 		
-		//2.添加后置函数
+		// 2.添加后置函数
 		dialog.envOptions["callbackPostSuccess"] = function(){
 			_this.reload();
 		}
@@ -344,7 +444,8 @@ function DatagridExtra(datagridId,options_,eoptions_){
 	 * 更新
 	 */
 	this.update = function($this){
-		//1.可以用getChecked方法,不过谨慎考虑选择了用getSelections
+		$this = $($this);
+		// 1.可以用getChecked方法,不过谨慎考虑选择了用getSelections
 		var selectArr = $(_this.id).datagrid('getSelections');// 我们用这个
 		if(selectArr.length==0){selectArr = $(_this.id).datagrid('getChecked');}
 		if (selectArr.length != 1) {
@@ -352,17 +453,17 @@ function DatagridExtra(datagridId,options_,eoptions_){
 			return false;
 		}
 		
-		//2.定一个url处理函数
+		// 2.定一个url处理函数
 		var options = {
 			callbackHref:function(href){
 				return _this.hrefHandler(href,selectArr[0]);
 			}
 		};
 		
-		//1.弹出dialog
+		// 1.弹出dialog
 		var dialog = Easyui.createEasyuiDialog($this,options);
 		
-		//2.添加后置函数
+		// 2.添加后置函数
 		dialog.envOptions["callbackPostSuccess"] = function(){
 			_this.reload();
 		}
@@ -389,12 +490,12 @@ function DatagridExtra(datagridId,options_,eoptions_){
 	/**
 	 * 视图的显示
 	 * 
-	 * 获取了参数，
-	 * 弹出了框
+	 * 获取了参数， 弹出了框
 	 * 
 	 */
 	this.view = function($this){		
-		//1.可以用getChecked方法,不过谨慎考虑选择了用getSelections
+		$this = $($this);
+		// 1.可以用getChecked方法,不过谨慎考虑选择了用getSelections
 		var selectArr = $(_this.id).datagrid('getSelections');// 我们用这个
 		if(selectArr.length==0){selectArr = $(_this.id).datagrid('getChecked');}
 		if (selectArr.length != 1) {
@@ -402,17 +503,17 @@ function DatagridExtra(datagridId,options_,eoptions_){
 			return false;
 		}
 		
-		//2.定一个url处理函数
+		// 2.定一个url处理函数
 		var options = {
 			callbackHref:function(href){
 				return _this.hrefHandler(href,selectArr[0]);
 			}
 		};
 		
-		//1.弹出dialog
+		// 1.弹出dialog
 		var dialog = Easyui.createEasyuiDialog($this,options);	
 		
-		//2.添加后置函数,这里面它是不需要这个函数的,不过为了保险起见,还是加上去了
+		// 2.添加后置函数,这里面它是不需要这个函数的,不过为了保险起见,还是加上去了
 		dialog.envOptions["callbackPostSuccess"] = function(){
 			_this.reload();
 		}
@@ -443,18 +544,19 @@ function DatagridExtra(datagridId,options_,eoptions_){
 	 * 
 	 */
 	this.deletes = function($this){
-		//1.可以用getSelections方法,不过谨慎考虑选择了用getChecked
+		$this = $($this);
+		// 1.可以用getSelections方法,不过谨慎考虑选择了用getChecked
 		var checkedArr = $(_this.id).datagrid('getChecked');// 我们用这个
 		if (checkedArr.length <= 0) {
 			$.messager.alert('警告', '请至少选择一行要删除的数据！', 'warning');
 			return false;
 		}
 		
-		//2.删除
+		// 2.删除
 		$.messager.confirm('确认删除','您确定要删除选中的记录吗？',function(flag){
-			//1.是否要执行
+			// 1.是否要执行
 			if(!flag)return false;
-			//2.寻找ajax参数
+			// 2.寻找ajax参数
 			var href = "";
 			if(!Extra.isEmpty($this.attr("fhref"))){href=$this.attr("fhref");}
 			if(!Extra.isEmpty($this.attr("action"))){href=$this.attr("action")}
@@ -478,7 +580,7 @@ function DatagridExtra(datagridId,options_,eoptions_){
 				_this.reload();
 			}			
 			
-			//3.ajax调用
+			// 3.ajax调用
 			ExtraAjax.ajax(options);
 			
 		});
@@ -530,20 +632,30 @@ function DatagridExtra(datagridId,options_,eoptions_){
 		$(_this.id).datagrid('unselectAll');
 	};
 	
-
-	// 执行初始化操作
-	this.init();
-	// 绑定事件
-	//查询
-	this.bindEvent("tbSearch");
-	//添加
-	this.bindEvent("tbAdd");
-	//修改
-	this.bindEvent("tbUpdate");
-	//删除
-	this.bindEvent("tbDeletes");
-	//删除
-	this.bindEvent("tbView");
+	/**
+	 * 统一执行事件绑定
+	 */
+	this.execBind = function(){
+		// 绑定事件
+		// 查询绑定
+		this.bindEvent("tbSearch");
+		// 添加绑定
+		this.bindEvent("tbAdd");
+		// 修改绑定
+		this.bindEvent("tbUpdate");
+		// 删除绑定
+		this.bindEvent("tbDeletes");
+		// 视图绑定
+		this.bindEvent("tbView");
+	}
+	
+	if(eoptions_["init"]){
+		// 执行初始化操作
+		this.init();
+		// 执行事件绑定事件
+		this.execBind();
+	}
+	
 }
 
 
