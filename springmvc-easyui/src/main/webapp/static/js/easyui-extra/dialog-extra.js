@@ -1,3 +1,12 @@
+function DailogSimpleExtra(dialogId_,options_){
+	
+	if(Extra.isEmpty(options_)){options_={};}
+	options_["init"]=false;
+	
+	return new DialogExtra(dialogId_,options_);
+	
+}
+
 /*
  * 该类封装了Dialog对象里面
  * 1.事件绑定
@@ -12,6 +21,9 @@ function DialogExtra(dialogId_, options_) {
 	// 1.定义一些常用的变量
 	var _this = this;// 当前function
 	this.id = "#" + dialogId_;// dialog的Id
+	if(Extra.isEmpty(options_)){options_={};}
+	if(Extra.isEmpty(options_,"init")){options_["init"]=true;}
+	
 	this.envOptions = {
 		success_msg : "成功.",
 		fail_msg : "失败.",
@@ -22,15 +34,6 @@ function DialogExtra(dialogId_, options_) {
 		defaultCallbackSuccess:_this.ajaxSuccessDialog
 	};
 	// 2.定义一些常用的方法
-
-	/**
-	 * 初始化方法 init_options={dialogId:"dialog的Id"}
-	 */
-	this.init = function(init_options) {
-		if (!Extra.isEmpty(init_options, "dialogId")) {
-			_this.id = _this.setId(init_options["dialogId"]);
-		}
-	}
 
 	/**
 	 * 设置dialog的Id
@@ -69,16 +72,12 @@ function DialogExtra(dialogId_, options_) {
 	/**
 	 * 找到form表单
 	 */
-	this.getForm = function(a_) {
+	this.getForm = function(target) {
 		// 1.找到form表单(怎么找呢？【可以分为2中,一种是直接找,另一种是根据Id查找】;Id从什么地方而来呢？【从选择器的属性中来，属性名字叫做form_id】)
 		// 2.找到form表单,先选取第二种,如果没有form_id,再用第一中方法
+		//这里面其实是可以通过target来查找form表单的,不过这里面我们为了简单处理,没有做,如果想做的话,请修改bind-extra.js中的getButton方法
 		var $form;
-		var form_id = $(a_).attr("form_id");
-		if (Extra.isEmpty(form_id)) {
-			$form = $(_this.id).closest("div").find("form:eq(0)");
-		} else {
-			$form = $("#" + form_id);
-		}
+		$form = $(_this.id).find("form:eq(0)");
 		return $form;
 	}
 
@@ -106,20 +105,18 @@ function DialogExtra(dialogId_, options_) {
 	 * 
 	 * 
 	 */
-	this.save = function(save_a, eoptions) {
+	this.save = function(target, eoptions) {
 		if(Extra.isEmpty(eoptions)){eoptions={};}
 		// 1.找到form表单
-		var $form = _this.getForm(save_a);
+		var $form = _this.getForm();
 		if ($form == undefined) {
 			return;
 		}
 		// 2.验证form表单
 		if (!ExtraAjax.validForm($form))
-			return;
-
-		eoptions["progress.text"] = save_a.text()+"中....";
-		_this.envOptions["success_msg"]=save_a.text()+"成功";
-		_this.envOptions["fail_msg"]=save_a.text()+"失败";
+			return;		
+		
+		_this.getButtonText(target,eoptions);
 		
 		// 3.ajax参数收集
 		var ajaxOptions = ExtraAjax.ajaxOptions($form, eoptions);
@@ -160,14 +157,26 @@ function DialogExtra(dialogId_, options_) {
 		} catch (e) {
 		}
 	}
+	
+	this.getButtonText = function(target,eoptions){
+		if(typeof (target) == "number"){
+			eoptions["progress.text"] = _this.options()["buttons"][target]["text"]+"中....";
+			_this.envOptions["success_msg"]=_this.options()["buttons"][target]["text"]+"成功";
+			_this.envOptions["fail_msg"]=_this.options()["buttons"][target]["text"]+"失败";
+		}else{
+			eoptions["progress.text"] = target.text()+"中....";
+			_this.envOptions["success_msg"]=target.text()+"成功";
+			_this.envOptions["fail_msg"]=target.text()+"失败";
+		}
+	}
 
 	/**
 	 * 更新form表单 可扩展,
 	 */
-	this.update = function(a_update,eoptions) {
+	this.update = function(target,eoptions) {
 		if(Extra.isEmpty(eoptions)){eoptions={};}
 		// 1.找到form表单
-		var $form = _this.getForm(a_update);
+		var $form = _this.getForm();
 		if ($form == undefined) {
 			return;
 		}
@@ -176,10 +185,8 @@ function DialogExtra(dialogId_, options_) {
 		if (!ExtraAjax.validForm($form))
 			return;
 
-		eoptions["progress.text"] = a_update.text()+"中....";
-		_this.envOptions["success_msg"]=a_update.text()+"成功";
-		_this.envOptions["fail_msg"]=a_update.text()+"失败";
-		
+		_this.getButtonText(target,eoptions);
+				
 		// 3.ajax参数收集
 		var ajaxOptions = ExtraAjax.ajaxOptions($form, eoptions);
 
@@ -273,14 +280,18 @@ function DialogExtra(dialogId_, options_) {
 	this.onClose = function() {
 		$(_this.id).dialog({
 			onClose : function() {
-				// 当是自己动态创建的dialog的时候就给他删除了
-				if (_this.isIdGuid()) {
-					$(_this.id).dialog("destroy");
-				}
+				_this.destroy();
 			}
 		});
 	}
 
+	this.destroy = function(){
+		// 当是自己动态创建的dialog的时候就给他删除了
+		if (_this.isIdGuid()) {
+			$(_this.id).dialog("destroy");
+		}
+	}
+	
 	/**
 	 * 绑定事件方法 eventName事件名称,
 	 */
@@ -302,13 +313,18 @@ function DialogExtra(dialogId_, options_) {
 		return false;
 	}
 
-	// 3.绑定一些事件
-	// 3.1关闭标签绑定事件
-	this.bindEvent("btClose");
-	// 3.2保存/更新标签绑定事件
-	this.bindEvent("btSave");
-	// 绑定清空事件，在关闭dialog的时候
-	this.bindEvent("onClose");
-	//
+	this.init = function(){
+		// 3.绑定一些事件
+		// 3.1关闭标签绑定事件
+		_this.bindEvent("btClose");
+		// 3.2保存/更新标签绑定事件
+		_this.bindEvent("btSave");
+		// 绑定清空事件，在关闭dialog的时候
+		_this.bindEvent("onClose");
+	}
+	
+	if(options_["init"]){
+		_this.init();
+	}
 
 }

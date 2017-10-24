@@ -5,48 +5,42 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.loujie.easyui.entity.City;
-import com.loujie.easyui.service.CityServiceImpl;
+import com.fasterxml.jackson.annotation.JsonCreator.Mode;
+import com.loujie.easyui.entity.User;
+import com.loujie.easyui.service.UserServiceImpl;
 
 @Controller
 @RequestMapping(value = "/jsp")
 public class JspController {
 
-	private static final String dialogview = "/3/dialog/view";
-
-	private static final String datagridView = "/4/menu/view";
-	private static final String datagridAdd = "/4/menu/add";
-	private static final String datagridUpdate = "/4/menu/update";
+	private static final String datagridView = "/4/datagrid/view";
+	private static final String datagridAdd = "/4/datagrid/add";
+	private static final String datagridUpdate = "/4/datagrid/update";
 
 	@Autowired
-	private CityServiceImpl cityServiceImpl;
+	private UserServiceImpl userServiceImpl;
 
-	@RequestMapping(value = "/dialog/view")
-	public String dialogview(HttpServletRequest request, Integer id, Model model) {
-
-		return dialogview;
-	}
-
-	@RequestMapping(value = "/datagrid/view", method = RequestMethod.GET)
-	public String datagridView(HttpServletRequest request, Integer id, Model model) {
-		City city = cityServiceImpl.findOne(id, null);
-		model.addAttribute("city", city);
+	@RequestMapping(value = "/datagrid/view/{id}", method = RequestMethod.GET)
+	public String view(@PathVariable Integer id, Model model) {
+		User user = userServiceImpl.get(id);
+		model.addAttribute("user", user);
 		return datagridView;
 	}
 
 	@RequestMapping(value = "/datagrid/add", method = RequestMethod.GET)
-	public String datagridAdd(HttpServletRequest request, Model model) {
+	public String add(HttpServletRequest request, Mode mode) {
 
 		return datagridAdd;
 	}
 
-	@RequestMapping(value = "/datagrid/update", method = RequestMethod.GET)
-	public String datagridUpdate(HttpServletRequest request, Integer id, Model model) {
-		City city = cityServiceImpl.findOne(id, null);
-		model.addAttribute("city", city);
+	@RequestMapping(value = "/datagrid/update/{id}")
+	public String update(@PathVariable Integer id, Model model) {
+		User user = userServiceImpl.get(id);
+		model.addAttribute("user", user);
 		return datagridUpdate;
 	}
 

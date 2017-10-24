@@ -1,0 +1,13 @@
+
+1.document.getElementById('div1');//通过Id获取元素
+
+
+
+2.通过js修改标签的属性,在页面是怎么写的,在js中就怎么写;但是class属性例外,需要写成className
+
+3,使用style添加样式,是添加到element上的，它是弄不到class样式中的数据的
+样式的优先级：
+	*<标签<class<ID<行间样式
+
+
+

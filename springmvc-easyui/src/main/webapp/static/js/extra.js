@@ -83,7 +83,7 @@ var Extra = {
 		 */
 		isEmpty : function(isEmpty_options,isEmpty_jsonkey){
 			// 1.先判断第一个参数
-			if(isEmpty_options==undefined||isEmpty_options==null||isEmpty_options==''){
+			if(isEmpty_options==undefined||isEmpty_options==null||(isEmpty_options+'')==''){
 				return true;
 			}
 			// 2.如果类型分为object,就需要用到第二个参数了

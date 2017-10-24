@@ -1,26 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.loujie.easyui.dao.CityDao">
+<mapper namespace="com.loujie.easyui.dao.UserDao">
 
 	<!-- 1.定义的ResultMap -->
 
 	<!-- 2.定义表名称 -->
-	<sql id="table">city</sql>
-	<sql id="tables">city a</sql>
+	<sql id="table">user</sql>
+	<sql id="tables">user a</sql>
 
 	<!-- 3.需要查询的字段及添加、排序 -->
 	<sql id="column">
 		a.`id`,
 		a.`name`,
-		a.`abbr`,
-		a.`created_at`,
-		a.`updated_at`
+		a.`login_name`,
+		<if test="Epassword == 'yes'">
+			a.`password`,
+		</if>
+		a.`create_time`,
+		a.`update_time`
 	</sql>
 
 	<!-- 3.2查询条件 -->
 	<sql id="where">
 		<if test="ElikeName != null and ElikeName != ''">
-			and a.name like concat('%',#{ElikeName},'%')
+			and a.name like concat('%',#{ElikeName},'%');
+		</if>
+		<if test="loginName != null and loginName != ''">
+			and a.login_name = #{loginName}
+		</if>
+		<if test="password != null and password != ''">
+			and a.password = #{password}
 		</if>
 		<if test="id != null">
 			and a.id = #{id}
@@ -31,7 +40,7 @@
 	<sql id="order"></sql>
 
 	<!-- 4.查询模块 -->
-	<select id="findOne" resultType="City" parameterType="java.util.Map">
+	<select id="get" resultType="User" parameterType="java.util.Map">
 		select
 		<include refid="column" />
 		from
@@ -41,7 +50,7 @@
 		<include refid="order"/>
 	</select>
 	
-	<select id="findList" resultType="City" parameterType="java.util.Map">
+	<select id="getList" resultType="User" parameterType="java.util.Map">
 		select
 		<include refid="column" />
 		from
@@ -56,19 +65,17 @@
 		insert into 
 		<include refid="table" />(
 			`name`,
-			`abbr`,
-			`created_at`,
-			`updated_at`
+			`login_name`,
+			`password`
 		)values(
 			#{name},
-			#{abbr},
-			#{createdAt},
-			#{updatedAt}
+			#{loginName},
+			#{password}
 		)
 	</insert>
 
 	<!-- 6.更新模块 -->
-	<update id="updateCity">
+	<update id="updateUserName">
 		update 
 		<include refid="table"/>
 		set name = #{name}

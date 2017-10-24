@@ -2,7 +2,7 @@ package com.loujie.easyui.param;
 
 import com.loujie.util.page.PageCon;
 
-public class QueryCityParam extends PageCon {
+public class QueryUserParam extends PageCon {
 
 	private static final long serialVersionUID = 5838148657182238696L;
 

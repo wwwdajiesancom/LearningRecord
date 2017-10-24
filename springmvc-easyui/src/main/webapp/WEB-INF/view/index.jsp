@@ -38,7 +38,15 @@
 		<tr>
 			<td> <a href="${contextPath}/easyui/4/menu/menu" target="_blank">1.菜单(menu)</a> </td>
 			<td> <a href="${contextPath}/easyui/4/menu/validatebox" target="_blank">2.验证框(validatebox)</a> </td>
-			<td> <a href="${contextPath}/easyui/4/menu/datagrid" target="_blank">3.分页table(datagrid)</a> </td>
+			<td> <a href="${contextPath}/easyui/4/datagrid/datagrid" target="_blank">3.分页table(datagrid)</a> </td>
+			<td>  </td>
+			<td>  </td>
+			<td>  </td>
+		</tr>
+		<tr>
+			<td> <a href="${contextPath}/easyui/5/js/js1" target="_blank">1.js1</a> </td>
+			<td>  </td>
+			<td>  </td>
 			<td>  </td>
 			<td>  </td>
 			<td>  </td>

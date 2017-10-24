@@ -27,6 +27,82 @@ var BindExtra = {
 		this.setEasyuiBoolean(result);
 		return result;
 	},
+	getButtons:function(buttons_,dialogObject){
+		var result = [];
+		// 1.默认有一个关闭
+		if(Extra.isEmpty(buttons_)){
+			buttons_="close";
+		}
+		// 2.拆分
+		buttons_ = buttons_.split(",");
+		for(var i=0;i<buttons_.length;i++){
+			var item = Extra.trim(buttons_[i]);
+			// 2.1是否包含属性,就是最后一个字符是]
+			if(item.charAt(item.length-1)=="]"){
+				var zkhIndex = item.indexOf("[");
+				// button的tag类型
+				var but_type = item.substring(0,zkhIndex);
+				// button的属性
+				var but_attr = item.substring(zkhIndex+1,item.length-1);
+				// 拆分属性,例子[value:确定;]
+				var but_attrs = but_attr.split(";");
+				// 存放button的属性
+				var options = {};
+				for(var j = 0;j<but_attrs.length;j++){
+					Extra.splitAttr(options,but_attrs[j]);
+				}
+				result.push(BindExtra.getButton(but_type,options,i,dialogObject));
+			}else{
+				result.push(BindExtra.getButton(item,null,i,dialogObject));
+			}
+		}
+		return result;
+	},
+	getButton:function(buttonType,options_,i,dialogObject){
+		var result = {};
+		var handler = null;
+		// 1.验证按钮是否合法
+		switch(buttonType){
+			case "save":
+				if(!Extra.isEmpty(options_,"value")){
+					a_val = options_["value"];
+				}else{					
+					a_val = "保存";
+				}
+				handler=function(){
+					dialogObject.save(i);
+				}
+				break;
+			case "update":
+				if(!Extra.isEmpty(options_,"value")){
+					a_val = options_["value"];
+					delete options_["value"];
+				}else{					
+					a_val = "更新";
+				}
+				handler=function(){
+					dialogObject.update(i);
+				}
+				break;	
+			case "close":
+				if(!Extra.isEmpty(options_,"value")){
+					a_val = options_["value"];
+					delete options_["value"];
+				}else{
+					a_val = "关闭";
+				}
+				handler=function(){
+					dialogObject.close();
+				}
+				break;
+			case "cancel":
+			default:return "";
+		}
+		//其实这里面,可以将其它的属性也添加到这里面，通过其它的属性可以进一步的完成一些操作,不过这里面没有做这么复杂，只有遇到情况的时候才会处理
+		result["text"]=a_val;
+		result["handler"]=handler;
+		return result;
+	},
 	/**
 	 * 获取按钮Html
 	 */
@@ -159,13 +235,13 @@ var BindExtra = {
  */
 var Easyui = {
 	/**
-	 * $this,包含的属性：
-	 *例子：<a href="#" class="easyui-linkbutton" tag="dialog" buttons="save,close" params="modal:true;width:350px;height: 250px;href:${contextPath}/jsp/dialog/view.html;">打开一个dialog</a> 
+	 * $this,包含的属性： 例子：<a href="#" class="easyui-linkbutton" tag="dialog"
+	 * buttons="save,close" params="modal:true;width:350px;height:
+	 * 250px;href:${contextPath}/jsp/dialog/view.html;">打开一个dialog</a>
 	 * 
 	 * tag:dialog,标记它可以打开一个dialog
 	 * 
-	 * dialog加载内容所需的地址,有3种加载方式
-	 * fhref:打开的dialog中加载内容所用到的url地址
+	 * dialog加载内容所需的地址,有3种加载方式 fhref:打开的dialog中加载内容所用到的url地址
 	 * action:打开的dialog中加载内容所用到的url地址
 	 * params="content:'http://www.baidu.com'",它主要是为了加载其它项目的地址的,上面的只能添加站内地址
 	 * 
@@ -182,7 +258,7 @@ var Easyui = {
 	 * callbackDynamic：这是一个动态的函数,主要是为了处理dialog属性用的,function(attrOptions){}
 	 * 
 	 */
-	createEasyuiDialog:function ($this,options_){
+	createEasyuiDialog2:function ($this,options_){
 		// dialog的Id
 		var bind_id = Extra.guid();
 		// 1.找到相关的属性方法
@@ -194,7 +270,7 @@ var Easyui = {
 		var buttons_html = BindExtra.getButtonsHtml(bind_id,buttons);
 		attrOptions["buttons"] = "#"+bind_id+"_bt";
 		
-		//两种设置href的方式
+		// 两种设置href的方式
 		if(Extra.isEmpty(attrOptions,"href")&&!Extra.isEmpty($this.attr("fhref"))){
 			attrOptions["href"] = $this.attr("fhref");
 		}		
@@ -202,12 +278,12 @@ var Easyui = {
 			attrOptions["href"] = $this.attr("action");
 		}
 		
-		//有些href需要加工处理,所以外部提供了一个处理函数
+		// 有些href需要加工处理,所以外部提供了一个处理函数
 		if(!Extra.isEmpty(options_,"callbackHref")){
 			attrOptions["href"] = options_["callbackHref"](attrOptions["href"]);
 		}
 		
-		//动态的函数调用
+		// 动态的函数调用
 		if(!Extra.isEmpty(options_,"callbackDynamic")){
 			options_["callbackDynamic"](attrOptions);
 		}
@@ -231,23 +307,79 @@ var Easyui = {
 		}
 		
 		// 3.dialog初始化
-		//渲染bt
+		// 渲染bt
 		$.parser.parse("#" + bind_id + "_bt");
-		//生成dialog
+		// 生成dialog
 		$("#"+bind_id).dialog(attrOptions);
 
 		// 绑定其它的事件
 		try{
 		 	return new DialogExtra(bind_id);					
 		}catch(e){}
+	},
+	createEasyuiDialog:function ($this,options_){
+		// dialog的Id
+		var bind_id = Extra.guid();
+		// 1.找到相关的属性方法
+		var attr = $this.attr("params");
+		// 格式化
+		var attrOptions = BindExtra.getAttr(attr);
+		var dialogObject = new DailogSimpleExtra(bind_id);
+		// 弹出框的buttons属性
+		var buttons = $this.attr("buttons");
+		var buttons_ = BindExtra.getButtons(buttons,dialogObject);
+		attrOptions["buttons"] = buttons_;
 		
-	}		
+		// 两种设置href的方式
+		if(Extra.isEmpty(attrOptions,"href")&&!Extra.isEmpty($this.attr("fhref"))){
+			attrOptions["href"] = $this.attr("fhref");
+		}		
+		if(Extra.isEmpty(attrOptions,"href")&&!Extra.isEmpty($this.attr("action"))){
+			attrOptions["href"] = $this.attr("action");
+		}
+		
+		// 有些href需要加工处理,所以外部提供了一个处理函数
+		if(!Extra.isEmpty(options_,"callbackHref")){
+			attrOptions["href"] = options_["callbackHref"](attrOptions["href"]);
+		}
+		
+		// 动态的函数调用
+		if(!Extra.isEmpty(options_,"callbackDynamic")){
+			options_["callbackDynamic"](attrOptions);
+		}
+		
+		// 2.给当前的容器增加一个dialog代码
+		// 生成dialog的Html
+		var dialog_html = BindExtra.createDialog(bind_id,attrOptions,"");
+		if($this.closest("body").length==0){
+			if($this.closest("div").length==0){
+				if($this.closest("form").length==0){
+					// 不知道父元素是什么,不做处理了
+					return false;
+				}else{
+					$this.closest("form").append(dialog_html);
+				}
+			}else{
+				$this.closest("div").append(dialog_html);
+			}
+		}else{
+			$this.closest("body").append(dialog_html);
+		}
+		
+		// 3.dialog初始化
+		// 渲染bt
+		// $.parser.parse("#" + bind_id + "_bt");
+		// 生成dialog
+		$("#"+bind_id).dialog(attrOptions);
+		dialogObject.init();
+		return 	dialogObject;				
+	}
 };
 
 /**
- * easyui事件绑定方法
- * 例子:
- * <a href="#" class="easyui-linkbutton" tag="dialog" buttons="save,close" params="modal:true;width:350px;height: 250px;href:${contextPath}/jsp/dialog/view.html;">打开一个dialog</a>
+ * easyui事件绑定方法 例子: <a href="#" class="easyui-linkbutton" tag="dialog"
+ * buttons="save,close" params="modal:true;width:350px;height:
+ * 250px;href:${contextPath}/jsp/dialog/view.html;">打开一个dialog</a>
  * 
  * tag:dialog,标记它可以打开一个dialog
  * 
@@ -275,9 +407,8 @@ function easyui_dialog_event_bind(){
 }
 
 /**
- * 给input添加固定的属性
- * 例子:
- * <input type="text" class="easyui-validatebox" zauto="true" required="true" />
+ * 给input添加固定的属性 例子: <input type="text" class="easyui-validatebox" zauto="true"
+ * required="true" />
  * 
  * zauto="true",存在这样的标记的会自动加载样式
  * 
@@ -293,13 +424,14 @@ function easyui_input_bind(){
 
 /**
  * 执行所有的绑定事件
+ * 
  * @returns
  */
 function exec_all_bind(){
-	//dialog
+	// dialog
 	try{easyui_dialog_event_bind();}catch(e){console.log(e);}
 	
-	//input自动加载样式
+	// input自动加载样式
 	try{easyui_input_bind();}catch(e){console.log(e);}
 	
 }
