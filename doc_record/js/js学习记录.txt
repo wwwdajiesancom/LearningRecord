@@ -1,13 +1,184 @@
 
 1.document.getElementById('div1');//通过Id获取元素
+ document.getElementsByTagName('div');//通过标签名字,获取一组元素
 
 
 
-2.通过js修改标签的属性,在页面是怎么写的,在js中就怎么写;但是class属性例外,需要写成className
+2.通过js修改标签的属性,属性在页面是怎么写的,在js中就怎么写;但是class属性例外,需要写成className,因为class它在js中是一个关键字
 
-3,使用style添加样式,是添加到element上的，它是弄不到class样式中的数据的
+3,使用style添加样式,是添加到element上的，它是无法修改class样式中的信息的
 样式的优先级：
-	*<标签<class<ID<行间样式
+	* < 标签 < class < ID < 行间样式
+操作样式的时候,style与class只操作一个就行了，不要都操作，因为优先级的原因，容易出现混乱并且你还找不到问题所在
+
+4.window.onload = function(){
+
+	//当页面加载完成的时候触发
+
+
+}
+
+5.基础,概念的了解
+ECMAScript，它是javascript的解释器                             基本兼容
+
+DOM document object model     html，赋予了操作html的功能       大多兼容
+
+BOM browser object model     browser,浏览器    window           基本完全不兼容,一般不用
+
+
+6.变量的类型,number,string,boolean,undefined,object,function
+typeof (a) == 'string' 
+parseInt();parseInt('123jfieji234')==123;parseInt('aaa123')==NaN;NaN=not a number
+parseFloat();
+isNaN()
+
+7.函数
+
+函数参数，动态参数
+arguments,可变参数
+
+获取css中的样式：
+currentStyle,可以获取非行间样式,oDiv.currentStyle.width
+getComputedStyle(oDiv,null).width
+这些方法只能获取单一样式，
+css中的样式分为两种类型：
+复合样式：border,background,等;因为border，它还有线条的样式，线条的宽度等属性了，所以叫做复合样式
+单一样式：height,width,它们都是单一的
+
+js的的第二定律,好东西都不兼容
+
+8.数组
+
+var arr = [1,2,3,4,5,6];
+arr.length=3;这样arr=[1,2,3]了；
+arr.push(4);//放入到后面
+arr.unshift(0);//从前面插入了
+
+arr.splice(起点，n);//从起点开始（包括起点），向后删除n个元素
+arr.splice(起点,0,'a','b','c');//从起点开始,删除0个元素,并从起点开始插入'a','b','c'3个元素
+
+arr.join("--");//用--将数组中的元素拼接起来
+
+arr.sort();//排序
+
+arr.pop();//从后面删除
+arr.shift();//从前面删除
+
+
+9.定时器
+setInterval(function,间隔时间)   间隔型
+setTimeout(function,延时时间)    延时型
+
+clearInterval
+clearTimeout
+
+
+运动：
+
+
+
+10.DOM操作，
+childNodes,不兼容
+nodeType,可以作为兼容所用
+
+11.事件
+event,但是不兼容,这样获取兼容：var oEvent = ev||event;
+function(ev){
+	var oEvent = ev||event;
+}
+
+事件冒泡，是parent,child,在同一个事件上都绑定了函数，就会冒泡式的触发
+(ev||event).cancelBubble=true;//取消冒泡
+
+获取鼠标的位置：
+	function getPostion(ev){
+		var oEvent = ev||event;
+		
+		var scorllTop = document.documentElement.scrollTop||document.body.scrollTop;
+		var scorllLeft = document.documentElement.scrollLeft||document.body.scrollLeft;
+		
+		return {x:scorllLeft+oEvent.clientX,y:scorllTop+oEvent.clientY};
+	}
+	
+默认事件：
+
+//右键事件
+document.oncontextmenu=function(){
+
+	return false;//取消了默认事件
+}
+
+
+拖拽：
+鼠标按下事件，在div上绑定
+
+鼠标移动，在document上绑定，因为如果绑定到div上,如果移除了div怎么办
+
+鼠标松开事件，也绑定到document上,因为有的时候可能被其它的东西遮掩（可以有不同的层）
+
+
+事件绑定：
+
+
+
+12.面向对象
+
+	prototype,解释,这里面我们用类似比较的方式来说:
+	
+	样式,css;它分为2种，（一）行间样式，针对的是单个标签元素（二）class，针对的是一组标签元素
+	
+	class           一次给一组元素增加样式    对应的是原型,prototype
+	
+	行间样式        一次给一个元素增加样式    对应的是给执行的对象增加东西
+	
+13.函数的调用
+function show(){
+	alert(this);
+}
+
+1.
+//show();我们经常用到的调用方式
+2.
+//show.call();
+
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

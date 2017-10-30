@@ -1,18 +1,27 @@
 package com.dajiesan.www.test;
 
-import java.util.Date;
+import java.nio.charset.Charset;
 
 import org.junit.Test;
-
-import com.loujie.util.ArgsUtils;
 
 public class JunitTestJie {
 
 	@Test
 	public void date_test() {
-		long date = 1507514700000l;
-		String result = ArgsUtils.formatDate(new Date(date), "yyyy-MM-dd HH:mm:ss");
-		System.out.println(result);
+	}
+
+	public String getTableEntity(String tableName) {
+		String[] segs = tableName.split("_");
+		StringBuilder tableBuilder = new StringBuilder();
+		for (String seg : segs) {
+			tableBuilder.append((seg.charAt(0) + "").toUpperCase()).append(seg.substring(1, seg.length()));
+		}
+		return tableBuilder.toString();
+	}
+
+	@Test
+	public void iabc() {
+		System.err.println("$1".getBytes(Charset.forName("")));
 	}
 
 }

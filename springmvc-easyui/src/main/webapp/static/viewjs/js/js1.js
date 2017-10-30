@@ -9,3 +9,16 @@ function toRed(target){
 function getValue(target){
 	console.log(target.value);
 }
+
+
+window.onload = function(){
+	
+	var oText = document.getElementById("text1");
+	
+	oText.onkeydown = function(){
+		return false;
+	}
+	
+	
+	
+}

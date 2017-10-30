@@ -23,5 +23,7 @@
 		<option value="3">3</option>
 	</select>
 	
+	<input type="text" id="text1"  />
+	
 </body>
 </html>
