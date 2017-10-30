@@ -12,18 +12,10 @@
 
 <title>js1学习</title>
 </head>
-<body>
-	<div style="height: 200px;width: 200px;background: red;" onmouseover="toGreen(this);" onmouseout="toRed(this);">
+<body style="width: 2048px;height: 2048px;">
+	<div style="height: 200px;width: 200px;background: red;" id="div1">
 		dajiahao
 	</div>
-	
-	<select onclick="getValue(this);" style="width: 150px;height: 25px;">
-		<option value="1">1</option>
-		<option value="2">2</option>
-		<option value="3">3</option>
-	</select>
-	
-	<input type="text" id="text1"  />
 	
 </body>
 </html>

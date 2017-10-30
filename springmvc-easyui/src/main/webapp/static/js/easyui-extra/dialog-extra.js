@@ -36,27 +36,17 @@ function DialogExtra(dialogId_, options_) {
 	// 2.定义一些常用的方法
 
 	/**
-	 * 设置dialog的Id
-	 * 
-	 */
-	this.setId = function(setId_dialogId) {
-		if (!Extra.isEmpty(setId_dialogId)) {
-			_this.id = "#" + setId_dialogId;
-		}
-	}
-
-	/**
 	 * 获取dialog的属性信息
 	 * 
 	 */
-	this.options = function() {
+	this.__proto__.options = function() {
 		return $(_this.id).dialog().dialog("options");
 	}
 
 	/**
 	 * 打开dialog
 	 */
-	this.open = function() {
+	this.__proto__.open = function() {
 		$(_this.id).dialog('open');
 		return false;
 	}
@@ -64,7 +54,7 @@ function DialogExtra(dialogId_, options_) {
 	/**
 	 * 关闭dialog
 	 */
-	this.close = function() {
+	this.__proto__.close = function() {
 		$(_this.id).dialog("close");
 		return false;
 	}
@@ -72,7 +62,7 @@ function DialogExtra(dialogId_, options_) {
 	/**
 	 * 找到form表单
 	 */
-	this.getForm = function(target) {
+	this.__proto__.getForm = function(target) {
 		// 1.找到form表单(怎么找呢？【可以分为2中,一种是直接找,另一种是根据Id查找】;Id从什么地方而来呢？【从选择器的属性中来，属性名字叫做form_id】)
 		// 2.找到form表单,先选取第二种,如果没有form_id,再用第一中方法
 		//这里面其实是可以通过target来查找form表单的,不过这里面我们为了简单处理,没有做,如果想做的话,请修改bind-extra.js中的getButton方法
@@ -105,7 +95,7 @@ function DialogExtra(dialogId_, options_) {
 	 * 
 	 * 
 	 */
-	this.save = function(target, eoptions) {
+	this.__proto__.save = function(target, eoptions) {
 		if(Extra.isEmpty(eoptions)){eoptions={};}
 		// 1.找到form表单
 		var $form = _this.getForm();
@@ -131,7 +121,7 @@ function DialogExtra(dialogId_, options_) {
 	/**
 	 * ajax调用成功后执行的方法 result:ajax成功返回的值 options,可能携带了一些东西
 	 */
-	this.ajaxSuccessDialog = function(result, options) {
+	this.__proto__.ajaxSuccessDialog = function(result, options) {
 		try {
 			// 1.后台是否执行成功
 			if(ExtraAjax.ajaxSuccessStatus(result)){
@@ -158,7 +148,10 @@ function DialogExtra(dialogId_, options_) {
 		}
 	}
 	
-	this.getButtonText = function(target,eoptions){
+	/**
+	 * 获取button按钮的信息
+	 */
+	this.__proto__.getButtonText = function(target,eoptions){
 		if(typeof (target) == "number"){
 			eoptions["progress.text"] = _this.options()["buttons"][target]["text"]+"中....";
 			_this.envOptions["success_msg"]=_this.options()["buttons"][target]["text"]+"成功";
@@ -173,7 +166,7 @@ function DialogExtra(dialogId_, options_) {
 	/**
 	 * 更新form表单 可扩展,
 	 */
-	this.update = function(target,eoptions) {
+	this.__proto__.update = function(target,eoptions) {
 		if(Extra.isEmpty(eoptions)){eoptions={};}
 		// 1.找到form表单
 		var $form = _this.getForm();
@@ -198,16 +191,9 @@ function DialogExtra(dialogId_, options_) {
 	}
 
 	/**
-	 * 清空dialog中的内容
-	 */
-	this.clearForm = function() {
-
-	}
-
-	/**
 	 * 关闭按钮事件绑定方法 selector=[a[tag='close'],a[tag='closeAndTip']]
 	 */
-	this.btClose = function() {
+	this.__proto__.btClose = function() {
 		var options = _this.options();
 		if (!Extra.isEmpty(options, "buttons")) {
 			// 绑定bt中的close事件,直接关闭dialog
@@ -236,7 +222,7 @@ function DialogExtra(dialogId_, options_) {
 	/**
 	 * 保存按钮事件绑定 selector=a[tag='save'] or a[tag='update']
 	 */
-	this.btSave = function() {
+	this.__proto__.btSave = function() {
 		var options = _this.options();
 		if (!Extra.isEmpty(options, "buttons")) {
 			// 绑定bt中的保存事件,
@@ -261,7 +247,7 @@ function DialogExtra(dialogId_, options_) {
 	/**
 	 * Id是否为guid
 	 */
-	this.isIdGuid = function() {
+	this.__proto__.isIdGuid = function() {
 		// #dcafb407-96c9-8131-f35c-4849564b5833
 		if (_this.id.length == 37) {
 			var idArrs = _this.id.split("-");
@@ -277,7 +263,7 @@ function DialogExtra(dialogId_, options_) {
 	/**
 	 * dialog关闭时调用的方法
 	 */
-	this.onClose = function() {
+	this.__proto__.onClose = function() {
 		$(_this.id).dialog({
 			onClose : function() {
 				_this.destroy();
@@ -285,7 +271,7 @@ function DialogExtra(dialogId_, options_) {
 		});
 	}
 
-	this.destroy = function(){
+	this.__proto__.destroy = function(){
 		// 当是自己动态创建的dialog的时候就给他删除了
 		if (_this.isIdGuid()) {
 			$(_this.id).dialog("destroy");
@@ -295,7 +281,7 @@ function DialogExtra(dialogId_, options_) {
 	/**
 	 * 绑定事件方法 eventName事件名称,
 	 */
-	this.bindEvent = function(eventName) {
+	this.__proto__.bindEvent = function(eventName) {
 		if (Extra.isEmpty(eventName)) {
 			return false;
 		}
@@ -313,7 +299,7 @@ function DialogExtra(dialogId_, options_) {
 		return false;
 	}
 
-	this.init = function(){
+	this.__proto__.init = function(){
 		// 3.绑定一些事件
 		// 3.1关闭标签绑定事件
 		_this.bindEvent("btClose");

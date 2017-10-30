@@ -139,7 +139,29 @@ function show(){
 1.
 //show();我们经常用到的调用方式
 2.
-//show.call();
+//show.call();这个可以用到继承里面
+
+
+
+14.BOM
+
+
+document.write("向页面上写东西");
+
+
+window.open(url,"_self/_blank/");
+window.close();//一般情况下,open,close是需要成对出现的
+
+
+window.navigator.userAgent;
+
+window.location
+
+
+
+
+
+
 
 	
 	

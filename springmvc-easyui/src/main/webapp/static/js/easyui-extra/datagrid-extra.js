@@ -178,7 +178,7 @@ function DatagridExtra(datagridId,options_,eoptions_){
 	/**
 	 * 初始化,声明成datagrid
 	 */
-	this.init = function(){
+	this.__proto__.init = function(){
 		if(Extra.isEmpty($(_this.id).attr("binddatagrid"))){
 			// 获取声明datagrid所需要的参数
 			var datagridOptions = _this.datagridOptions();
@@ -190,7 +190,7 @@ function DatagridExtra(datagridId,options_,eoptions_){
 	/**
 	 * 获取datagrid声明时需要的参数
 	 */
-	this.datagridOptions = function(){	
+	this.__proto__.datagridOptions = function(){	
 		var result = options_;
 		// 2.设置基本属性
 		var attrOptions = _this.copy(_this.datagridAttrOptions(),result,"c");
@@ -209,7 +209,7 @@ function DatagridExtra(datagridId,options_,eoptions_){
 	 * o:类型["a","b","c"], a,将a全部拷贝到b中; c,将a全部拷贝到b中,如果b中拥有则放弃;
 	 * b,将a部分拷贝到b中,只拷贝b中拥有的;
 	 */
-	this.copy=function(a,b,o){
+	this.__proto__.copy=function(a,b,o){
 		switch(o){
 			case "a":
 				for(var key in a){
@@ -242,14 +242,14 @@ function DatagridExtra(datagridId,options_,eoptions_){
 	 * 2.动态的加载,生成html
 	 * 
 	 */
-	this.datagridToolbarOptions = function(){
+	this.__proto__.datagridToolbarOptions = function(){
 		
 	}
 	
 	/**
 	 * datagrid的字段属性
 	 */
-	this.datagridColumnOptions = function(){
+	this.__proto__.datagridColumnOptions = function(){
 		var options = {
 				columns : [[]],
 				frozenColumns : [[]]// 同列属性，但是这些列将会被冻结在左侧。格式与columns是一样的
@@ -260,7 +260,7 @@ function DatagridExtra(datagridId,options_,eoptions_){
 	/**
 	 * datagrid的基本属性
 	 */
-	this.datagridAttrOptions = function(){
+	this.__proto__.datagridAttrOptions = function(){
 		var options = {
 				fit:true,//全屏,分页部分在最下面
 				
@@ -285,7 +285,7 @@ function DatagridExtra(datagridId,options_,eoptions_){
 	 * 
 	 * 里面暂时没有什么好修改的
 	 */
-	this.datagridPageOptions = function(){
+	this.__proto__.datagridPageOptions = function(){
 		var options = { pagination : true, 
 						pagePosition : "bottom",// 'top','bottom','both'
 						pageNumber : 1, 
@@ -300,7 +300,7 @@ function DatagridExtra(datagridId,options_,eoptions_){
 	 * url:获取数据的地址,可以从datagrid的属性中获取,action/url
 	 * 
 	 */
-	this.datagridDataOptions = function(){
+	this.__proto__.datagridDataOptions = function(){
 		var options = {
 				loadMsg : "加载中......",
 				url:''
@@ -318,14 +318,14 @@ function DatagridExtra(datagridId,options_,eoptions_){
 	/**
 	 * 获取datagrid的options参数,通过options方法
 	 */
-	this.options = function(){
+	this.__proto__.options = function(){
 		return $(_this.id).datagrid("options");
 	}
 	
 	/**
 	 * toolbar中的查询事件绑定
 	 */
-	this.tbSearch = function(){
+	this.__proto__.tbSearch = function(){
 		var options = _this.options();
 		if(!Extra.isEmpty(options,"toolbar")){
 			$(options["toolbar"]).find("a[tag='search']").each(function(){
@@ -357,7 +357,7 @@ function DatagridExtra(datagridId,options_,eoptions_){
 	 * callbackParam:一个处理参数的函数,因为一些特殊的原因,parent中的input不容易变成{}对象,就专门写一个函数处理
 	 * 
 	 */
-	this.search = function($this){
+	this.__proto__.search = function($this){
 		// 1.找到$this的父对像,方便查找里面的input
 		$this = $($this);
 		var $parent;
@@ -383,7 +383,7 @@ function DatagridExtra(datagridId,options_,eoptions_){
 	/**
 	 * 绑定添加事件
 	 */
-	this.tbAdd = function(){
+	this.__proto__.tbAdd = function(){
 		var options = _this.options();
 		if(!Extra.isEmpty(options,"toolbar")){
 			$(options["toolbar"]).find("a[tag='add']").each(function(){
@@ -401,7 +401,7 @@ function DatagridExtra(datagridId,options_,eoptions_){
 	 * 
 	 * 
 	 */
-	this.add = function($this){
+	this.__proto__.add = function($this){
 		// 0.可以设置一个前置处理url的函数
 		// 也可以设置一个动态的处理属性的函数
 		$this = $($this);
@@ -418,7 +418,7 @@ function DatagridExtra(datagridId,options_,eoptions_){
 	/**
 	 * 绑定更新事件
 	 */
-	this.tbUpdate = function(){
+	this.__proto__.tbUpdate = function(){
 		var options = _this.options();
 		if(!Extra.isEmpty(options,"toolbar")){
 			$(options["toolbar"]).find("a[tag='update']").each(function(){
@@ -434,7 +434,7 @@ function DatagridExtra(datagridId,options_,eoptions_){
 	/**
 	 * 处理href,返回正常的数据信息
 	 */
-	this.hrefHandler = function(href,rowData){
+	this.__proto__.hrefHandler = function(href,rowData){
 		var params = Extra.getHrefParam(href);
 		for(var i in params){
 			href = Extra.replaceAll(href,"{"+params[i]+"}",rowData[params[i]]);
@@ -445,7 +445,7 @@ function DatagridExtra(datagridId,options_,eoptions_){
 	/**
 	 * 更新
 	 */
-	this.update = function($this){
+	this.__proto__.update = function($this){
 		$this = $($this);
 		// 1.可以用getChecked方法,不过谨慎考虑选择了用getSelections
 		var selectArr = $(_this.id).datagrid('getSelections');// 我们用这个
@@ -476,7 +476,7 @@ function DatagridExtra(datagridId,options_,eoptions_){
 	/**
 	 * 绑定视图事件
 	 */
-	this.tbView = function(){
+	this.__proto__.tbView = function(){
 		var options = _this.options();
 		if(!Extra.isEmpty(options,"toolbar")){
 			$(options["toolbar"]).find("a[tag='view']").each(function(){
@@ -495,7 +495,7 @@ function DatagridExtra(datagridId,options_,eoptions_){
 	 * 获取了参数， 弹出了框
 	 * 
 	 */
-	this.view = function($this){		
+	this.__proto__.view = function($this){		
 		$this = $($this);
 		// 1.可以用getChecked方法,不过谨慎考虑选择了用getSelections
 		var selectArr = $(_this.id).datagrid('getSelections');// 我们用这个
@@ -526,7 +526,7 @@ function DatagridExtra(datagridId,options_,eoptions_){
 	/**
 	 * 绑定批量删除事件
 	 */
-	this.tbDeletes = function(){
+	this.__proto__.tbDeletes = function(){
 		var options = _this.options();
 		if(!Extra.isEmpty(options,"toolbar")){
 			$(options["toolbar"]).find("a[tag='deletes']").each(function(){
@@ -545,7 +545,7 @@ function DatagridExtra(datagridId,options_,eoptions_){
 	 * 绑定到此按钮上默认是有提示的,tip=true
 	 * 
 	 */
-	this.deletes = function($this){
+	this.__proto__.deletes = function($this){
 		$this = $($this);
 		// 1.可以用getSelections方法,不过谨慎考虑选择了用getChecked
 		var checkedArr = $(_this.id).datagrid('getChecked');// 我们用这个
@@ -585,7 +585,7 @@ function DatagridExtra(datagridId,options_,eoptions_){
 		return false;
 	}
 	
-	this.bindEvent = function(eventName){
+	this.__proto__.bindEvent = function(eventName){
 		switch(eventName){
 			case "tbSearch":
 				_this.tbSearch();
@@ -609,30 +609,30 @@ function DatagridExtra(datagridId,options_,eoptions_){
 	
 	// 一些系统方法
 	// 将datagrid变成加载中的形态
-	this.beforeSend = function() {
+	this.__proto__.beforeSend = function() {
 		$(_this.id).datagrid('loading');
 	};
 	// 将datagrid的加载中状态取消
-	this.complete = function() {
+	this.__proto__.complete = function() {
 		$(_this.id).datagrid('loaded');
 	};
 	// 刷新datagrid页面,变成第一页
-	this.refresh = function() {
+	this.__proto__.refresh = function() {
 		$(_this.id).datagrid('load');
 	};
 	// 刷新datagrid页面,保持在当前页
-	this.reload = function() {
+	this.__proto__.reload = function() {
 		$(_this.id).datagrid('reload');
 	};
 	// 取消选中datagrid
-	this.unselectAll = function() {
+	this.__proto__.unselectAll = function() {
 		$(_this.id).datagrid('unselectAll');
 	};
 	
 	/**
 	 * 统一执行事件绑定
 	 */
-	this.execBind = function(){
+	this.__proto__.execBind = function(){
 		// 绑定事件
 		// 查询绑定
 		this.bindEvent("tbSearch");
