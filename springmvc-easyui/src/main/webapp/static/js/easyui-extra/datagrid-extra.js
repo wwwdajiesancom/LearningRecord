@@ -322,18 +322,13 @@ function DatagridExtra(datagridId,options_,eoptions_){
 		return $(_this.id).datagrid("options");
 	}
 	
-	/**
-	 * toolbar中的查询事件绑定
-	 */
-	this.__proto__.tbSearch = function(){
+	this.__proto__.tbClick=function(){
 		var options = _this.options();
 		if(!Extra.isEmpty(options,"toolbar")){
-			$(options["toolbar"]).find("a[tag='search']").each(function(){
-				if($(this).attr("bindclick")==undefined){					
-					$(this).attr("bindclick",true).bind('click',function(){
-						_this.search($(this));
-					});
-				}
+			$(options["toolbar"]).undelegate("a[tag='search'],a[tag='view'],a[tag='add'],a[tag='update'],a[tag='deletes']","click").delegate("a[tag='search'],a[tag='view'],a[tag='add'],a[tag='update'],a[tag='deletes']","click",function(){
+				var function_call = "_this."+$(this).attr("tag");
+				function_call=eval(function_call);
+				function_call($(this));
 			});
 		}
 	}
@@ -381,22 +376,6 @@ function DatagridExtra(datagridId,options_,eoptions_){
 	}
 	
 	/**
-	 * 绑定添加事件
-	 */
-	this.__proto__.tbAdd = function(){
-		var options = _this.options();
-		if(!Extra.isEmpty(options,"toolbar")){
-			$(options["toolbar"]).find("a[tag='add']").each(function(){
-				if($(this).attr("bindclick")==undefined){					
-					$(this).attr("bindclick",true).bind('click',function(){
-						_this.add($(this));
-					});
-				}
-			});
-		}
-	}
-	
-	/**
 	 * 添加功能,
 	 * 
 	 * 
@@ -413,22 +392,6 @@ function DatagridExtra(datagridId,options_,eoptions_){
 			_this.reload();
 		}
 		return false;		
-	}
-	
-	/**
-	 * 绑定更新事件
-	 */
-	this.__proto__.tbUpdate = function(){
-		var options = _this.options();
-		if(!Extra.isEmpty(options,"toolbar")){
-			$(options["toolbar"]).find("a[tag='update']").each(function(){
-				if($(this).attr("bindclick")==undefined){					
-					$(this).attr("bindclick",true).bind('click',function(){
-						_this.update($(this));
-					});
-				}
-			});
-		}
 	}
 	
 	/**
@@ -474,22 +437,6 @@ function DatagridExtra(datagridId,options_,eoptions_){
 	}
 	
 	/**
-	 * 绑定视图事件
-	 */
-	this.__proto__.tbView = function(){
-		var options = _this.options();
-		if(!Extra.isEmpty(options,"toolbar")){
-			$(options["toolbar"]).find("a[tag='view']").each(function(){
-				if($(this).attr("bindclick")==undefined){					
-					$(this).attr("bindclick",true).bind('click',function(){
-						_this.view($(this));
-					});
-				}
-			});
-		}
-	}
-	
-	/**
 	 * 视图的显示
 	 * 
 	 * 获取了参数， 弹出了框
@@ -521,22 +468,6 @@ function DatagridExtra(datagridId,options_,eoptions_){
 		}
 		
 		return false;
-	}
-	
-	/**
-	 * 绑定批量删除事件
-	 */
-	this.__proto__.tbDeletes = function(){
-		var options = _this.options();
-		if(!Extra.isEmpty(options,"toolbar")){
-			$(options["toolbar"]).find("a[tag='deletes']").each(function(){
-				if($(this).attr("bindclick")==undefined){					
-					$(this).attr("bindclick",true).bind('click',function(){
-						_this.deletes($(this));
-					});
-				}
-			});
-		}
 	}
 	
 	/**
@@ -587,20 +518,8 @@ function DatagridExtra(datagridId,options_,eoptions_){
 	
 	this.__proto__.bindEvent = function(eventName){
 		switch(eventName){
-			case "tbSearch":
-				_this.tbSearch();
-				break;
-			case "tbAdd":
-				_this.tbAdd();
-				break;
-			case "tbUpdate":
-				_this.tbUpdate();
-				break;
-			case "tbDeletes":
-				_this.tbDeletes();
-				break;
-			case "tbView":
-				_this.tbView();
+			case "tbClick":
+				_this.tbClick();
 				break;
 		}
 		
@@ -634,16 +553,7 @@ function DatagridExtra(datagridId,options_,eoptions_){
 	 */
 	this.__proto__.execBind = function(){
 		// 绑定事件
-		// 查询绑定
-		this.bindEvent("tbSearch");
-		// 添加绑定
-		this.bindEvent("tbAdd");
-		// 修改绑定
-		this.bindEvent("tbUpdate");
-		// 删除绑定
-		this.bindEvent("tbDeletes");
-		// 视图绑定
-		this.bindEvent("tbView");
+		this.bindEvent("tbClick");
 	}
 	
 	if(eoptions_["init"]){

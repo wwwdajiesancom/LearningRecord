@@ -45,7 +45,7 @@
 		</tr>
 		<tr>
 			<td> <a href="${contextPath}/easyui/5/js/js1" target="_blank">1.js1</a> </td>
-			<td>  </td>
+			<td> <a href="${contextPath}/easyui/5/js/js2" target="_blank">2.js2</a> </td>
 			<td>  </td>
 			<td>  </td>
 			<td>  </td>

@@ -291,8 +291,8 @@ var Easyui = {
 		// 2.给当前的容器增加一个dialog代码
 		// 生成dialog的Html
 		var dialog_html = BindExtra.createDialog(bind_id,attrOptions,buttons_html);
-		if($this.closest("div").length==0){
-			if($this.closest("body").length==0){
+		if($this.closest("body").length==0){
+			if($this.closest("div").length==0){
 				if($this.closest("form").length==0){
 					// 不知道父元素是什么,不做处理了
 					return false;
@@ -300,15 +300,20 @@ var Easyui = {
 					$this.closest("form").append(dialog_html);
 				}
 			}else{
-				$this.closest("body").append(dialog_html);
+				$this.closest("div").append(dialog_html);
 			}
 		}else{
-			$this.closest("div").append(dialog_html);
+			$this.closest("body").append(dialog_html);
 		}
 		
 		// 3.dialog初始化
 		// 渲染bt
 		$.parser.parse("#" + bind_id + "_bt");
+		
+		//在关闭的时候触发的事件
+		attrOptions["onClose"]=function(){
+			$("#"+bind_id).dialog("destroy");
+		}
 		// 生成dialog
 		$("#"+bind_id).dialog(attrOptions);
 
@@ -367,12 +372,15 @@ var Easyui = {
 		}
 		
 		// 3.dialog初始化
-		// 渲染bt
-		// $.parser.parse("#" + bind_id + "_bt");
+		attrOptions["onClose"]=function(){
+			$("#"+bind_id).dialog("destroy");
+		}
 		// 生成dialog
 		$("#"+bind_id).dialog(attrOptions);
+		
 		dialogObject.init();
-		return 	dialogObject;				
+		
+		return dialogObject;				
 	}
 };
 
@@ -395,14 +403,9 @@ var Easyui = {
  */
 function easyui_dialog_event_bind(){
 	// 1.绑定dialog
-	$("a[tag='dialog']").each(function(){
-		if($(this).attr("bindclick")==undefined){
-			$(this).attr("bindclick",true);
-			$(this).bind("click",function(){
-				Easyui.createEasyuiDialog($(this),{});
-				return false;
-			});		
-		}
+	$("body").undelegate("a[tag='dialog']","click").delegate("a[tag='dialog']","click",function(){
+		Easyui.createEasyuiDialog($(this),{});
+		return false;
 	});
 }
 

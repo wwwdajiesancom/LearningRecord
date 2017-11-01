@@ -1,10 +1,8 @@
 function DailogSimpleExtra(dialogId_,options_){
-	
 	if(Extra.isEmpty(options_)){options_={};}
 	options_["init"]=false;
 	
 	return new DialogExtra(dialogId_,options_);
-	
 }
 
 /*
@@ -40,7 +38,7 @@ function DialogExtra(dialogId_, options_) {
 	 * 
 	 */
 	this.__proto__.options = function() {
-		return $(_this.id).dialog().dialog("options");
+		return $(_this.id).dialog("options");
 	}
 
 	/**
@@ -197,24 +195,10 @@ function DialogExtra(dialogId_, options_) {
 		var options = _this.options();
 		if (!Extra.isEmpty(options, "buttons")) {
 			// 绑定bt中的close事件,直接关闭dialog
-			$(options["buttons"]).find("a[tag='close']").each(function() {
-				if ($(this).attr("bindclick") == undefined) {
-					$(this).attr("bindclick", true).bind('click', function() {
-						_this.close();
-					});
-				}
-			});
 			// 绑定bt中的closeAndTip事件,关闭dialog并提示
-			$(options["buttons"]).find("a[tag='closeAndTip']").each(function() {
-				if ($(this).attr("bindclick") == undefined) {
-					$(this).attr("bindclick", true).bind('click', function() {
-						// TODO tip,提示
-						// 关闭窗体
-						_this.close();
-					});
-				}
+			$(options["buttons"]).undelegate("a[tag='close'],a[tag='closeAndTip']","click").delegate("a[tag='close'],a[tag='closeAndTip']","click",function(){
+				_this.close();
 			});
-
 		} else {
 		}
 	}
@@ -226,20 +210,12 @@ function DialogExtra(dialogId_, options_) {
 		var options = _this.options();
 		if (!Extra.isEmpty(options, "buttons")) {
 			// 绑定bt中的保存事件,
-			$(options["buttons"]).find("a[tag='save']").each(function() {
-				if ($(this).attr("bindclick") == undefined) {
-					$(this).attr("bindclick", true).bind('click', function() {
-						_this.save($(this));
-					});
-				}
+			$(options["buttons"]).undelegate("a[tag='save']","click").delegate("a[tag='save']","click",function(){
+				_this.save($(this));
 			});
 			// 绑定bt中的更新事件,
-			$(options["buttons"]).find("a[tag='update']").each(function() {
-				if ($(this).attr("bindclick") == undefined) {
-					$(this).attr("bindclick", true).bind('click', function() {
-						_this.update($(this));
-					});
-				}
+			$(options["buttons"]).undelegate("a[tag='update']","click").delegate("a[tag='update']","click",function(){
+				_this.update($(this));
 			});
 		}
 	}
@@ -258,17 +234,6 @@ function DialogExtra(dialogId_, options_) {
 			}
 		}
 		return false;
-	}
-
-	/**
-	 * dialog关闭时调用的方法
-	 */
-	this.__proto__.onClose = function() {
-		$(_this.id).dialog({
-			onClose : function() {
-				_this.destroy();
-			}
-		});
 	}
 
 	this.__proto__.destroy = function(){
@@ -292,9 +257,6 @@ function DialogExtra(dialogId_, options_) {
 		case "btSave":// 绑定bt中的保存按钮事件
 			_this.btSave();
 			break;
-		case "onClose":// dialog关闭时触发的事件
-			_this.onClose();
-			break;
 		}
 		return false;
 	}
@@ -305,8 +267,6 @@ function DialogExtra(dialogId_, options_) {
 		_this.bindEvent("btClose");
 		// 3.2保存/更新标签绑定事件
 		_this.bindEvent("btSave");
-		// 绑定清空事件，在关闭dialog的时候
-		_this.bindEvent("onClose");
 	}
 	
 	if(options_["init"]){

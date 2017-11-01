@@ -33,12 +33,13 @@ public class JspController {
 
 	@RequestMapping(value = "/datagrid/add", method = RequestMethod.GET)
 	public String add(HttpServletRequest request, Mode mode) {
-
+		System.out.println("abc---------------------------");
 		return datagridAdd;
 	}
 
 	@RequestMapping(value = "/datagrid/update/{id}")
 	public String update(@PathVariable Integer id, Model model) {
+		System.err.println("update:" + id);
 		User user = userServiceImpl.get(id);
 		model.addAttribute("user", user);
 		return datagridUpdate;

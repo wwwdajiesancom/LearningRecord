@@ -14,6 +14,10 @@ java基础目录:
 	
 	
 2.JDK的安装及配置
+	JRE-java运行环境，它包含了jvm(java virtual machina)和java核心类库
+	JDK-java开发工具包，它包含了java运行环境、java开发工具（java,javac,javadoc）和核心类库
+
+
 
 CLASSPATH:
 	java执行时找.class文件时，需要加载的路径

@@ -319,8 +319,9 @@ var ExtraAjax = {
 			//1.看是否存在验证函数
 			if(!Extra.isEmpty($form.attr("callbackValid"))){
 				var callbackValid = $form.attr("callbackValid");
-				callbackValid = eval(callbackValid);
-				return callbackValid();
+				//callbackValid = eval(callbackValid);
+				return eval(callbackValid);
+				//return callbackValid();
 			}
 			//2.验证分为不同的方式,可以是easyui的验证,也可以是其它插件的,当前的情况我们只写一种就是easyui的验证
 			//1.设置验证方式

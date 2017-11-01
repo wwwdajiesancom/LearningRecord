@@ -4,10 +4,16 @@
 
 <script type="text/javascript"
 	src="${contextPath}/static/js/exec-bind.js"></script>
+	
+<script type="text/javascript">
+<!--
+	
+//-->
+</script>	
 
 <form action="${contextPath}/ajax/datagrid/update" method="post"
 	callbackValid="" callbackSuccess="" callbackSubSuccess=""
-	callbackParam="" callbackSubParam="">
+	callbackParam="" callbackSubParam=""> 
 	<input type="hidden" name="id" value="${user.id}" />
 	<table>
 		<tr>

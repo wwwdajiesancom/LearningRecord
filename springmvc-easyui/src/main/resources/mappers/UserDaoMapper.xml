@@ -23,7 +23,7 @@
 	<!-- 3.2查询条件 -->
 	<sql id="where">
 		<if test="ElikeName != null and ElikeName != ''">
-			and a.name like concat('%',#{ElikeName},'%');
+			and a.name like concat('%',#{ElikeName},'%')
 		</if>
 		<if test="loginName != null and loginName != ''">
 			and a.login_name = #{loginName}
@@ -38,7 +38,7 @@
 
 	<!-- 3.3排序 -->
 	<sql id="order"></sql>
-
+	
 	<!-- 4.查询模块 -->
 	<select id="get" resultType="User" parameterType="java.util.Map">
 		select
