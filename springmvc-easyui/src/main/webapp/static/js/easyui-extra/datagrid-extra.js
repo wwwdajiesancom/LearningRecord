@@ -29,7 +29,7 @@ var Row = {
 		var dialog = Easyui.createEasyuiDialog($this,{});	
 		
 		// 2.添加后置函数,这里面它是不需要这个函数的,不过为了保险起见,还是加上去了
-		dialog.envOptions["callbackPostSuccess"] = function(){
+		dialog.envOptions[CallbackOptions.callbackPostSuccess] = function(){
 		}
 		return false;
 	},
@@ -45,7 +45,7 @@ var Row = {
 		var dialog = Easyui.createEasyuiDialog($this,{});
 		
 		// 2.添加后置函数
-		dialog.envOptions["callbackPostSuccess"] = function(){
+		dialog.envOptions[CallbackOptions.callbackPostSuccess] = function(){
 			try{$("#"+Row.getDatagridTable($this).attr("id")).datagrid("reload");}catch(e){console.log("Row.update:"+e);}
 		}
 		return false;
@@ -65,11 +65,11 @@ var Row = {
 			if(!flag)return false;
 			// 2.寻找ajax参数
 			var options = ExtraAjax.ajaxOptions($this);
-			options["progress.text"]="删除中....";
-			options["success_msg"]="删除成功";
-			options["fail_msg"]="删除失败";
+			options[AjaxOptions.progressText]="删除中....";
+			options[AjaxOptions.default_success_msg]="删除成功";
+			options[AjaxOptions.default_fail_msg]="删除失败";
 			//定义外部回调函数
-			options["callbackSubSuccess"]=function(result){
+			options[CallbackOptions.callbackSubSuccess]=function(result){
 				try{$("#"+Row.getDatagridTable($this).attr("id")).datagrid("reload");}catch(e){console.log("Row.delete:"+e);}
 			}			
 			// 3.ajax调用
@@ -363,8 +363,8 @@ function DatagridExtra(datagridId,options_,eoptions_){
 		}
 		// 2.找到里面的参数
 		var param = {};
-		if(!Extra.isEmpty($this.attr("callbackParam"))){
-			var callbackParam = $this.attr("callbackParam");
+		if(!Extra.isEmpty($this.attr(CallbackOptions.callbackParam))){
+			var callbackParam = $this.attr(CallbackOptions.callbackParam);
 			callbackParam = eval(callbackParam);
 			try{param = callbackParam();}catch(e){}
 		}else{
@@ -388,7 +388,7 @@ function DatagridExtra(datagridId,options_,eoptions_){
 		var dialog = Easyui.createEasyuiDialog($this,{});
 		
 		// 2.添加后置函数
-		dialog.envOptions["callbackPostSuccess"] = function(){
+		dialog.envOptions[CallbackOptions.callbackPostSuccess] = function(){
 			_this.reload();
 		}
 		return false;		
@@ -429,7 +429,7 @@ function DatagridExtra(datagridId,options_,eoptions_){
 		var dialog = Easyui.createEasyuiDialog($this,options);
 		
 		// 2.添加后置函数
-		dialog.envOptions["callbackPostSuccess"] = function(){
+		dialog.envOptions[CallbackOptions.callbackPostSuccess] = function(){
 			_this.reload();
 		}
 		
@@ -463,7 +463,7 @@ function DatagridExtra(datagridId,options_,eoptions_){
 		var dialog = Easyui.createEasyuiDialog($this,options);	
 		
 		// 2.添加后置函数,这里面它是不需要这个函数的,不过为了保险起见,还是加上去了
-		dialog.envOptions["callbackPostSuccess"] = function(){
+		dialog.envOptions[CallbackOptions.callbackPostSuccess] = function(){
 			_this.reload();
 		}
 		
@@ -503,10 +503,10 @@ function DatagridExtra(datagridId,options_,eoptions_){
 				href=Extra.replaceAll(href,"{"+params[i]+"}",param.toString());
 			}
 			options["url"]=href;			
-			options["progress.text"]="删除中....";
-			options["success_msg"]="删除成功";
-			options["fail_msg"]="删除失败";
-			options["callbackSubSuccess"]=function(result){
+			options[AjaxOptions.progressText]="删除中....";
+			options[AjaxOptions.default_success_msg]="删除成功";
+			options[AjaxOptions.default_fail_msg]="删除失败";
+			options[CallbackOptions.callbackSubSuccess]=function(result){
 				_this.reload();
 			}			
 			// 3.ajax调用

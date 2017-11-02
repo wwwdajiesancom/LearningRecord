@@ -346,8 +346,8 @@ var ExtraAjax = {
 		 */
 		validForm : function($form,options){
 			//1.看是否存在验证函数
-			if(!Extra.isEmpty($form.attr("callbackValid"))){
-				var callbackValid = $form.attr("callbackValid");
+			if(!Extra.isEmpty($form.attr(CallbackOptions.callbackValid))){
+				var callbackValid = $form.attr(CallbackOptions.callbackValid);
 				callbackValid = eval(callbackValid);
 				return callbackValid();
 			}
@@ -361,8 +361,8 @@ var ExtraAjax = {
 			if(validType=="easyui"){
 				$form.form("enableValidation");
 				var result = $form.form("validate");
-				if(result&&!Extra.isEmpty($form.attr("callbackSubValid"))){
-					var callbackSubValid = $form.attr("callbackSubValid");
+				if(result&&!Extra.isEmpty($form.attr(CallbackOptions.callbackSubValid))){
+					var callbackSubValid = $form.attr(CallbackOptions.callbackSubValid);
 					callbackSubValid = eval(callbackSubValid);
 					result = callbackSubValid();
 				}
@@ -388,20 +388,20 @@ var ExtraAjax = {
 		ajaxData : function($form){
 			try{
 				//ajax所需要的参数
-				if(!Extra.isEmpty($form.attr("callbackParam"))){
-					var callbackParam = $form.attr("callbackParam");
+				if(!Extra.isEmpty($form.attr(CallbackOptions.callbackParam))){
+					var callbackParam = $form.attr(CallbackOptions.callbackParam);
 					callbackParam = eval(callbackParam);
 					return callbackParam();
 				}else{
 					var data = {};
 					//自定义子处理
-					if(!Extra.isEmpty($form.attr("callbackSubParam"))){
-						var callbackSubParam = $form.attr("callbackSubParam");
+					if(!Extra.isEmpty($form.attr(CallbackOptions.callbackSubParam))){
+						var callbackSubParam = $form.attr(CallbackOptions.callbackSubParam);
 						callbackSubParam = eval(callbackSubParam);
 						data = callbackSubParam();
 					}
 					//form表单中的
-					var params = $form.find(":input[name][znone!='true']:enabled").serializeArray();
+					var params = $form.find(FormOptions.form_input_selector).serializeArray();
 					if(params.length>0){
 						for(var i in params){
 							var item = params[i];
@@ -436,8 +436,8 @@ var ExtraAjax = {
 			var options = {};
 			
 			//1.额外参数
-			if(!Extra.isEmpty(eoptions,"progress.text")){
-				options["progress.text"] = eoptions["progress.text"];
+			if(!Extra.isEmpty(eoptions,AjaxOptions.progressText)){
+				options[AjaxOptions.progressText] = eoptions[AjaxOptions.progressText];
 			}
 			
 			//2.必须的参数
@@ -456,11 +456,11 @@ var ExtraAjax = {
 			options["data"] = this.ajaxData($form);
 			
 			//4.一些方法的处理
-			if(!Extra.isEmpty($form.attr("callbackSuccess"))){
-				options["callbackSuccess"]=$form.attr("callbackSuccess");
+			if(!Extra.isEmpty($form.attr(CallbackOptions.callbackSuccess))){
+				options[CallbackOptions.callbackSuccess]=$form.attr(CallbackOptions.callbackSuccess);
 			}
-			if(!Extra.isEmpty($form.attr("callbackSubSuccess"))){
-				options["callbackSubSuccess"]=$form.attr("callbackSubSuccess");
+			if(!Extra.isEmpty($form.attr(CallbackOptions.callbackSubSuccess))){
+				options[CallbackOptions.callbackSubSuccess]=$form.attr(CallbackOptions.callbackSubSuccess);
 			}
 			return options;
 		},
@@ -495,8 +495,8 @@ var ExtraAjax = {
 			var dataType = 'json';
 			var cache = false;
 			var progressText = "";
-			if(!Extra.isEmpty(options,"progress.text")){
-				progressText = options["progress.text"];
+			if(!Extra.isEmpty(options,AjaxOptions.progressText)){
+				progressText = options[AjaxOptions.progressText];
 			}
 			$.ajax({
 				url:url,
@@ -522,11 +522,11 @@ var ExtraAjax = {
 				success:function(result){
 					//成功后执行的方法
 					try{
-						if(!Extra.isEmpty(options,"callbackSuccess")){
-							eval(options["callbackSuccess"])(result);
+						if(!Extra.isEmpty(options,CallbackOptions.callbackSuccess)){
+							eval(options[CallbackOptions.callbackSuccess])(result);
 						}else{						
-							if(!Extra.isEmpty(options,"defaultCallbackSuccess")){
-								options["defaultCallbackSuccess"](result,options);
+							if(!Extra.isEmpty(options,CallbackOptions.defaultCallbackSuccess)){
+								options[CallbackOptions.defaultCallbackSuccess](result,options);
 							}else{
 								ExtraAjax.ajaxSuccess(result,options);
 							}
@@ -567,19 +567,17 @@ var ExtraAjax = {
 		 * 判断ajax调用的后台执行是否成功
 		 */
 		ajaxSuccessStatus:function(result){
-			try{
-				if(result.success){
-					return true;
-				}
-			}catch(e){}
+			if(Extra.getJsonValue(result,AjaxOptions.success)){
+				return true;
+			}
 			return false;
 		},
 		/**
 		 * ajax调用后台成功执行过程中,执行的一个外部提供的子函数
 		 */
 		ajaxSuccessSubCallback:function(options){
-			if (!Extra.isEmpty(options, "callbackSubSuccess")) {
-				var callbackSubSuccess = eval(options["callbackSubSuccess"]);
+			if (!Extra.isEmpty(options, CallbackOptions.callbackSubSuccess)) {
+				var callbackSubSuccess = eval(options[CallbackOptions.callbackSubSuccess]);
 				callbackSubSuccess();
 			}
 		},
@@ -587,8 +585,8 @@ var ExtraAjax = {
 		 * ajax调用后台成功执行过程中,执行的一个后置成功函数
 		 */
 		ajaxSuccessPostCallback:function(options){
-			if (!Extra.isEmpty(options, "callbackPostSuccess")) {
-				var callbackPostSuccess = eval(options["callbackPostSuccess"]);
+			if (!Extra.isEmpty(options, CallbackOptions.callbackPostSuccess)) {
+				var callbackPostSuccess = eval(options[CallbackOptions.callbackPostSuccess]);
 				callbackPostSuccess();
 			}
 		},
@@ -596,8 +594,8 @@ var ExtraAjax = {
 		 * ajax调用后台成功执行过程中,执行的一个后置失败函数
 		 */
 		ajaxFailPostCallback:function(options){
-			if (!Extra.isEmpty(options, "callbackPostFail")) {
-				var callbackPostFail = eval(options["callbackPostFail"]);
+			if (!Extra.isEmpty(options, CallbackOptions.callbackPostFail)) {
+				var callbackPostFail = eval(options[CallbackOptions.callbackPostFail]);
 				callbackPostFail();
 			}
 		},
@@ -606,8 +604,8 @@ var ExtraAjax = {
 		 */
 		ajaxSuccessMsg:function(result,options){
 			var msg = "成功";
-			if(!Extra.isEmpty(options,"success_msg"))msg=options["success_msg"];
-			if (!Extra.isEmpty(result, "msg")){msg = result["msg"];}
+			if(!Extra.isEmpty(options,AjaxOptions.default_success_msg))msg=options[AjaxOptions.default_success_msg];
+			if (!Extra.isEmpty(result, AjaxOptions.result_success_msg)){msg = result[AjaxOptions.result_success_msg];}
 			return msg;
 		},
 		/**
@@ -615,8 +613,8 @@ var ExtraAjax = {
 		 */
 		ajaxFailMsg:function(result,options){
 			var msg = "失败";
-			if(!Extra.isEmpty(options,"fail_msg"))msg=options["fail_msg"];
-			if (!Extra.isEmpty(result, "msg")){msg = result["msg"];}
+			if(!Extra.isEmpty(options,AjaxOptions.default_fail_msg))msg=options[AjaxOptions.default_fail_msg];
+			if (!Extra.isEmpty(result, AjaxOptions.result_fail_msg)){msg = result[AjaxOptions.result_fail_msg];}
 			return msg;
 		},
 		/**
@@ -633,4 +631,37 @@ var ExtraAjax = {
 				}		
 			);
 		}
+};
+
+var FormOptions = {
+	form_input_selector:":input[name][znone!='true']:enabled",
+		
+};
+
+var AjaxOptions = {
+	success:"success",//判断ajax调用是否成功所需要的字段,返回的是一个boolean值最好,如果不是需要修改相关的引用方法
+	
+	result_success_msg:"msg",//ajax调用成功后,执行成功的提示信息获取用到的key
+	result_fail_msg:"msg",//ajax调用成功后,执行失败的提示信息获取用到的key
+	
+	default_success_msg:"success_msg",//ajax调用成功后,执行成功提示信息获取用到的默认key
+	default_fail_msg:"fail_msg",//ajax调用成功后,执行失败提示信息获取用到的默认key
+	
+	progressText:"progressText",
+};
+
+var CallbackOptions = {
+		callbackPostSuccess:"callbackPostSuccess",
+		callbackPostFail:"callbackPostFail",
+		
+		callbackParam:"callbackParam",
+		callbackSubParam:"callbackSubParam",
+		
+		callbackValid:"callbackValid",
+		callbackSubValid:"callbackSubValid",
+		
+		defaultCallbackSuccess:"defaultCallbackSuccess",
+		callbackSuccess:"callbackSuccess",
+		callbackSubSuccess:"callbackSubSuccess",
+		
 };

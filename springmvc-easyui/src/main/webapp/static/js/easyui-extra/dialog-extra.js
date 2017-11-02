@@ -22,15 +22,13 @@ function DialogExtra(dialogId_, options_) {
 	if(Extra.isEmpty(options_)){options_={};}
 	if(Extra.isEmpty(options_,"init")){options_["init"]=true;}
 	
-	this.envOptions = {
-		success_msg : "成功.",
-		fail_msg : "失败.",
-		callbackPostSuccess : function() {
-		},//后置成功函数
-		callbackPostFail : function() {
-		},//后置失败函数
-		defaultCallbackSuccess:_this.ajaxSuccessDialog
-	};
+	this.envOptions = {};
+	this.envOptions[AjaxOptions.default_success_msg] = "成功";
+	this.envOptions[AjaxOptions.default_fail_msg] = "失败";
+	this.envOptions[CallbackOptions.callbackPostSuccess] = function(){};
+	this.envOptions[CallbackOptions.callbackPostFail] = function(){};	
+	this.envOptions[CallbackOptions.defaultCallbackSuccess] = _this.ajaxSuccessDialog;
+		
 	// 2.定义一些常用的方法
 
 	/**
@@ -110,7 +108,7 @@ function DialogExtra(dialogId_, options_) {
 		var ajaxOptions = ExtraAjax.ajaxOptions($form, eoptions);
 
 		// 设置默认的回调函数
-		ajaxOptions["defaultCallbackSuccess"] = _this.ajaxSuccessDialog;
+		ajaxOptions[CallbackOptions.defaultCallbackSuccess] = _this.ajaxSuccessDialog;
 
 		// 4.ajax调用
 		ExtraAjax.ajax(ajaxOptions);
@@ -151,13 +149,13 @@ function DialogExtra(dialogId_, options_) {
 	 */
 	this.__proto__.getButtonText = function(target,eoptions){
 		if(typeof (target) == "number"){
-			eoptions["progress.text"] = _this.options()["buttons"][target]["text"]+"中....";
-			_this.envOptions["success_msg"]=_this.options()["buttons"][target]["text"]+"成功";
-			_this.envOptions["fail_msg"]=_this.options()["buttons"][target]["text"]+"失败";
+			eoptions[AjaxOptions.progressText] = _this.options()["buttons"][target]["text"]+"中....";
+			_this.envOptions[AjaxOptions.default_success_msg]=_this.options()["buttons"][target]["text"]+"成功";
+			_this.envOptions[AjaxOptions.default_fail_msg]=_this.options()["buttons"][target]["text"]+"失败";
 		}else{
-			eoptions["progress.text"] = target.text()+"中....";
-			_this.envOptions["success_msg"]=target.text()+"成功";
-			_this.envOptions["fail_msg"]=target.text()+"失败";
+			eoptions[AjaxOptions.progressText] = target.text()+"中....";
+			_this.envOptions[AjaxOptions.default_success_msg]=target.text()+"成功";
+			_this.envOptions[AjaxOptions.default_fail_msg]=target.text()+"失败";
 		}
 	}
 
@@ -182,7 +180,7 @@ function DialogExtra(dialogId_, options_) {
 		var ajaxOptions = ExtraAjax.ajaxOptions($form, eoptions);
 
 		// 设置默认的回调函数
-		ajaxOptions["defaultCallbackSuccess"] = _this.ajaxSuccessDialog;
+		ajaxOptions[CallbackOptions.defaultCallbackSuccess] = _this.ajaxSuccessDialog;
 
 		// 4.ajax调用
 		ExtraAjax.ajax(ajaxOptions);
