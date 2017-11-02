@@ -8,6 +8,12 @@ var Extra = {
 			}
 			return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
 		},
+		isString:function(str){
+			if(typeof (str) == 'string'){
+				return true;
+			}
+			return false;
+		},
 		/**
 		 * 获取href中的参数
 		 * 例如：http://www.loujie.com/test/{id}?name={name}&age={age}
@@ -633,9 +639,19 @@ var ExtraAjax = {
 		}
 };
 
+
+var DatagridOptions = {
+	search:"search",
+	add:"add",
+	view:"view",
+	update:"update",
+	deletes:"deletes",
+	
+	dialog:"dialog",
+};
+
 var FormOptions = {
 	form_input_selector:":input[name][znone!='true']:enabled",
-		
 };
 
 var AjaxOptions = {

@@ -3,7 +3,6 @@
 <script type="text/javascript"
 	src="${contextPath}/static/js/exec-bind.js"></script>
 <script type="text/javascript">
-	alert(12345);
 </script>
 <form action="${contextPath}/ajax/datagrid/add" method="post"
 	callbackValid="" callbackSuccess="" callbackSubSuccess=""

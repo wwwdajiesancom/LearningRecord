@@ -43,14 +43,14 @@ exec-bind.js
 	b.动态创建Dialog的按钮样例：
 		<a href="#" 
 			class="easyui-linkbutton" 
-			tag="dialog"
+			tag="DatagridOptions.dialog"
 			fhref=""
 			action="" 
 			buttons="save,close" 
 			params="modal:true;width:350px;height: 250px;href:${contextPath}/jsp/dialog/view.html;"
 		>动态创建一个dialog</a>
 		解释:其中class是a标签的easyui样式,多出的就是Dialog的东西了
-			1）tag="dialog",它是一个标记,标记该a标签会绑定一个创建Dialog的事件
+			1）tag="DatagridOptions.dialog",它是一个标记,标记该a标签会绑定一个创建Dialog的事件
 			2）fhref,action是Dialog创建好,要加载到dialog-content中的url;这个Url连接到一个jsp页面
 			3）buttons="save,update[value=更新;],close",它是动态创建Dialog下面按钮动属性
 				要注意的是,我们这里面只有3个,就是save,update,close
@@ -102,18 +102,18 @@ exec-bind.js
 					params="title:添加测试;width:350;height:250;" 
 					buttons="save,close" 
 					class="easyui-linkbutton" 
-					tag="add" 
+					tag="DatagridOptions.add" 
 				>添加</a>
 				<a href="#" 
 					fhref="${contextPath}/jsp/datagrid/update.html" 
 					params="width:350;height:250;" 
 					buttons="save[value:修改],close" 
 					class="easyui-linkbutton" 
-					tag="update" 
+					tag="DatagridOptions.update" 
 				>修改</a>
 				<a href="#" 
 					class="easyui-linkbutton" 
-					tag="deletes" 
+					tag="DatagridOptions.deletes" 
 				>删除</a>		
 			</div>
 			<div>
@@ -132,7 +132,7 @@ exec-bind.js
 						<td>
 							<a href="#" 
 								class="easyui-linkbutton" 
-								tag="search" 
+								tag="DatagridOptions.search" 
 							>查询</a>
 						</td>
 					</tr>
@@ -168,7 +168,7 @@ exec-bind.js
 			例如:
 				 * <a href="#" 
 				 *		class="easyui-linkbutton" 
-				 *		tag="view"      可选
+				 *		tag="DatagridOptions.view"      可选
 				 *		fhref=""        它需要是真路径,不能包含了参数
 				 *		action="" 
 				 *		buttons="save,close" 
@@ -242,10 +242,10 @@ exec-bind.js
 	<!-- datagrid的toolbar部分代码 -->
 	<div id="${test_datagrid}_tb"  style="display: none;">
 		<div>
-			<a href="#" action="${contextPath}/jsp/dialog/view.html?id={id}" params="title:添加测试;width:350;height:250;" buttons="save,close" class="easyui-linkbutton" tag="view" >视图</a>
-			<a href="#" action="${contextPath}/jsp/datagrid/add.html" params="title:添加测试;width:350;height:250;" buttons="save,close" class="easyui-linkbutton" tag="add" >添加</a>
-			<a href="#" action="${contextPath}/jsp/datagrid/update.html?id={id}" params="width:350;height:250;" buttons="update[value:修改],close" class="easyui-linkbutton" tag="update" >修改</a>
-			<a href="#" class="easyui-linkbutton" tag="deletes" action="${contextPath}/ajax/datagrid/delete.json?ids={id}&name={name}" >删除</a>		
+			<a href="#" action="${contextPath}/jsp/dialog/view.html?id={id}" params="title:添加测试;width:350;height:250;" buttons="save,close" class="easyui-linkbutton" tag="DatagridOptions.view" >视图</a>
+			<a href="#" action="${contextPath}/jsp/datagrid/add.html" params="title:添加测试;width:350;height:250;" buttons="save,close" class="easyui-linkbutton" tag="DatagridOptions.add" >添加</a>
+			<a href="#" action="${contextPath}/jsp/datagrid/update.html?id={id}" params="width:350;height:250;" buttons="update[value:修改],close" class="easyui-linkbutton" tag="DatagridOptions.update" >修改</a>
+			<a href="#" class="easyui-linkbutton" tag="DatagridOptions.deletes" action="${contextPath}/ajax/datagrid/delete.json?ids={id}&name={name}" >删除</a>		
 		</div>
 		<div>
 			<table id="${test_datagrid}_tb_search">
@@ -261,7 +261,7 @@ exec-bind.js
 						<input type="text" name="id" zauto="true" />
 					</td>
 					<td>
-						<a href="#" class="easyui-linkbutton" tag="search" >查询</a>
+						<a href="#" class="easyui-linkbutton" tag="DatagridOptions.search" >查询</a>
 					</td>
 				</tr>
 			</table>
@@ -271,10 +271,10 @@ exec-bind.js
 	<!-- datagrid的toolbar部分代码 -->
 	<div id="${test_datagrid}_tb2"  style="display: none;">
 		<div>
-			<a href="#" action="${contextPath}/jsp/dialog/view.html?id={id}" params="title:添加测试;width:350;height:250;" buttons="save,close" class="easyui-linkbutton" tag="view" >视图</a>
-			<a href="#" action="${contextPath}/jsp/datagrid/add.html" params="title:添加测试;width:350;height:250;" buttons="save,close" class="easyui-linkbutton" tag="add" >添加</a>
-			<a href="#" action="${contextPath}/jsp/datagrid/update.html?id={id}" params="width:350;height:250;" buttons="update[value:修改],close" class="easyui-linkbutton" tag="update" >修改</a>
-			<a href="#" class="easyui-linkbutton" tag="deletes" action="${contextPath}/ajax/datagrid/delete.json?ids={id}&name={name}" >删除</a>		
+			<a href="#" action="${contextPath}/jsp/dialog/view.html?id={id}" params="title:添加测试;width:350;height:250;" buttons="save,close" class="easyui-linkbutton" tag="DatagridOptions.view" >视图</a>
+			<a href="#" action="${contextPath}/jsp/datagrid/add.html" params="title:添加测试;width:350;height:250;" buttons="save,close" class="easyui-linkbutton" tag="DatagridOptions.add" >添加</a>
+			<a href="#" action="${contextPath}/jsp/datagrid/update.html?id={id}" params="width:350;height:250;" buttons="update[value:修改],close" class="easyui-linkbutton" tag="DatagridOptions.update" >修改</a>
+			<a href="#" class="easyui-linkbutton" tag="DatagridOptions.deletes" action="${contextPath}/ajax/datagrid/delete.json?ids={id}&name={name}" >删除</a>		
 		</div>
 		<div>
 			<table id="${test_datagrid}_tb_search">
@@ -290,7 +290,7 @@ exec-bind.js
 						<input type="text" name="id" zauto="true" />
 					</td>
 					<td>
-						<a href="#" class="easyui-linkbutton" tag="search" >查询</a>
+						<a href="#" class="easyui-linkbutton" tag="DatagridOptions.search" >查询</a>
 					</td>
 				</tr>
 			</table>
