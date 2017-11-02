@@ -13,10 +13,13 @@ var Extra = {
 		 * 例如：http://www.loujie.com/test/{id}?name={name}&age={age}
 		 * 获取id,name,age
 		 */
-		getHrefParam:function(href){
+		getHrefParam:function(href,_reg){
 			var result = [];
 			if(!this.isEmpty(href)){
 				var reg = /\{([\w\d_]+)\}/ig;
+				if(!this.isEmpty(_reg)){
+					reg = _reg;
+				}
 				var r = "";
 				while(r=reg.exec(href)){
 					result.push(r[1]);
@@ -150,6 +153,16 @@ var Extra = {
 		 * key:键值,但可能包含了其它的分割字符,例如person.name
 		 * value:值
 		 * seg:分隔符,默认为.
+		 * 
+		 * 处理复杂的name;目前可以处理以下几种,
+		 * 
+		 * 1.直接名称,例如age,page等;
+		 * 
+		 * 2.数组,id=1,id=2,id=3会转换成id:[1,2,3];
+		 * 
+		 * 3.携带.的字段;例如persion.name=2;转换成persion:{name:2};
+		 * 
+		 * 4.带有下标的例如list[0].name=jiege,list[0].age=12,list[1].name=weiwei,list[1].age=23,这些会转化为list:[{name:jiege,age:12},{name:weiwei,age:23}]
 		 */
 		keyValueToJson:function(result,key,value,seg){
 			//1.设置默认值
@@ -170,6 +183,7 @@ var Extra = {
 			if(this.isEmpty(i)){
 				i = 0;
 			}
+			//最后一个,肯定不会带下标
 			if(i==(keys.length-1)){
 				if(!this.isEmpty(result[keys[i]])){
 					if(typeof (result[keys[i]]) == "object"){
@@ -188,12 +202,29 @@ var Extra = {
 				}
 			}else{
 				//更加复杂了,主要是有重复的值
-				if(!this.isEmpty(result[keys[i]])){
-					this.setKeyItor(keys,value,result[keys[i]],i+1);
+				var keyIndex = Extra.getHrefParam(keys[i],/\[([\d]+)\]/ig)[0];
+				var newKey = this.replaceAll(keys[i],"["+keyIndex+"]");
+				if(!this.isEmpty(result[newKey])){
+					//存在下标,abc[0].name
+					if(!this.isEmpty(keyIndex)){
+						var indexResult = result[newKey][keyIndex];
+						if(this.isEmpty(indexResult)){
+							indexResult = {};
+						}
+						this.setKeyItor(keys,value,indexResult,i+1);
+						result[newKey][keyIndex] = indexResult;
+					}else{
+						this.setKeyItor(keys,value,result[newKey],i+1);						
+					}
 				}else{					
 					var _result = {};
 					this.setKeyItor(keys,value,_result,i+1);
-					result[keys[i]] = _result;
+					if(!this.isEmpty(keyIndex)){
+						var values_ = [];values_[keyIndex]=_result;
+						result[newKey] = values_;
+					}else{						
+						result[newKey] = _result;
+					}
 				}
 			}
 		},
@@ -377,6 +408,7 @@ var ExtraAjax = {
 							var key = item["name"];
 							var value = item["value"];
 							if(!Extra.isEmpty(value)&&!Extra.isEmpty(key)){
+								//处理复杂的name;目前可以处理以下几种,1.直接名称,例如age,page等;2.数组,id=1,id=2,id=3会转换成id:[1,2,3];3.携带.的字段;例如persion.name=2;转换成persion:{name:2};带有下标的例如list[0].name=jiege,list[0].age=12,list[1].name=weiwei,list[1].age=23,这些会转化为list:[{name:jiege,age:12},{name:weiwei,age:23}]
 								Extra.keyValueToJson(data,key,value);
 							}
 						}
