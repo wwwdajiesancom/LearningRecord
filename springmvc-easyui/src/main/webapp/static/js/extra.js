@@ -158,11 +158,7 @@ var Extra = {
 			}
 			//2.拆分
 			var keys = key.split(seg);
-			if(keys.length==1){
-				result[key]=value;
-			}else{
-				this.setKeyItor(keys,value,result);
-			}
+			this.setKeyItor(keys,value,result);
 		},
 		/**
 		 * 将一个[]放入到一个{}中,
@@ -195,7 +191,9 @@ var Extra = {
 				if(!this.isEmpty(result[keys[i]])){
 					this.setKeyItor(keys,value,result[keys[i]],i+1);
 				}else{					
-					result[keys[i]] = this.setKeyItor(keys,value,{},i+1);
+					var _result = {};
+					this.setKeyItor(keys,value,_result,i+1);
+					result[keys[i]] = _result;
 				}
 			}
 		},
@@ -319,9 +317,8 @@ var ExtraAjax = {
 			//1.看是否存在验证函数
 			if(!Extra.isEmpty($form.attr("callbackValid"))){
 				var callbackValid = $form.attr("callbackValid");
-				//callbackValid = eval(callbackValid);
-				return eval(callbackValid);
-				//return callbackValid();
+				callbackValid = eval(callbackValid);
+				return callbackValid();
 			}
 			//2.验证分为不同的方式,可以是easyui的验证,也可以是其它插件的,当前的情况我们只写一种就是easyui的验证
 			//1.设置验证方式
@@ -332,7 +329,13 @@ var ExtraAjax = {
 			//2.easyui验证
 			if(validType=="easyui"){
 				$form.form("enableValidation");
-				return $form.form("validate");
+				var result = $form.form("validate");
+				if(result&&!Extra.isEmpty($form.attr("callbackSubValid"))){
+					var callbackSubValid = $form.attr("callbackSubValid");
+					callbackSubValid = eval(callbackSubValid);
+					result = callbackSubValid();
+				}
+				return result;
 			}
 			return false;
 		},
@@ -367,7 +370,7 @@ var ExtraAjax = {
 						data = callbackSubParam();
 					}
 					//form表单中的
-					var params = $form.find(":input[name]:enabled").serializeArray();
+					var params = $form.find(":input[name][znone!='true']:enabled").serializeArray();
 					if(params.length>0){
 						for(var i in params){
 							var item = params[i];

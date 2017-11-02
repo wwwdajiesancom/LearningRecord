@@ -51,6 +51,13 @@
 			<td> <input tag="add" type="button" value="value4" class="ztextbox" /> </td>
 			
 		</tr>
+		
+		<tr>
+			<td> <input type="checkbox" name="ch1.name" value="1" />1 <input type="checkbox" name="ch1.name" znone="true" value="2" />2 <input type="checkbox" name="ch1.name" value="3" />3 <input type="checkbox" name="ch1.name" value="4" />4 </td>
+			<td></td>
+			<td></td>
+			<td></td>
+		</tr>
 	</table>
 	
 </body>
