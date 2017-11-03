@@ -17,7 +17,9 @@ var Extra = {
 		/**
 		 * 获取href中的参数
 		 * 例如：http://www.loujie.com/test/{id}?name={name}&age={age}
-		 * 获取id,name,age
+		 * 获取到的是[id,name,age]
+		 * 
+		 * _reg:这是一个正则,默认匹配{xxx},但是也可以匹配其它的,这时就需要自己写了
 		 */
 		getHrefParam:function(href,_reg){
 			var result = [];

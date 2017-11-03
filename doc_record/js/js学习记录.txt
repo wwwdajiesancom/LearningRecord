@@ -163,10 +163,35 @@ window.location
 
 
 
+正则表达式：
+	有两种表达方式：
+		1.JS表达式风格,var reg = new RegExp("a");
+		2.perl风格,var reg = /a/;
+	
+	模式修饰符：
+		i:ingore,忽略大小写
+		g:global,找到全部
+		m:multi,多行匹配
+		
+	\:转义
+		\d数字,代表的是[0-9]
+		\w字母、数字、下划线,代表的是[a-zA-Z0-9_]
+		\s,代表的空白字符
+		
+	string.match(reg)，将所有匹配的提取出来
+	var str = "abc 23 bcd 13 34 jj56 bb33";
+	var reg = /\d+/g;
+	var result = str.match(reg);
+	result=[23,13,34,56,33];
+	
+	[^a],除了a之外的,需要在[]中
+	
+	RegExp,下面的方法：
+	reg.test(str);//判断是否匹配,只要有一部分满足，就是true
+	reg.exec(str);//匹配，返回匹配的结果，是一个数组
 	
 	
-	
-
+	^,$行首及行尾,这样就可以全匹配了
 
 
 
