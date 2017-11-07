@@ -39,10 +39,41 @@
 			</table>
 		</div>
 	</div>
-
-	<table id="datagrid_table" toolbar="#datagrid_table_tb" height="100%"
-		action="${contextPath}/ajax/findpage">
+	<table id="datagrid_table" toolbar="#datagrid_table_tb" action="${contextPath}/ajax/findpage">
 
 	</table>
+	
+    <div id="datagrid_table_tb2">
+		<div>
+			<a href="javascript:;" class="easyui-linkbutton" tag="view" buttons="close" params="title:用户详情;width:350;height:250;modal:true;" action="${contextPath}/jsp/datagrid/view/{id}">详情</a>
+			<a href="javascript:;" class="easyui-linkbutton" tag="add" buttons="close,save" params="title:添加用户;width:350;height:250;modal:true;" action="${contextPath}/jsp/datagrid/add">添加</a>
+			<a href="javascript:;" class="easyui-linkbutton" tag="update" buttons="update,close" params="title:修改用户;width:350;height:250;modal:true;" action="${contextPath}/jsp/datagrid/update/{id}">修改</a>
+			<a href="javascript:;" class="easyui-linkbutton" tag="deletes" action="${contextPath}/ajax/datagrid/delete/{id}">删除</a>
+		</div>
+		<div>
+			<table id="datagrid_table_tb_search2">
+				<tr>
+					<td>名称：</td>
+					<td>
+						<input type="text" name="name" zauto="true" />
+					</td>
+					<td>
+						编号：
+					</td>
+					<td>
+						<input type="text" name="id" zauto="true" />
+					</td>
+					<td>
+						<a href="#" class="easyui-linkbutton" tag="search" >查询</a>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	
+	<table id="datagrid_table2" action="${contextPath}/ajax/findpage">
+
+	</table>
+	
 </body>
 </html>

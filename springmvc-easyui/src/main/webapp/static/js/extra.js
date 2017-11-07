@@ -531,7 +531,7 @@ var ExtraAjax = {
 					//成功后执行的方法
 					try{
 						if(!Extra.isEmpty(options,CallbackOptions.callbackSuccess)){
-							eval(options[CallbackOptions.callbackSuccess])(result);
+							eval(options[CallbackOptions.callbackSuccess])(result,options);
 						}else{						
 							if(!Extra.isEmpty(options,CallbackOptions.defaultCallbackSuccess)){
 								options[CallbackOptions.defaultCallbackSuccess](result,options);
