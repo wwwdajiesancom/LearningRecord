@@ -641,6 +641,47 @@ var ExtraAjax = {
 		}
 };
 
+var ExtraObject = function(extraObject){
+	this.extraObject = extraObject;
+	this.id = this.extraObject.id;
+}
+
+ExtraObject.prototype["equals"]=function(id){
+	if(!id.startsWith("#")){
+		id = "#"+id;
+	}
+	if(this.id==id){
+		return true;
+	}else{
+		return false;
+	}
+}
+
+var ExtraHistory = {
+	arr:[],
+	add:function(extraObject){
+		this.arr.push(new ExtraObject(extraObject));
+	},
+	get:function(index){
+		if(Extra.isEmpty(index)){
+			index = 0;
+		}
+		return this.arr[index].extraObject;
+	},
+	del:function(idOrIndex){
+		try{
+			if(typeof (idOrIndex)=="string"){
+				for(var i in this.arr){
+					if(this.arr[i].equals(idOrIndex)){
+						return this.del(parseInt(i));
+					}
+				}
+			}else if(typeof (idOrIndex)=="number"){
+				return this.arr.splice(idOrIndex,1);
+			}
+		}catch(e){}
+	}
+}
 
 var DatagridOptions = {
 	search:"search",

@@ -281,3 +281,16 @@ DialogExtra.prototype["init"] = function(){
 	// 3.2保存/更新标签绑定事件
 	this.bindEvent("btSave");
 };
+
+/**
+ * 扩展方法
+ */
+DialogExtra.prototype["invoke"] = function(methodName,options){
+	try{
+		if(Extra.isEmpty(options)){
+			$(this.id).dialog(methodName);
+		}else{
+			$(this.id).dialog(methodName,options);
+		}
+	}catch(e){}
+}

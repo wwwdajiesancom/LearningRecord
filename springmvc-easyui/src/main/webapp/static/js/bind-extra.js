@@ -265,6 +265,10 @@ var Easyui = {
 		var attr = $this.attr("params");
 		// 格式化
 		var attrOptions = BindExtra.getAttr(attr);
+		if(!Extra.isEmpty(attrOptions,"id")){
+			bind_id = attrOptions["id"];
+			delete attrOptions["id"];
+		}
 		// 弹出框的buttons属性
 		var buttons = $this.attr("buttons");
 		var buttons_html = BindExtra.getButtonsHtml(bind_id,buttons);
@@ -313,13 +317,16 @@ var Easyui = {
 		//在关闭的时候触发的事件
 		attrOptions["onClose"]=function(){
 			$("#"+bind_id).dialog("destroy");
+			ExtraHistory.del("#"+bind_id);
 		}
 		// 生成dialog
 		$("#"+bind_id).dialog(attrOptions);
 
 		// 绑定其它的事件
 		try{
-		 	return new DialogExtra(bind_id);					
+		 	var dialogExtra = new DialogExtra(bind_id);
+		 	ExtraHistory.add(dialogExtra);
+		 	return dialogExtra;
 		}catch(e){}
 	},
 	createEasyuiDialog:function ($this,options_){
@@ -329,6 +336,10 @@ var Easyui = {
 		var attr = $this.attr("params");
 		// 格式化
 		var attrOptions = BindExtra.getAttr(attr);
+		if(!Extra.isEmpty(attrOptions,"id")){
+			bind_id = attrOptions["id"];
+			delete attrOptions["id"];
+		}
 		var dialogObject = new DailogSimpleExtra(bind_id);
 		// 弹出框的buttons属性
 		var buttons = $this.attr("buttons");
@@ -374,12 +385,13 @@ var Easyui = {
 		// 3.dialog初始化
 		attrOptions["onClose"]=function(){
 			$("#"+bind_id).dialog("destroy");
+			ExtraHistory.del("#"+bind_id);
 		}
 		// 生成dialog
 		$("#"+bind_id).dialog(attrOptions);
 		
 		dialogObject.init();
-		
+		ExtraHistory.add(dialogObject);
 		return dialogObject;				
 	}
 };
