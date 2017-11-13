@@ -9,13 +9,21 @@
 
 <script type="text/javascript" src="${contextPath}/static/viewjs/datagrid/datagrid.js"></script>
 
+<script type="text/javascript">
+function abcdef($this){
+	//$this代表的是a标签
+	alert(1233);
+	return false;
+}
+</script>
+
 <title>easyui-分页table(datagrid)</title>
 </head>
 <body>
 	<div id="datagrid_table_tb">
 		<div>
 			<a href="javascript:;" class="easyui-linkbutton" tag="view" buttons="close" params="title:用户详情;width:350;height:250;modal:true;" action="${contextPath}/jsp/datagrid/view/{id}">详情</a>
-			<a href="javascript:;" class="easyui-linkbutton" tag="add" buttons="close,save" params="title:添加用户;width:350;height:250;modal:true;" action="${contextPath}/jsp/datagrid/add">添加</a>
+			<a href="javascript:;" class="easyui-linkbutton" tag="add" beforeCallback="abcdef" buttons="close,save" params="title:添加用户;width:350;height:250;modal:true;" action="${contextPath}/jsp/datagrid/add">添加</a>
 			<a href="javascript:;" class="easyui-linkbutton" tag="update" buttons="update,close" params="title:修改用户;width:350;height:250;modal:true;" action="${contextPath}/jsp/datagrid/update/{id}">修改</a>
 			<a href="javascript:;" class="easyui-linkbutton" tag="deletes" action="${contextPath}/ajax/datagrid/delete/{id}">删除</a>
 		</div>
@@ -71,9 +79,9 @@
 		</div>
 	</div>
 	
-	<table id="datagrid_table2" action="${contextPath}/ajax/findpage">
+	<div id="datagrid_table2" action="${contextPath}/ajax/findpage">
 
-	</table>
+	</div>
 	
 </body>
 </html>

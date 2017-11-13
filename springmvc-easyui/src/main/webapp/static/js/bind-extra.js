@@ -421,6 +421,12 @@ function easyui_dialog_event_bind(){
 	});
 }
 
+function easyui_rowtag_event_bind(){
+	$("body").undelegate("a[tag^='row']","click").delegate("a[tag^='row']","click",function(){
+		Row.all(this,$(this).attr("index"));
+	});	
+}
+
 /**
  * 给input添加固定的属性 例子: <input type="text" class="easyui-validatebox" zauto="true"
  * required="true" />
@@ -448,6 +454,9 @@ function exec_all_bind(){
 	
 	// input自动加载样式
 	try{easyui_input_bind();}catch(e){console.log(e);}
+	
+	//
+	try{easyui_rowtag_event_bind();}catch(e){}
 	
 }
 

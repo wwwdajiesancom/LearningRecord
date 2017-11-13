@@ -6,7 +6,7 @@ var Row = {
 	 * 根据datagrid中的一个小元素获取datagridTable对象
 	 */
 	getDatagridTable:function($this){
-		return $($this).closest("div.datagrid").find("table[id][binddatagrid]");
+		return $($this).closest("div.datagrid").find("table[id][binddatagrid]:eq(0),div[id][binddatagrid]:eq(0)");
 	},
 	/**
 	 * 视图展示
@@ -92,6 +92,24 @@ var Row = {
 		try{callbackOther = eval(callbackOther); callbackOther($this,i,row,datagridId);}catch(e){}
 		try{$("#"+datagridId).datagrid("reload");}catch(e){}
 		return false;
+	},
+	all:function($this,i){
+		$this = $($this);
+		//执行全局函数
+		var beforeCallback = $this.attr("beforeCallback");
+		var flag = true;
+		if(!Extra.isEmpty(beforeCallback)){
+			beforeCallback = eval(beforeCallback);
+			flag = beforeCallback($this);
+		}
+		//判断是否要执行下面的操作
+		if(flag){
+			var tag= $this.attr("tag");
+			if(!Extra.isEmpty(tag)){
+				tag = Extra.replaceAll(tag,"row");
+				Row[tag]($this,i,$this.attr("callbackOther"));
+			}
+		}
 	}
 }
 
@@ -332,6 +350,19 @@ DatagridExtra.prototype["options"] = function(){
 };
 
 /**
+ * 单击事件的前置事件
+ */
+DatagridExtra.prototype["tbClickBeforeCallback"] = function($this_){
+	var $this = $($this_);
+	var beforeCallback = $this.attr("beforeCallback");
+	if(!Extra.isEmpty(beforeCallback)){
+		beforeCallback = eval(beforeCallback);
+		return beforeCallback($this_);
+	}	
+	return true;
+}
+
+/**
  * 给所有的标签绑定相应的事件
  * 
  * 
@@ -341,7 +372,10 @@ DatagridExtra.prototype["tbClick"] = function(){
 	var options = this.options();
 	if(!Extra.isEmpty(options,"toolbar")){
 		$(options["toolbar"]).undelegate("a[tag='"+DatagridOptions.search+"'],a[tag='"+DatagridOptions.view+"'],a[tag='"+DatagridOptions.add+"'],a[tag='"+DatagridOptions.update+"'],a[tag='"+DatagridOptions.deletes+"']","click").delegate("a[tag='"+DatagridOptions.search+"'],a[tag='"+DatagridOptions.view+"'],a[tag='"+DatagridOptions.add+"'],a[tag='"+DatagridOptions.update+"'],a[tag='"+DatagridOptions.deletes+"']","click",function(){
-			_this[$(this).attr("tag")]($(this));
+			//执行绑定事件的前置事件
+			if(_this.tbClickBeforeCallback(this)){
+				_this[$(this).attr("tag")]($(this));				
+			}
 		});
 	}
 };
@@ -372,7 +406,7 @@ DatagridExtra.prototype[DatagridOptions.search] = function($this){
 	if(!Extra.isEmpty($this.attr("parentId"))){
 		$parent = $("#"+$this.attr("parentId"));
 	}else{
-		$parent = $this.closest("table");
+		$parent = $this.closest("table:eq(0)");
 	}
 	// 2.找到里面的参数
 	var param = {};
@@ -542,6 +576,7 @@ DatagridExtra.prototype[DatagridOptions.deletes] = function($this){
 	
 	return false;
 };
+
 
 DatagridExtra.prototype["bindEvent"] = function(eventName){
 	switch(eventName){
