@@ -7,7 +7,9 @@ public class JavaDemoTest {
 	@Test
 	public void abc() {
 		
+		Exception abc = null;
 		
+		RuntimeException rException;
 		
 		
 		

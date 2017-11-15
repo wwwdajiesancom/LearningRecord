@@ -82,6 +82,16 @@ var Extra = {
 			}
 			return this.replaceAll(str,seg,'');
 		},
+		trimLR:function(str){
+			if(this.isEmpty(str)){
+				return str;
+			}
+			try{
+				return str.trim();
+			}catch(e){
+				return str;
+			}			
+		},
 		/**
 		 * 判断是否为空 分为两种判断： 第一种是传递一个参数,为string,boolean,number
 		 * 第二种是传递二个参数,第一个参数为{},第二个为string(其实是一个键值)
@@ -414,7 +424,7 @@ var ExtraAjax = {
 						for(var i in params){
 							var item = params[i];
 							var key = item["name"];
-							var value = item["value"];
+							var value = Extra.trimLR(item["value"]);
 							if(!Extra.isEmpty(value)&&!Extra.isEmpty(key)){
 								//处理复杂的name;目前可以处理以下几种,1.直接名称,例如age,page等;2.数组,id=1,id=2,id=3会转换成id:[1,2,3];3.携带.的字段;例如persion.name=2;转换成persion:{name:2};带有下标的例如list[0].name=jiege,list[0].age=12,list[1].name=weiwei,list[1].age=23,这些会转化为list:[{name:jiege,age:12},{name:weiwei,age:23}]
 								Extra.keyValueToJson(data,key,value);

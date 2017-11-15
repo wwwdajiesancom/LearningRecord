@@ -221,6 +221,7 @@ var BindExtra = {
 		if(!Extra.isEmpty(options_,'content')){
 			options_["content"] = "<iframe src='"+options_["content"]+"' width='100%' height='100%' frameborder='0' scrolling='auto'></iframe>";
 		}
+		
 	},
 	createDialog :function(id,options_,buttons_html){
 		var dialog_html = "<div id='"+id+"' >";
@@ -422,9 +423,12 @@ function easyui_dialog_event_bind(){
 }
 
 function easyui_rowtag_event_bind(){
-	$("body").undelegate("a[tag^='row']","click").delegate("a[tag^='row']","click",function(){
+	console.log("easyui_rowtag_event_bindeasyui_rowtag_event_bindeasyui_rowtag_event_bind");
+	
+	$("body").on("click","a[tag='rowview']",function(){
+		$(this).unbind();
 		Row.all(this,$(this).attr("index"));
-	});	
+	});
 }
 
 /**

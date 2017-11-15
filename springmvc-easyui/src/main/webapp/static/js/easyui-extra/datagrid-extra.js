@@ -299,7 +299,7 @@ DatagridExtra.prototype["datagridAttrOptions"] = function(){
 			ctrlSelect:false,// 是否要启动Ctrl键,进行多选；不过在singleSelect=true时失效
 			
 			// 与选择checkbox有关系
-			checkOnSelect:true,// 如果为true，当用户点击行的时候该复选框就会被选中或取消选中。
+			checkOnSelect:false,// 如果为true，当用户点击行的时候该复选框就会被选中或取消选中。
 								// 如果为false，当用户仅在点击该复选框的时候才会呗选中或取消。
 			selectOnCheck:false,// 如果为true，单击复选框将永远选择行。
 								// 如果为false，选择行将不选中复选框。
