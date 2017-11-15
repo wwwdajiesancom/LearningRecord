@@ -42,6 +42,8 @@ exec-bind.js
 	a.需要引用extra.js,dialog-extra.js,datagrid-extra.js
 	b.动态创建Dialog的按钮样例：
 		<a href="#" 
+		    callbackDestroy=""
+		    destroyContent="true"
 			class="easyui-linkbutton" 
 			tag="DatagridOptions.dialog"
 			fhref=""

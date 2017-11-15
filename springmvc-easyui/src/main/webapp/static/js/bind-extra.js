@@ -224,7 +224,7 @@ var BindExtra = {
 		
 	},
 	createDialog :function(id,options_,buttons_html){
-		var dialog_html = "<div id='"+id+"' >";
+		var dialog_html = "<div id='"+id+"' autocreatedialog='true'>";
 		dialog_html += buttons_html;
 		dialog_html += "</div>";
 		return dialog_html;
@@ -291,25 +291,12 @@ var Easyui = {
 		// 动态的函数调用
 		if(!Extra.isEmpty(options_,"callbackDynamic")){
 			options_["callbackDynamic"](attrOptions);
-		}
+		}		
 		
 		// 2.给当前的容器增加一个dialog代码
 		// 生成dialog的Html
 		var dialog_html = BindExtra.createDialog(bind_id,attrOptions,buttons_html);
-		if($this.closest("body").length==0){
-			if($this.closest("div").length==0){
-				if($this.closest("form").length==0){
-					// 不知道父元素是什么,不做处理了
-					return false;
-				}else{
-					$this.closest("form").append(dialog_html);
-				}
-			}else{
-				$this.closest("div").append(dialog_html);
-			}
-		}else{
-			$this.closest("body").append(dialog_html);
-		}
+		Easyui.append($this,dialog_html);
 		
 		// 3.dialog初始化
 		// 渲染bt
@@ -317,17 +304,17 @@ var Easyui = {
 		
 		//在关闭的时候触发的事件
 		attrOptions["onClose"]=function(){
-			$("#"+bind_id).dialog("destroy");
-			ExtraHistory.del("#"+bind_id);
+			Easyui.onClose($this,bind_id);
 		}
 		// 生成dialog
 		$("#"+bind_id).dialog(attrOptions);
 
 		// 绑定其它的事件
 		try{
-		 	var dialogExtra = new DialogExtra(bind_id);
-		 	ExtraHistory.add(dialogExtra);
-		 	return dialogExtra;
+			var dialogObject = new DailogSimpleExtra(bind_id);
+			ExtraHistory.add(dialogObject);
+			dialogObject.init();
+		 	return dialogObject;
 		}catch(e){}
 	},
 	createEasyuiDialog:function ($this,options_){
@@ -368,32 +355,72 @@ var Easyui = {
 		// 2.给当前的容器增加一个dialog代码
 		// 生成dialog的Html
 		var dialog_html = BindExtra.createDialog(bind_id,attrOptions,"");
-		if($this.closest("body").length==0){
+		Easyui.append($this,dialog_html);		
+		// 3.dialog初始化
+		attrOptions["onClose"]=function(){
+			Easyui.onClose($this,bind_id);
+		}
+		
+		// 生成dialog
+		ExtraHistory.add(dialogObject);
+		$("#"+bind_id).dialog(attrOptions);
+		dialogObject.init();
+		return dialogObject;				
+	},
+	dialogAttrs:function($this,dialogObject){
+		// 1.找到相关的属性方法
+		var attr = $this.attr("params");
+		// 格式化params
+		var attrOptions = BindExtra.getAttr(attr);
+		//id可以自定义
+		if(!Extra.isEmpty(attrOptions,"id")){
+			bind_id = attrOptions["id"];
+			delete attrOptions["id"];
+		}
+		
+		// 两种设置href的方式
+		if(Extra.isEmpty(attrOptions,"href")&&!Extra.isEmpty($this.attr("fhref"))){
+			attrOptions["href"] = $this.attr("fhref");
+		}		
+		if(Extra.isEmpty(attrOptions,"href")&&!Extra.isEmpty($this.attr("action"))){
+			attrOptions["href"] = $this.attr("action");
+		}
+		
+	},
+	append:function($this,html){
+		if($this.closest("body:eq(0)").length==0){
 			if($this.closest("div").length==0){
 				if($this.closest("form").length==0){
 					// 不知道父元素是什么,不做处理了
 					return false;
 				}else{
-					$this.closest("form").append(dialog_html);
+					$this.closest("form").append(html);
 				}
 			}else{
-				$this.closest("div").append(dialog_html);
+				$this.closest("div").append(html);
 			}
 		}else{
-			$this.closest("body").append(dialog_html);
+			$this.closest("body:eq(0)").append(html);
 		}
+	},
+	onClose:function($this,bind_id){
 		
-		// 3.dialog初始化
-		attrOptions["onClose"]=function(){
-			$("#"+bind_id).dialog("destroy");
-			ExtraHistory.del("#"+bind_id);
+		//是否要手动的销毁content
+		var callbackDestroy = $this.attr("callbackDestroy");
+		if(!Extra.isEmpty(callbackDestroy)){
+			try{eval(callbackDestroy)();}catch(e){}
 		}
-		// 生成dialog
-		$("#"+bind_id).dialog(attrOptions);
-		
-		dialogObject.init();
-		ExtraHistory.add(dialogObject);
-		return dialogObject;				
+		//是否需要自动的content
+		var destoryContent = $this.attr("destoryContent");
+		if(!Extra.isEmpty(destoryContent)){
+			if(Extra.boolean(destoryContent)){
+				EasyuiDesotry.destroy("#"+bind_id);
+			}
+		}
+		//销毁dialog对象
+		$("#"+bind_id).dialog("destroy");
+		//从全局记录中删除dialog对象
+		ExtraHistory.del("#"+bind_id);		
 	}
 };
 
@@ -423,12 +450,10 @@ function easyui_dialog_event_bind(){
 }
 
 function easyui_rowtag_event_bind(){
-	console.log("easyui_rowtag_event_bindeasyui_rowtag_event_bindeasyui_rowtag_event_bind");
-	
-	$("body").on("click","a[tag='rowview']",function(){
-		$(this).unbind();
-		Row.all(this,$(this).attr("index"));
-	});
+//	$("body").on("click","a[tag='rowview']",function(){
+//		$(this).unbind();
+//		Row.all(this,$(this).attr("index"));
+//	});
 }
 
 /**

@@ -20,17 +20,32 @@ function DialogExtra(dialogId_, options_) {
 	this.id = "#" + dialogId_;// dialog的Id
 	if(Extra.isEmpty(options_)){options_={};}
 	if(Extra.isEmpty(options_,"init")){options_["init"]=true;}
+	
+	//一些默认的设置
 	this.envOptions = {};
 	this.envOptions[AjaxOptions.default_success_msg] = "成功";
 	this.envOptions[AjaxOptions.default_fail_msg] = "失败";
 	this.envOptions[CallbackOptions.callbackPostSuccess] = function(){};
 	this.envOptions[CallbackOptions.callbackPostFail] = function(){};	
 	this.envOptions[CallbackOptions.defaultCallbackSuccess] = this.ajaxSuccessDialog;
-		
+	
+	//存放dialog中的信息
+	this.controlArrs = [];	
+	
 	// 2.定义一些常用的方法
 	
 	if(options_["init"]){
 		this.init();
+	}
+}
+
+DialogExtra.prototype["addControl"] = function(target){
+	this.controlArrs.push(target);
+}
+
+DialogExtra.prototype["DestroyControl"] = function(target){
+	for(var i in this.controlArrs){
+		
 	}
 }
 

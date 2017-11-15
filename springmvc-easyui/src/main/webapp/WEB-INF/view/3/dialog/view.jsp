@@ -13,8 +13,12 @@
 		</tr>
 		<tr>
 			<td>Email：</td>
-			<td><input type="text" name="email" class="easyui-validatebox" zauto="true"
-				validType="email" /></td>
+			<td><select id="cc" class="easyui-combobox" panelHeigth="75">
+		        <option>java</option>
+		        <option>hphp</option>
+		        <option>python</option>
+		        <option>c#</option>
+		    </select></td>
 		</tr>
 	</table>
 </form>

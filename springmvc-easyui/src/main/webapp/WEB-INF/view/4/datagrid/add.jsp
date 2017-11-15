@@ -20,6 +20,15 @@ console.log(this);
 			<td><input type="text" name="loginName" class="easyui-validatebox"
 				zauto="true" required="true" /></td>
 		</tr>
+		<tr>
+            <td>用户登录帐号：</td>
+            <td><select id="cc" class="easyui-combobox" panelHeigth="75">
+		        <option>java</option>
+		        <option>hphp</option>
+		        <option>python</option>
+		        <option>c#</option>
+		    </select></td>
+        </tr>		
 	</table>
 
 </form>
