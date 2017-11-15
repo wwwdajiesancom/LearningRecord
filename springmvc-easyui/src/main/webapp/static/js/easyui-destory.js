@@ -24,7 +24,7 @@ var EasyuiDesotry = {
 	},
 	destroy:function(parent_selector){
 		if(Extra.isEmpty(parent_selector)){
-			parent_selector = $("body:eq(0)");
+			return;
 		}
 		var selectorsObject = this.easyui_destory_selectors();
 		for(var i in selectorsObject){

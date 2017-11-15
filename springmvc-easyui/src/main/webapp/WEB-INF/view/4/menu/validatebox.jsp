@@ -30,7 +30,6 @@
 	easyuiarrs.push({selector:"*.easyui-dialog",target:"dialog",method:"destroy",type:"div"});
 	easyuiarrs.push({selector:"*.easyui-window",target:"window",method:"destroy",type:"div"});
 	
-	
 	function destory(){
 	    for(var i in easyuiarrs){
 	    	$("body").find(easyuiarrs[i]["selector"]).each(function(){
@@ -43,9 +42,6 @@
 	    }	
 	}
 	
-	$(function(){
-	
-	});
 //-->
 </script>
 </head>
@@ -57,10 +53,10 @@
 		required="true" />
 
     
-<div id="dd" class="easyui-dialog" title="My Dialog" style="width:400px;height:200px;"   
-        data-options="iconCls:'icon-save',resizable:true,modal:false">   
-    Dialog Content.    
-</div>  
+	<div id="dd"  title="My Dialog" style="width:400px;height:200px;"   
+	        data-options="iconCls:'icon-save',resizable:true,modal:false">   
+	    Dialog Content.    
+	</div>  
 
 </body>
 </html>
