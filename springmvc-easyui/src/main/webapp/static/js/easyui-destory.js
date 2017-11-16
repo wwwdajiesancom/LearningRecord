@@ -4,19 +4,19 @@ var EasyuiDesotry = {
 	easyui_destory_selectors:function(){
 		var easyuiarrs = [];		
 		//form表单中的
-		easyuiarrs.push({selector:"*.easyui-textbox,*.jstextbox",target:"textbox",method:"destroy",type:"input"});
-		easyuiarrs.push({selector:"*.easyui-combo,*.jscombo",target:"combo",method:"destroy",type:"input"});
-		easyuiarrs.push({selector:"*.easyui-combobox,*.jscombobox",target:"combobox",method:"destroy",type:"select"});
-		easyuiarrs.push({selector:"*.easyui-combotree,*.jscombotree",target:"combotree",method:"destroy",type:"select"});
-		easyuiarrs.push({selector:"*.easyui-numberbox,*.jsnumberbox",target:"numberbox",method:"destroy",type:"input"});
-		easyuiarrs.push({selector:"*.easyui-combogrid,*.jscombogrid",target:"combogrid",method:"destroy",type:"select"});
-		easyuiarrs.push({selector:"*.easyui-datebox,*.jsdatabox",target:"datebox",method:"destroy",type:"input"});
-		easyuiarrs.push({selector:"*.easyui-datetimebox,*.jsdatetimebox",target:"datetimebox",method:"destroy",type:"input"});
-		easyuiarrs.push({selector:"*.easyui-datetimespinner,*.jsdatetimespinner",target:"datetimespinner",method:"destroy",type:"input"});
-		easyuiarrs.push({selector:"*.easyui-numberspinner,*.jsnumberspinner",target:"numberspinner",method:"destroy",type:"input"});
-		easyuiarrs.push({selector:"*.easyui-timespinner,*.jstimespinner",target:"timespinner",method:"destroy",type:"input"});
-		easyuiarrs.push({selector:"*.easyui-slider,*.slider",target:"slider",method:"destroy",type:"div"});
-		easyuiarrs.push({selector:"*.easyui-filebox,*.filebox",target:"filebox",method:"destroy",type:"input"});
+		easyuiarrs.push({selector:"*.easyui-textbox,*.js-textbox",target:"textbox",method:"destroy",type:"input"});
+		easyuiarrs.push({selector:"*.easyui-combo,*.js-combo",target:"combo",method:"destroy",type:"input"});
+		easyuiarrs.push({selector:"*.easyui-combobox,*.js-combobox",target:"combobox",method:"destroy",type:"select"});
+		easyuiarrs.push({selector:"*.easyui-combotree,*.js-combotree",target:"combotree",method:"destroy",type:"select"});
+		easyuiarrs.push({selector:"*.easyui-numberbox,*.js-numberbox",target:"numberbox",method:"destroy",type:"input"});
+		easyuiarrs.push({selector:"*.easyui-combogrid,*.js-combogrid",target:"combogrid",method:"destroy",type:"select"});
+		easyuiarrs.push({selector:"*.easyui-datebox,*.js-databox",target:"datebox",method:"destroy",type:"input"});
+		easyuiarrs.push({selector:"*.easyui-datetimebox,*.js-datetimebox",target:"datetimebox",method:"destroy",type:"input"});
+		easyuiarrs.push({selector:"*.easyui-datetimespinner,*.js-datetimespinner",target:"datetimespinner",method:"destroy",type:"input"});
+		easyuiarrs.push({selector:"*.easyui-numberspinner,*.js-numberspinner",target:"numberspinner",method:"destroy",type:"input"});
+		easyuiarrs.push({selector:"*.easyui-timespinner,*.js-timespinner",target:"timespinner",method:"destroy",type:"input"});
+		easyuiarrs.push({selector:"*.easyui-slider,*.js-slider",target:"slider",method:"destroy",type:"div"});
+		easyuiarrs.push({selector:"*.easyui-filebox,*.js-filebox",target:"filebox",method:"destroy",type:"input"});
 		
 		//窗体类,因为窗体中无法包含窗体,导致dialog,window都不在原有的地方
 		//easyuiarrs.push({selector:"*.easyui-dialog",target:"dialog",method:"destroy",type:"div"});
@@ -35,7 +35,7 @@ var EasyuiDesotry = {
 		//找到.easyui-dialog,.easyui-window
 		//如果是需要js动态声明的,需要有一个标记class="jswindow"
 		var ids = [];
-		$div.find(".easyui-dialog,.easyui-window,.jswindow").each(function(){var id=$(this).attr("id");if(Extra.isEmpty(id))id=Extra.guid();ids.push("#"+id);});
+		$div.find(".easyui-dialog,.easyui-window,.js-window").each(function(){var id=$(this).attr("id");if(Extra.isEmpty(id))id=Extra.guid();ids.push("#"+id);});
 		$div.remove();
 		return data+"<div autoDestroyWindow='"+ids.toString()+"'></div>";
 	},
