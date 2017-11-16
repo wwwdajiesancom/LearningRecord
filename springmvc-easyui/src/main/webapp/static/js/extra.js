@@ -8,6 +8,9 @@ var Extra = {
 			}
 			return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
 		},
+		log:function(data){
+			window.console.log(data);
+		},
 		isString:function(str){
 			if(typeof (str) == 'string'){
 				return true;
@@ -550,7 +553,7 @@ var ExtraAjax = {
 							}
 						}
 					}catch(e){
-						console.log("Extra.ajax:"+e);
+						Extra.log("Extra.ajax:"+e);
 					}
 				},
 				error : function(xhr, textStatus, errorThrown) {
@@ -578,7 +581,7 @@ var ExtraAjax = {
 					ExtraAjax.ajaxTip("失败提示", msg, "error");			
 				}
 			} catch (e) {
-				console.log("Extra.ajaxSucess:"+e);
+				Extra.log("Extra.ajaxSucess:"+e);
 			}
 		},	
 		/**

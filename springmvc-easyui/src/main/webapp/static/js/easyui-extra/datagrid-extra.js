@@ -46,7 +46,7 @@ var Row = {
 		
 		// 2.添加后置函数
 		dialog.envOptions[CallbackOptions.callbackPostSuccess] = function(){
-			try{$("#"+Row.getDatagridTable($this).attr("id")).datagrid("reload");}catch(e){console.log("Row.update:"+e);}
+			try{$("#"+Row.getDatagridTable($this).attr("id")).datagrid("reload");}catch(e){Extra.log("Row.update:"+e);}
 		}
 		return false;
 	},
@@ -70,7 +70,7 @@ var Row = {
 			options[AjaxOptions.default_fail_msg]="删除失败";
 			//定义外部回调函数
 			options[CallbackOptions.callbackSubSuccess]=function(result){
-				try{$("#"+Row.getDatagridTable($this).attr("id")).datagrid("reload");}catch(e){console.log("Row.delete:"+e);}
+				try{$("#"+Row.getDatagridTable($this).attr("id")).datagrid("reload");}catch(e){Extra.log("Row.delete:"+e);}
 			}			
 			// 3.ajax调用
 			ExtraAjax.ajax(options);

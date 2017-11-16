@@ -21,6 +21,10 @@ function DialogExtra(dialogId_, options_) {
 	if(Extra.isEmpty(options_)){options_={};}
 	if(Extra.isEmpty(options_,"init")){options_["init"]=true;}
 	
+	//取出a标签,它是窗体的起源,窗体就是因他而来的
+	this.$this = undefined;
+	if(!Extra.isEmpty(options_,"$this"))this.$this = options_["$this"];
+	
 	//一些默认的设置
 	this.envOptions = {};
 	this.envOptions[AjaxOptions.default_success_msg] = "成功";
@@ -252,9 +256,7 @@ DialogExtra.prototype["isIdGuid"] = function() {
  */
 DialogExtra.prototype["destroy"] = function(){
 	// 当是自己动态创建的dialog的时候就给他删除了
-	if (this.isIdGuid()) {
-		$(this.id).dialog("destroy");
-	}
+	$(this.id).dialog("destroy");
 };
 
 /**

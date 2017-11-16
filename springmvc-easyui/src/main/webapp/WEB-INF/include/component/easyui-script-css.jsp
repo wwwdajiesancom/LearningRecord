@@ -18,6 +18,7 @@
 	
 <%-- 自己定义的扩展js --%>
 <script type="text/javascript" src="${easyuiContextPath}/static/js/extra.js"></script>
+<script type="text/javascript" src="${easyuiContextPath}/static/js/easyui-destory.js"></script>
 
 <%-- 自定义的一些封装好的方法 --%>
 <script type="text/javascript"

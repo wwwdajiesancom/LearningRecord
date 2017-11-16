@@ -6,19 +6,21 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <%@include file="/WEB-INF/include/component/easyui-script-css.jsp"%>
-<script type="text/javascript" src="${contextPath}/static/js/bind-extra.js"></script>
-<script type="text/javascript" src="${contextPath}/static/js/easyui-extra/dialog-extra.js"></script>
+<script type="text/javascript"
+	src="${contextPath}/static/js/bind-extra.js"></script>
+<script type="text/javascript"
+	src="${contextPath}/static/js/easyui-extra/dialog-extra.js"></script>
 
 <title>easyui对话框(dialog)</title>
 <script type="text/javascript">
 <!--
 	//dialog,它依赖了window,linkbutton
 	//
-	$(function(){
-		
+	$(function() {
+
 	});
-	
-	function nxnxnxnxnxnxnxnx(){
+
+	function nxnxnxnxnxnxnxnx() {
 		alert("nxnxnxnxnxnxnxnx");
 	}
 //-->
@@ -26,13 +28,17 @@
 </head>
 <body>
 
-    <div abc="abc">
-        <div a="a">
-        
-			<a href="#" class="easyui-linkbutton" tag="dialog" buttons="save,close" params="modal:true;width:350px;height: 250px;href:${contextPath}/jsp/datagrid/add;">动态创建一个dialog</a>
-        </div>
-    </div>
-	
-	
+	<div abc="abc">
+		<div a="a">
+			<a href="#" class="easyui-linkbutton" tag="dialog"
+				buttons="save,close"
+				params="modal:true;width:350px;height: 250px;href:${contextPath}/jsp/datagrid/add;">动态创建一个dialog</a>
+		</div>
+	</div>
+
+	<div id="win" class="easyui-window" title="My Window"
+		style="width: 600px; height: 400px"
+		data-options="iconCls:'icon-save',modal:true">Window Content</div>
+
 </body>
 </html>

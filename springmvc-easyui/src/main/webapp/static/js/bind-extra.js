@@ -270,24 +270,21 @@ var Easyui = {
 			bind_id = attrOptions["id"];
 			delete attrOptions["id"];
 		}
+		
+		var dialogObject = new DailogSimpleExtra(bind_id,{"$this":$this});
+		
 		// 弹出框的buttons属性
 		var buttons = $this.attr("buttons");
 		var buttons_html = BindExtra.getButtonsHtml(bind_id,buttons);
 		attrOptions["buttons"] = "#"+bind_id+"_bt";
 		
 		// 两种设置href的方式
-		if(Extra.isEmpty(attrOptions,"href")&&!Extra.isEmpty($this.attr("fhref"))){
-			attrOptions["href"] = $this.attr("fhref");
-		}		
-		if(Extra.isEmpty(attrOptions,"href")&&!Extra.isEmpty($this.attr("action"))){
-			attrOptions["href"] = $this.attr("action");
-		}
+		Easyui.$thisAttrs(attrOptions,dialogObject);
 		
 		// 有些href需要加工处理,所以外部提供了一个处理函数
 		if(!Extra.isEmpty(options_,"callbackHref")){
 			attrOptions["href"] = options_["callbackHref"](attrOptions["href"]);
-		}
-		
+		}		
 		// 动态的函数调用
 		if(!Extra.isEmpty(options_,"callbackDynamic")){
 			options_["callbackDynamic"](attrOptions);
@@ -296,26 +293,21 @@ var Easyui = {
 		// 2.给当前的容器增加一个dialog代码
 		// 生成dialog的Html
 		var dialog_html = BindExtra.createDialog(bind_id,attrOptions,buttons_html);
-		Easyui.append($this,dialog_html);
+		Easyui.append(dialogObject,dialog_html);
 		
-		// 3.dialog初始化
 		// 渲染bt
-		$.parser.parse("#" + bind_id + "_bt");
+		$.parser.parse(dialogObject.id + "_bt");
 		
-		//在关闭的时候触发的事件
-		attrOptions["onClose"]=function(){
-			Easyui.onClose($this,bind_id);
-		}
-		// 生成dialog
-		$("#"+bind_id).dialog(attrOptions);
-
-		// 绑定其它的事件
-		try{
-			var dialogObject = new DailogSimpleExtra(bind_id);
-			ExtraHistory.add(dialogObject);
-			dialogObject.init();
-		 	return dialogObject;
-		}catch(e){}
+		//增加dialog的function方法绑定
+		Easyui.dialogEvent(attrOptions,dialogObject);
+		
+		// 渲染dialog
+		$(dialogObject.id).dialog(attrOptions);		
+		//记录到历史中,在dialog关闭的时候会删除的
+		ExtraHistory.add(dialogObject);
+		//因为前面生成的是一个没有绑定dialog中的事件,所以这里是绑定事件
+		dialogObject.init();
+	 	return dialogObject;
 	},
 	createEasyuiDialog:function ($this,options_){
 		// dialog的Id
@@ -328,19 +320,15 @@ var Easyui = {
 			bind_id = attrOptions["id"];
 			delete attrOptions["id"];
 		}
-		var dialogObject = new DailogSimpleExtra(bind_id);
+		var dialogObject = new DailogSimpleExtra(bind_id,{"$this":$this});
+		
 		// 弹出框的buttons属性
 		var buttons = $this.attr("buttons");
 		var buttons_ = BindExtra.getButtons(buttons,dialogObject);
 		attrOptions["buttons"] = buttons_;
 		
 		// 两种设置href的方式
-		if(Extra.isEmpty(attrOptions,"href")&&!Extra.isEmpty($this.attr("fhref"))){
-			attrOptions["href"] = $this.attr("fhref");
-		}		
-		if(Extra.isEmpty(attrOptions,"href")&&!Extra.isEmpty($this.attr("action"))){
-			attrOptions["href"] = $this.attr("action");
-		}
+		Easyui.$thisAttrs(attrOptions,dialogObject);
 	
 		// 有些href需要加工处理,所以外部提供了一个处理函数
 		if(!Extra.isEmpty(options_,"callbackHref")){
@@ -352,75 +340,75 @@ var Easyui = {
 			options_["callbackDynamic"](attrOptions);
 		}
 		
-		// 2.给当前的容器增加一个dialog代码
 		// 生成dialog的Html
 		var dialog_html = BindExtra.createDialog(bind_id,attrOptions,"");
-		Easyui.append($this,dialog_html);		
-		// 3.dialog初始化
-		attrOptions["onClose"]=function(){
-			Easyui.onClose($this,bind_id);
-		}
+		Easyui.append(dialogObject,dialog_html);	
 		
-		// 生成dialog
+		//增加dialog的function方法绑定
+		Easyui.dialogEvent(attrOptions,dialogObject);
+		
+		// 渲染dialog
+		$(dialogObject.id).dialog(attrOptions);		
+		//记录到历史中,在dialog关闭的时候会删除的
 		ExtraHistory.add(dialogObject);
-		$("#"+bind_id).dialog(attrOptions);
+		//因为前面生成的是一个没有绑定dialog中的事件,所以这里是绑定事件
 		dialogObject.init();
-		return dialogObject;				
+	 	return dialogObject;		
 	},
-	dialogAttrs:function($this,dialogObject){
-		// 1.找到相关的属性方法
-		var attr = $this.attr("params");
-		// 格式化params
-		var attrOptions = BindExtra.getAttr(attr);
-		//id可以自定义
-		if(!Extra.isEmpty(attrOptions,"id")){
-			bind_id = attrOptions["id"];
-			delete attrOptions["id"];
+	dialogEvent:function(attrOptions,dialogObject){
+		attrOptions["onClose"]=function(){
+			Easyui.onClose(dialogObject);
 		}
-		
+		attrOptions["extractor"]=function(data){
+			return EasyuiDesotry.extractor(data);
+		}
+	},
+	$thisAttrs:function(attrOptions,dialogObject){		
 		// 两种设置href的方式
-		if(Extra.isEmpty(attrOptions,"href")&&!Extra.isEmpty($this.attr("fhref"))){
-			attrOptions["href"] = $this.attr("fhref");
-		}		
-		if(Extra.isEmpty(attrOptions,"href")&&!Extra.isEmpty($this.attr("action"))){
-			attrOptions["href"] = $this.attr("action");
+		if(Extra.isEmpty(attrOptions,"href")&&!Extra.isEmpty(dialogObject.$this.attr("fhref"))){
+			attrOptions["href"] = dialogObject.$this.attr("fhref");
 		}
-		
+		if(Extra.isEmpty(attrOptions,"href")&&!Extra.isEmpty(dialogObject.$this.attr("action"))){
+			attrOptions["href"] = dialogObject.$this.attr("action");
+		}		
 	},
-	append:function($this,html){
-		if($this.closest("body").length==0){
-			if($this.closest("div").length==0){
-				if($this.closest("form").length==0){
+	append:function(dialogObject,html){
+		if(dialogObject.$this.closest("body").length==0){
+			if(dialogObject.$this.closest("div").length==0){
+				if(dialogObject.$this.closest("form").length==0){
 					// 不知道父元素是什么,不做处理了
 					return false;
 				}else{
-					$this.closest("form").append(html);
+					dialogObject.$this.closest("form").append(html);
 				}
 			}else{
-				$this.closest("div").append(html);
+				dialogObject.$this.closest("div").append(html);
 			}
 		}else{
-			$this.closest("body").append(html);
+			dialogObject.$this.closest("body").append(html);
 		}
 	},
-	onClose:function($this,bind_id){
-		
+	onClose:function(dialogObject){		
 		//是否要手动的销毁content
-		var callbackDestroy = $this.attr("callbackDestroy");
+		var callbackDestroy = dialogObject.$this.attr("callbackDestroy");
 		if(!Extra.isEmpty(callbackDestroy)){
 			try{eval(callbackDestroy)();}catch(e){}
 		}
-		//是否需要自动的content
-		var destoryContent = $this.attr("destoryContent");
-		if(!Extra.isEmpty(destoryContent)){
-			if(Extra.boolean(destoryContent)){
-				EasyuiDesotry.destroy("#"+bind_id);
+		//是否需要自动的content,默认是删除的
+		var delFlag = true;
+		var destroyContent = dialogObject.$this.attr("destroyContent");
+		if(!Extra.isEmpty(destroyContent)){
+			if(destroyContent=="false"){
+				delFlag = false;
 			}
 		}
+		if(delFlag){
+			EasyuiDesotry.destroy(dialogObject.id);
+		}
 		//销毁dialog对象
-		$("#"+bind_id).dialog("destroy");
+		dialogObject.destroy();
 		//从全局记录中删除dialog对象
-		ExtraHistory.del("#"+bind_id);		
+		ExtraHistory.del(dialogObject.id);		
 	}
 };
 
@@ -479,10 +467,10 @@ function easyui_input_bind(){
  */
 function exec_all_bind(){
 	// dialog
-	try{easyui_dialog_event_bind();}catch(e){console.log(e);}
+	try{easyui_dialog_event_bind();}catch(e){Extra.log(e);}
 	
 	// input自动加载样式
-	try{easyui_input_bind();}catch(e){console.log(e);}
+	try{easyui_input_bind();}catch(e){Extra.log(e);}
 	
 	//
 	try{easyui_rowtag_event_bind();}catch(e){}
