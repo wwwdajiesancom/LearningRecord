@@ -35,7 +35,7 @@ var EasyuiDesotry = {
 		//找到.easyui-dialog,.easyui-window
 		//如果是需要js动态声明的,需要有一个标记class="jswindow"
 		var ids = [];
-		$div.find(".easyui-dialog,.easyui-window,.js-window").each(function(){var id=$(this).attr("id");if(Extra.isEmpty(id))id=Extra.guid();ids.push("#"+id);});
+		$div.find(".easyui-dialog,.easyui-window,.js-window,.js-dialog").each(function(){var id=$(this).attr("id");if(Extra.isEmpty(id))id=Extra.guid();ids.push("#"+id);});
 		$div.remove();
 		return data+"<div autoDestroyWindow='"+ids.toString()+"'></div>";
 	},
