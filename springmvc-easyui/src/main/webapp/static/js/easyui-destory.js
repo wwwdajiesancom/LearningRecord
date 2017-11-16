@@ -10,7 +10,7 @@ var EasyuiDesotry = {
 		easyuiarrs.push({selector:"*.easyui-combotree,*.js-combotree",target:"combotree",method:"destroy",type:"select"});
 		easyuiarrs.push({selector:"*.easyui-numberbox,*.js-numberbox",target:"numberbox",method:"destroy",type:"input"});
 		easyuiarrs.push({selector:"*.easyui-combogrid,*.js-combogrid",target:"combogrid",method:"destroy",type:"select"});
-		easyuiarrs.push({selector:"*.easyui-datebox,*.js-databox",target:"datebox",method:"destroy",type:"input"});
+		easyuiarrs.push({selector:"*.easyui-datebox,*.js-datebox",target:"datebox",method:"destroy",type:"input"});
 		easyuiarrs.push({selector:"*.easyui-datetimebox,*.js-datetimebox",target:"datetimebox",method:"destroy",type:"input"});
 		easyuiarrs.push({selector:"*.easyui-datetimespinner,*.js-datetimespinner",target:"datetimespinner",method:"destroy",type:"input"});
 		easyuiarrs.push({selector:"*.easyui-numberspinner,*.js-numberspinner",target:"numberspinner",method:"destroy",type:"input"});
