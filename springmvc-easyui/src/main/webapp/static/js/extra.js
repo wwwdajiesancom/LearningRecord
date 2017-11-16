@@ -1,3 +1,8 @@
+/**
+ * 静态类
+ * 
+ * 封装了字符串，json,date格式化等常用的方法
+ */
 var Extra = {
 		/**
 		 * 产生随机guid
@@ -8,9 +13,15 @@ var Extra = {
 			}
 			return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
 		},
+		/**
+		 * 日志记录
+		 */
 		log:function(data){
 			window.console.log(data);
 		},
+		/**
+		 * 是否为字符串
+		 */
 		isString:function(str){
 			if(typeof (str) == 'string'){
 				return true;
@@ -359,6 +370,9 @@ var Extra = {
 };
 
 
+/**
+ * ajax封装
+ */
 var ExtraAjax = {
 		/**
 		 * 验证form表单是否可以提交了
@@ -670,17 +684,22 @@ ExtraObject.prototype["equals"]=function(id){
 	}
 }
 
+/**
+ * 当前正在使用的dialog历史记录
+ */
 var ExtraHistory = {
-	arr:[],
+	arr:[],//存放dialog
 	add:function(extraObject){
 		this.arr.push(new ExtraObject(extraObject));
 	},
+	//可以获取
 	get:function(index){
 		if(Extra.isEmpty(index)){
 			index = 0;
 		}
 		return this.arr[index].extraObject;
 	},
+	//删除
 	del:function(idOrIndex){
 		try{
 			if(typeof (idOrIndex)=="string"){
@@ -723,17 +742,16 @@ var AjaxOptions = {
 };
 
 var CallbackOptions = {
-		callbackPostSuccess:"callbackPostSuccess",
-		callbackPostFail:"callbackPostFail",
-		
-		callbackParam:"callbackParam",
-		callbackSubParam:"callbackSubParam",
-		
-		callbackValid:"callbackValid",
-		callbackSubValid:"callbackSubValid",
-		
-		defaultCallbackSuccess:"defaultCallbackSuccess",
-		callbackSuccess:"callbackSuccess",
-		callbackSubSuccess:"callbackSubSuccess",
-		
+	callbackPostSuccess:"callbackPostSuccess",
+	callbackPostFail:"callbackPostFail",
+	
+	callbackParam:"callbackParam",
+	callbackSubParam:"callbackSubParam",
+	
+	callbackValid:"callbackValid",
+	callbackSubValid:"callbackSubValid",
+	
+	defaultCallbackSuccess:"defaultCallbackSuccess",
+	callbackSuccess:"callbackSuccess",
+	callbackSubSuccess:"callbackSubSuccess",
 };

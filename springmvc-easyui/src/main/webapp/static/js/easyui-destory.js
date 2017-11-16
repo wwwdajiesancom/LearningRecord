@@ -1,6 +1,17 @@
-//主要是为了销毁一些垃圾
+/**
+ * 主要是为了销毁一些easyui组件垃圾
+ * 
+ * 因为组件自身的缘故或者组件之间不能相互包含的缘故，easyui框架有时会将dom信息打乱，这样会导致在关闭某一个dialog、panel、window时
+ * 出现一些无法删除的对象
+ * 
+ */
 var EasyuiDesotry = {
-	//需要销毁组件的列表
+	tags:function(which){
+		var tags = [];
+		tags[0]="autoDestroyWindow";
+		tags["window"]=tags[0];		
+	},
+	//可以销毁组件的列表
 	easyui_destory_selectors:function(){
 		var easyuiarrs = [];		
 		//form表单中的
@@ -24,7 +35,11 @@ var EasyuiDesotry = {
 		return easyuiarrs;
 	},
 	/**
-	 * 这个是panel里面的一个方法,在ajax调用成功之后返回的text
+	 * 收集器,
+	 * 这个是panel里面的一个方法extractor,在ajax调用成功之后返回的对data进行处理的方法
+	 * 
+	 * 这里面主要是将data中需要删除的dialog,window记录下来,在以后销毁的时候可以销毁
+	 * 因为当前尚未渲染,所以data中还存在；但是到页面上渲染后,里面的dialog就会出现在其它的地方,所以要记录下来
 	 */
 	extractor:function(data){
 		//从data中找到相关的数据window数据
@@ -37,9 +52,10 @@ var EasyuiDesotry = {
 		var ids = [];
 		$div.find(".easyui-dialog,.easyui-window,.js-window,.js-dialog").each(function(){var id=$(this).attr("id");if(Extra.isEmpty(id))id=Extra.guid();ids.push("#"+id);});
 		$div.remove();
-		return data+"<div autoDestroyWindow='"+ids.toString()+"'></div>";
+		return data+"<div "+EasyuiDesotry.tags("window")+"='"+ids.toString()+"'></div>";
 	},
 	/**
+	 * 删除收集器中的信息，
 	 * 调用这个函数的时候,需要和函数EasyuiDesotry.extractor一块使用,这个是收集的用处
 	 */
 	destroyWindow:function(parent_selector){
@@ -48,9 +64,9 @@ var EasyuiDesotry = {
 			return;
 		}
 		//2.删除窗体
-		$(parent_selector).find("div[autoDestroyWindow]").each(function(){
+		$(parent_selector).find("div["+EasyuiDesotry.tags("window")+"]").each(function(){
 			//找到相关的Id
-			var autoDestroyWindow = $(this).attr("autoDestroyWindow");
+			var autoDestroyWindow = $(this).attr(EasyuiDesotry.tags("window"));
 			if(!Extra.isEmpty(autoDestroyWindow)){
 				var ids = autoDestroyWindow.split(",");
 				for(var index in ids){
@@ -59,6 +75,9 @@ var EasyuiDesotry = {
 			}
 		});
 	},
+	/**
+	 * 销毁dialog及里面的信息
+	 */
 	destroyGeneric:function(selector){
 		$(selector).each(function(){
 			try{
@@ -67,6 +86,9 @@ var EasyuiDesotry = {
 			}catch(e){}			
 		});
 	},
+	/**
+	 * 销毁input
+	 */
 	destroyInput:function(parent_selector){
 		//1.判断是否为空
 		if(Extra.isEmpty(parent_selector)){
@@ -84,6 +106,9 @@ var EasyuiDesotry = {
 			});
 		}
 	},
+	/**
+	 * 综合销毁
+	 */
 	destroy:function(parent_selector){
 		//1.判断是否为空
 		if(Extra.isEmpty(parent_selector)){

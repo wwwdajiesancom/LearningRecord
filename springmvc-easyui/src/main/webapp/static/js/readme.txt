@@ -1,26 +1,18 @@
+ljExtraEasyui封装框架:涉及了以下的js,以后就叫做ljExtraEasyui框架了
+
 extra.js
-	这里面定义了一些系统常用的js方法,都是以Extra开头调用了
-		一下写几个主要的：
-			1.判断是否为空,isEmpty(a,b);其中b是可选的,只有当a={}时,b是a中的一个key
-			2.ajax相关封装
-			3.valid,form表单的验证
-				
+	里面定义了Extra,ExtraAjax两个主要的静态类，同时定义了使用本封装的常量设置
+	Extra,主要定义了常用方法,针对字符串、json、时间格式化的操作
+	ExtraAjax,封装了ajax的操作,以后涉及到ljExtraEasyui框架都是用这个ajax,因为这样可以统一的处理一些操作
+	ExtraAjax,里面还封装了form验证,ajaxData获取,ajaxSuccess处理,提示等操作
+	
+easyui-destroy.js
+    里面主要定义了怎么删除页面上的easyui垃圾
+	
 dialog-extra.js
 	这里面封装了dialog里面的事件，主要有
-		1.关闭按钮,
-		2.保存按钮,ajax提交
-		3.修改按钮,ajax提交
-		
-		这里面还有一些固定的配置是可以被修改的：
-			this.envOptions = {
-				success_msg : "保存成功.",//做为一个成功时默认提示
-				fail_msg : "保存失败.",//做为一个失败时默认提示
-				callbackPostSuccess : function() {
-				},//在执行完所有的成功方法后,执行它,算是一个后置成功函数
-				callbackPostFail : function() {
-				},//在执行完所有的失败方法后,执行它,算是一个后置成功函数
-				defaultCallbackSuccess:_this.ajaxSuccessDialog(result,{})//默认ajaxSuccess方法
-			};
+		关闭dialog事件，
+		保存form表单事件
 	
 datagrid-extra.js
 	这里面封装datagrid的一些常用操作，
@@ -39,31 +31,39 @@ exec-bind.js
 	
 
 1.动态创建Dialog,以下是用法：
-	a.需要引用extra.js,dialog-extra.js,datagrid-extra.js
+	a.需要引用extra.js,easyui-destroy.js,dialog-extra.js,datagrid-extra.js
 	b.动态创建Dialog的按钮样例：
-		<a href="#" 
-		    callbackDestroy=""
-		    destroyContent="true"
-			class="easyui-linkbutton" 
+		<a href="javascript:;"		    
+			class="easyui-linkbutton"
+			 
 			tag="DatagridOptions.dialog"
 			fhref=""
 			action="" 
 			buttons="save,close" 
 			params="modal:true;width:350px;height: 250px;href:${contextPath}/jsp/dialog/view.html;"
+			
+			callbackDestroy=""
+            destroyContent="true"
 		>动态创建一个dialog</a>
-		解释:其中class是a标签的easyui样式,多出的就是Dialog的东西了
+		
+		解释:其中class是a标签样式,多出的就是Dialog的属性了
+		    callbackDestroy,这个函数是在dialog关闭时调用的,
+		    destroyContent,它是一个标记,标记是否要自动删除dialog中的组件,因为各种原因会导致一些组件删除不了,所以需要自动清理;但程序也不是万能的,当前除了可以自动删除class="easyui-"开头的组件,自己js实例话的组件并不能被删除,所以都需要一个标记,标记的格式：例如:<input class="easyui-combobox" />,这个标签是用js实例成combobox的,我们就需要这样写<input class="js-combobox"/>,这样我就知道你要将input用js变成combobox了
 			1）tag="DatagridOptions.dialog",它是一个标记,标记该a标签会绑定一个创建Dialog的事件
-			2）fhref,action是Dialog创建好,要加载到dialog-content中的url;这个Url连接到一个jsp页面
-			3）buttons="save,update[value=更新;],close",它是动态创建Dialog下面按钮动属性
-				要注意的是,我们这里面只有3个,就是save,update,close
-					I,save,update它们会发动一个ajax提交,这对url地址连接到的页面,所以这个页面必须有form表单
+			2）fhref,action是连接地址,为了加载dialog的内容的；这个地址指向一个jsp页面
+			3）buttons="save,update[value=更新;],close",它是动态创建Dialog下面操作按钮
+				要注意的是,我们这里面目前只有3类按钮,就是save,update,close
+					II,close按钮是关闭dialog的					
+					I,save,update按钮,它们会发动一个ajax提交,这个ajax需要form表来完成
 						form表单样例：
 							<form 
 								action="${contextPath}/ajax/dialog/view.json" //ajax参数,url
 								id="from_id"                                  //可选
 								method="post"                                 //ajax参数 ,type
-								contentType=""                                //可选,值可以是json,这样ajax提交是contentType="application/json"
+								contentType=""                                //可选,值可以是json,这样ajax提交时contentType="application/json"
+								//一下都是可选的,都是一些回调函数
 								callbackValid=""                              //可选,默认的是用easyui的form表单验证,它作为一个form表单验证函数,返回boolean值;function(){return false;}
+								callbackSubValid=""
 								callbackSuccess=""                            //可选,默认有一个处理函数,ajax成功后的success处理函数,function(data){}
 								callbackSubSuccess=""                         //可选,它是默认处理函数中的一部分,在其它部分都执行完毕,才执行该函数,function(){}
 								callbackParam=""                              //可选,默认有一个获取form表单数据的函数,但是它的功能比较标准有些处理不了,所以可以专门提供一个函数来获取form表单数据,这样就可以放弃默认的了,function(){return {};}
@@ -81,8 +81,6 @@ exec-bind.js
 									</tr>
 								</table>
 							</form>
-					
-					II,close,这个是关闭动态创建的dialog
 
 2.DatagridExtra的使用，
 	因为datagrid中的属性比较多,所以就封装了一下,除了几个比较重要的需要传递,其它的都设置成默认的了
