@@ -10,6 +10,12 @@ var EasyuiDesotry = {
 		var tags = [];
 		tags[0]="autoDestroyWindow";
 		tags["window"]=tags[0];		
+		if(Extra.isEmpty(which)){
+			return tags;
+		}		
+		else{
+			return tags[which];
+		}			
 	},
 	//可以销毁组件的列表
 	easyui_destory_selectors:function(){
