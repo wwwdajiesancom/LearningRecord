@@ -39,16 +39,6 @@ function DialogExtra(dialogId_, options_) {
 	}
 }
 
-DialogExtra.prototype["addControl"] = function(target){
-	this.controlArrs.push(target);
-}
-
-DialogExtra.prototype["DestroyControl"] = function(target){
-	for(var i in this.controlArrs){
-		
-	}
-}
-
 /**
  * 获取dialog的属性信息
  */

@@ -406,7 +406,7 @@ DatagridExtra.prototype[DatagridOptions.search] = function($this){
 	if(!Extra.isEmpty($this.attr("parentId"))){
 		$parent = $("#"+$this.attr("parentId"));
 	}else{
-		$parent = $this.closest("table:eq(0)");
+		$parent = $this.closest("table");
 	}
 	// 2.找到里面的参数
 	var param = {};

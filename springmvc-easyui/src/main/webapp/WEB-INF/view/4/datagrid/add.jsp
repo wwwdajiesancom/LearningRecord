@@ -5,6 +5,7 @@
 <script type="text/javascript">
 console.log(this);
 </script>
+
 <form action="${contextPath}/ajax/datagrid/add" method="post"
 	callbackValid="" callbackSuccess="" callbackSubSuccess=""
 	callbackParam="" callbackSubParam="">
@@ -21,7 +22,7 @@ console.log(this);
 				zauto="true" required="true" /></td>
 		</tr>
 		<tr>
-            <td>用户登录帐号：</td>
+            <td>用户登录帐号2：</td>
             <td><select id="cc" class="easyui-combobox" panelHeigth="75">
 		        <option>java</option>
 		        <option>hphp</option>
@@ -32,3 +33,10 @@ console.log(this);
 	</table>
 
 </form>
+
+<div id="nxnxnxnx">
+	<div id="dd"  class="easyui-dialog" title="My Dialog" style="width:400px;height:200px;"   
+	        data-options="iconCls:'icon-save',resizable:true,modal:false,closed:true">   
+	    Dialog Content.    
+	</div>  
+</div>

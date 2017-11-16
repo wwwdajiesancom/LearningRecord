@@ -53,8 +53,8 @@
 		required="true" />
 
     
-	<div id="dd"  title="My Dialog" style="width:400px;height:200px;"   
-	        data-options="iconCls:'icon-save',resizable:true,modal:false">   
+	<div id="dd"  class="easyui-dialog" title="My Dialog" style="width:400px;height:200px;"   
+	        data-options="iconCls:'icon-save',resizable:true,modal:false,closed:true">   
 	    Dialog Content.    
 	</div>  
 

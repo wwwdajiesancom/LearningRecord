@@ -388,7 +388,7 @@ var Easyui = {
 		
 	},
 	append:function($this,html){
-		if($this.closest("body:eq(0)").length==0){
+		if($this.closest("body").length==0){
 			if($this.closest("div").length==0){
 				if($this.closest("form").length==0){
 					// 不知道父元素是什么,不做处理了
@@ -400,7 +400,7 @@ var Easyui = {
 				$this.closest("div").append(html);
 			}
 		}else{
-			$this.closest("body:eq(0)").append(html);
+			$this.closest("body").append(html);
 		}
 	},
 	onClose:function($this,bind_id){

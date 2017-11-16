@@ -25,11 +25,14 @@
 </script>
 </head>
 <body>
-	
-	<a href="#" class="easyui-linkbutton" tag="dialog" buttons="save,close" params="modal:true;width:350px;height: 250px;href:${contextPath}/jsp/datagrid/add;">动态创建一个dialog</a>
-	
-	<a href="#" class="easyui-linkbutton" id="open_dialog" >打开本页面的dialog</a>
 
+    <div abc="abc">
+        <div a="a">
+        
+			<a href="#" class="easyui-linkbutton" tag="dialog" buttons="save,close" params="modal:true;width:350px;height: 250px;href:${contextPath}/jsp/datagrid/add;">动态创建一个dialog</a>
+        </div>
+    </div>
+	
 	
 </body>
 </html>
