@@ -14,8 +14,8 @@ public class BeanUtils extends org.apache.commons.beanutils.BeanUtils {
 	/**
 	 * 将orig中的数据复制到dest中
 	 * 
-	 * @param dest
-	 * @param orig
+	 * @param dest 目标对象
+	 * @param orig 原对象
 	 */
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	public static void copyBean(Object dest, Object orig) {

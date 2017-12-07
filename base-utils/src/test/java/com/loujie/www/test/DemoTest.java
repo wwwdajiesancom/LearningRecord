@@ -1,5 +1,6 @@
 package com.loujie.www.test;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,7 +22,9 @@ public class DemoTest {
 
 	@Test
 	public void listCompare() {
-		System.err.println(this.getClass().getName()+"");
+		BigDecimal a = new BigDecimal(15);
+		System.err.println(a.subtract(new BigDecimal(12)));
+		System.err.println(a);
 	}
 
 }

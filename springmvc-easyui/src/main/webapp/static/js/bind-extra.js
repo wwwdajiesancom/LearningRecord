@@ -101,6 +101,11 @@ var BindExtra = {
 		//其实这里面,可以将其它的属性也添加到这里面，通过其它的属性可以进一步的完成一些操作,不过这里面没有做这么复杂，只有遇到情况的时候才会处理
 		result["text"]=a_val;
 		result["handler"]=handler;
+		if(!Extra.isEmpty(options_)){
+			for(var key in options_){
+				result[key]=options_[key];
+			}
+		}
 		return result;
 	},
 	/**

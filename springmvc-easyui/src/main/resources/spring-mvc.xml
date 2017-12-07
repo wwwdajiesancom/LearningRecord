@@ -11,7 +11,7 @@
 	<mvc:annotation-driven></mvc:annotation-driven>
 	
 	<!-- 2.扫描包 -->
-	<context:component-scan base-package="com.loujie.easyui" use-default-filters="false">
+	<context:component-scan base-package="${context.component.scan}" use-default-filters="false">
 		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
 	</context:component-scan>
 	<!-- 3.自动注入Controller -->

@@ -8,7 +8,7 @@
 	<import resource="classpath:mybatis/spring-mybatis.xml"/>
 	<import resource="classpath:spring-tx.xml"/>
 	
-	<context:component-scan base-package="com.loujie.easyui">
+	<context:component-scan base-package="${context.component.scan}">
 		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
 	</context:component-scan>
 	
