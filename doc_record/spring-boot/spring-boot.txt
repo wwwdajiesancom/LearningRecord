@@ -1,0 +1,14 @@
+1.spring-boot解决的问题
+	a.引入pom中的jar包变少了（只需要spring-boot的jia包就可以了）
+	b.不需要xml配置文件，对应的也就不需要在web.xml中配置listener
+	c.部署不同
+		以前都是打成war包,然后部署到tomcat中
+		现在变成jar包,并且只能由一个tomcat来运行，不能运行其它的项目了
+	
+2.spring-boot项目的搭建，
+	1.使用官方提供的例子
+	2.自己搭建
+
+3.
+		
+	

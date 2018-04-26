@@ -1,16 +1,27 @@
 package com.loujie.www.test;
 
-import java.util.Date;
-
 import org.junit.Test;
-
-import com.loujie.www.util.ArgsUtils;
 
 public class SolrTest {
 
 	@Test
 	public void solr1() {
-		System.err.println(ArgsUtils.formatDate(new Date(1505874660000L), "yyyy-MM-dd HH:mm:ss"));
+		this.li();
+	}
+
+	public void li() {
+		this.className();
+		System.err.println("----------------end");
+	}
+
+	private String className() {
+		StackTraceElement stack[] = Thread.currentThread().getStackTrace();
+		for (StackTraceElement item : stack) {
+			String[] classNames = item.getClassName().split("\\.");
+			System.err.println(classNames[classNames.length - 1]);
+			System.err.println(item.getMethodName());
+		}
+		return null;
 	}
 
 }

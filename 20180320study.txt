@@ -1,0 +1,48 @@
+25.1.lambda表达式（它是一种简写，省略的部分代码由java编译器补上）
+		
+		
+		
+		lambda表达式，主要是为省略一些抽象类或接口实现匿名类的写法而设立的；如下：
+		Runnable r = new Runnable(){
+			public void run(){
+				System.out.println("jiegehao");
+			}
+		};
+		new Thread(r).start();
+		Comparator<T> c = new Comparator<T>(){
+			public int compare(T o1,T o2){
+				return Integer.compare(o1.column1,o2.column1);
+			}
+		};
+		Arrays.sort(T[] t,c);
+		以上使我们常用的写法，但是如果用了lambda表达式就可以这样写了
+		Runnable r = () -> System.out.println("jiegehao");
+		Comparator<T> c = (o1,02) -> Integer.compare(o1.column1,o2.column1);
+		lambda表达式,就是将一切可省略的都去掉，当然实现体部分也可以是一个{}块；
+		
+	25.2.函数式接口：他算是更近一步了，将抽象接口省略成一个其它类的方法，这叫做方式引用
+		我们将接口/抽象类中只有一个抽象方法的类叫做函数式接口，这样的接口都可以用lambda表达式来写。
+		我也可以添加标签@FunctionalInterface，它可以做为检查，也可以作为一个标识
+		只有一个抽象方法的理解，是包括除了Object中的方法
+		函数式接口可以写Object中的方法
+		Integer::compare，这种写法叫做方法引用，也用于lambda表达式
+		Comparator<Integer> c = Integer::compare;
+		lambda表达式的运用：方法引用的方式：
+			第一种：静态对象::静态方法
+			第二种：实例化对象::方法
+			
+	25.3.lambda表达式的运用：构造方法引用
+		ArrayList::new
+	
+	25.4.接口中的默认方法
+	interface Animal{
+		
+		default void noSys{
+			system.out.pritnln("都不会说话");
+		}
+		
+		void a();
+		
+	}
+	当接口中可以有方法之后，就会出现问题，会出现在extends,implements共同出现，这样就会出现冲突现象，此时必须重写这个方法，
+	ClassName.super.methodName();

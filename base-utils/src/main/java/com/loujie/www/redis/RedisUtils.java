@@ -14,9 +14,8 @@ import redis.clients.jedis.Jedis;
  */
 public class RedisUtils {
 
-	
 	private static String key(String key) {
-		
+
 		return "base_" + key;
 	}
 
@@ -152,6 +151,5 @@ public class RedisUtils {
 			}
 		}.run(Map.class);
 	}
-
 
 }

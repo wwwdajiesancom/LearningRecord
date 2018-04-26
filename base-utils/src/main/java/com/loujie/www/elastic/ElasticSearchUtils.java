@@ -20,6 +20,10 @@ import org.elasticsearch.search.sort.SortOrder;
  */
 public class ElasticSearchUtils {
 
+	public static void getCourse() {
+
+	}
+
 	/**
 	 * 例子
 	 */
@@ -59,7 +63,7 @@ public class ElasticSearchUtils {
 			;
 		}
 		// 2.4要取出的字段
-		String[] fields = {"id", "name", "price", "pay_type", "type", "created_at"};
+		String[] fields = { "id", "name", "price", "pay_type", "type", "created_at" };
 		searchRequestBuilder.addFields(fields);
 		// 3.查询,并处理结果
 		SearchResponse searchResponse = searchRequestBuilder.execute().actionGet();
@@ -79,6 +83,10 @@ public class ElasticSearchUtils {
 			}
 			System.out.println("end############################" + i++);
 		}
+	}
+
+	public static void main(String[] args) {
+		example(1, 3);
 	}
 
 }

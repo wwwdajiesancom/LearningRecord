@@ -1,0 +1,18 @@
+Vue:
+	html模版:
+		{{msg}}
+		{{}}
+	var vm = new Vue({
+		el : "#html_label_id",
+		data : {
+			msg : "hello world!!!",
+			age : 29,
+			lastName : "lou",
+			firstName : "jiege"
+		},
+		methods : {
+			getFullName : function(){
+				return this.firstName + this.lastName;
+			}
+		}
+	});

@@ -1,18 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true" scanPeriod="60 seconds" debug="false">
-	
+	<contextName>testlog</contextName>
+
 	<property name="encoderCharset" value="utf-8" />
-	<property name="consoleLogPath" value="logs/console.log" />
-	<property name="consoleEncoderPattern" value="%date{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger{36} - %msg%n" />
-	
-	<property name="fileLogPath" value="logs/file.log" />
-	<property name="fileEncoderPattern" value="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%5level] [%thread] %logger{0} %msg%n" />
-	
-	<property name="rollingLogPath" value="logs/rolling.log" />
-	<property name="rollingLogPathPattern" value="logs/rolling-%d{yyyy-MM-dd}.log" />
-	<property name="rollingLogPathPatternZip" value="logs/rolling-%d{yyyy-MM-dd}.%i.log.zip" />
-	<property name="rollingEncoderPattern" value="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%5level] [%thread] %logger{0} %msg%n" />
-	
+	<property name="consoleLogPath" value="${logback.log.path}console.log" />
+	<property name="consoleEncoderPattern"
+		value="%date{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger{36} - %msg%n" />
+
+	<property name="fileLogPath" value="${logback.log.path}file.log" />
+	<property name="fileEncoderPattern"
+		value="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%5level] [%thread] %logger{0} %msg%n" />
+
+	<property name="rollingLogPath" value="${logback.log.path}rolling.log" />
+	<property name="rollingLogPathZip" value="${logback.log.path}rolling_zip.log" />
+	<property name="rollingLogPathPattern" value="${logback.log.path}rolling-%d{yyyy-MM-dd}.log" />
+	<property name="rollingLogPathPatternZip"
+		value="${logback.log.path}rolling_zip-%d{yyyy-MM-dd}.%i.log.zip" />
+	<property name="rollingEncoderPattern"
+		value="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%5level] [%thread] %logger{0} %msg%n" />
+	<property name="rollingEncoderPatternZip"
+		value="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%5level] [%thread] %logger{0} %msg%n" />
+
 	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
 		<target>System.out</target>
 		<encoder>
@@ -20,53 +28,55 @@
 			<charset>${encoderCharset}</charset>
 		</encoder>
 	</appender>
+	
+	<!-- <filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>info</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+			ACCEPTNEUTRAL,DENY
+	</filter> -->
 
 	<appender name="file" class="ch.qos.logback.core.FileAppender">
 		<file>${fileLogPath}</file>
 		<append>true</append>
 		<prudent>false</prudent>
-		<filter class="ch.qos.logback.classic.filter.LevelFilter">
-			<level>DEBUG</level>
-			<onMatch>ACCEPT</onMatch>
-			<onMismatch>DENY</onMismatch>
-		</filter>
 		<encoder>
 			<Pattern>${fileEncoderPattern}</Pattern>
 			<charset>${encoderCharset}</charset>
 		</encoder>
 	</appender>
 
-	<appender name="ERROR"
+	<appender name="rolling_file"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<encoder>
 			<Pattern>${rollingEncoderPattern}</Pattern>
 			<charset>${encoderCharset}</charset>
 		</encoder>
 		<file>${rollingLogPath}</file>
-
+		
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 			<fileNamePattern>${rollingLogPathPattern}</fileNamePattern>
-			<maxHistory>3</maxHistory>
+			<maxHistory>3660</maxHistory>
 			<totalSizeCap>3GB</totalSizeCap>
 		</rollingPolicy>
 	</appender>
-	
-	<appender name="ERROR2"
+
+	<appender name="rolling_file_zip"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<encoder>
-			<Pattern>${encoderPattern}</Pattern>
+			<Pattern>${rollingEncoderPatternZip}</Pattern>
 			<charset>${encoderCharset}</charset>
 		</encoder>
-		<file>${rollingLogPath}</file>
-
-		<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+		<file>${rollingLogPathZip}</file>
+		<rollingPolicy
+			class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
 			<fileNamePattern>${rollingLogPathPatternZip}</fileNamePattern>
-			<maxHistory>60</maxHistory>
+			<maxHistory>3660</maxHistory>
 			<totalSizeCap>3GB</totalSizeCap>
 			<maxFileSize>100MB</maxFileSize>
 		</rollingPolicy>
 	</appender>
-	
+		
 	<root level="debug">
 		<appender-ref ref="console" />
 	</root>
