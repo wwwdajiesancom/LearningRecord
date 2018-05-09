@@ -5,10 +5,12 @@ Vue:
 	var vm = new Vue({
 		el : "#html_label_id",
 		data : {
+			url:"http://www.baidu.com",
 			msg : "hello world!!!",
 			age : 29,
 			lastName : "lou",
-			firstName : "jiege"
+			firstName : "jiege",
+			moves:[{name:"美人鱼",zuozhe:"周星驰"},{name:"妖猫传",zuozhe:"不知道"},{name:"我是谁",zuozhe:"hahahah"}]
 		},
 		methods : {
 			getFullName : function(){
@@ -16,3 +18,97 @@ Vue:
 			}
 		}
 	});
+
+
+v-bind标签:绑定属性
+	<a v-bind:href="url">baidu</a>
+v-on标签:绑定事件
+	<button v-on:click="getFullName"></button>
+	<button v-on:click="getFullName($event)"></button>,$event默认有
+v-on:click.enter.space.esc.shift这样是触发或者是组合,enter也可以换成数字,evnet.which
+v-on:click.meta相当于window键
+	.trim
+
+v-if,v-else-if,v-else
+
+v-show,
+v-cloak,这是一个属性,渲染完成后就去掉了
+
+v-html,让里面的代码执行渲染
+
+v-model,双向绑定,代表了v-on:click,v-bind:value;
+
+v-on:click.prevent(取消默认事件),.stop(阻止冒泡)
+
+v-for标签:放到那里,就循环那里
+	<h1>电影列表</h1>
+	<ul>
+		<li v-for="(t,index) in moves">{{t.name}}</li>
+	</ul>
+	t是一个临时变量表达moves中的原素，index是索引从0开始，moves是一个array
+	v-for还可以遍历{name:"jiege",age:10},v-for="(value,key,index) in json",这里面是这样存放了
+
+	v-for="(n,index) in 10",输出1,2,....,10;遍历数字
+	v-for="(s,index) in 'woshishui'",w,o,...,i;遍历字符串
+
+Vue.set(this.array,1,10)将数组中的第2个元素修改成10,这样会让以前渲染过的也修改了,数组中的数据也修改了
+Vue的data中定义array,被重写了几个方法,例如:push,pop,shift,reverse等,调用这些方法的时候会被Vue检测到,并反映到页面效果上
+					但是有的时候,会发现会出现问题,遍历渲染的时候,最好让代码模块都是不一样的,可以增加一个属性,值唯一
+
+Vue的参数：计算属性computed,这里面都需要有一个返回值,必须是一个同步的代码，因为它会被分析
+{
+	el:"",
+	data:{},
+	methods:{},
+	computed:{getA:function(){}},
+}
+在被调用的时候会出现此类问题,
+我们会发现一个问题,当data中的数据放生变化时,methods中的方法都会被重新的执行【需要被外部调用过的方法】，所以我们要说到computed
+computed,它与methods中的定义是一样的,但是computed中的方法会被分析,看是否需要被执行；
+computed中的方法调用与methods中的是不相同的,computed中的方法会被当作属性来调用{{getA}},computed中用到了缓存,而method并没有
+computed,中的对象,可以这样定义:computed:{fullName:{get:function{return this.name1+this.name2;},set:function(newValue){}}}
+
+watch监听：可以没有返回值，可以有异步代码
+{
+	el:"",
+	data:{
+		searchInfo:"",
+		result:[];
+	}
+	watch:{
+		searchInfo:function(query){
+			var vm = this;
+			setTimeout(function(){
+				vm.result = ["js","java","c#"];
+			},500);
+		}
+	}
+}
+watch,监听data中的searchInfo变化,做出相应的调用;query是searchInfo的值
+Vue给array增加了一个map方法,array.map(function(item){
+
+});
+
+filters,过滤器，这个方法在转化的时候用到,switch(){case:break;case:break;}
+{
+	el:"",
+	data:{
+		msg:"ni hao ya!!!"
+	},
+	filters:{
+		ox:function(val,val2){
+			//msg变成大写
+		}
+	}
+}
+{{msg|ox(val2)}},msg是作为第一个参数用的
+
+<div style="height:200px;width:200px;" v-bind:style="color:red;"></div>
+v-bind:style,他会与前面的style进行融合,v-bind:style="[{border:1px},{color:red}]"
+
+js表达式：
+{cirle:boolean,otherCirle:boolean},如果后面的值为true,则显示cirle;当然也可以写多个表达式在里面
+cirle,是字段;boolean是一个返回boolean值的表达式
+
+v-bind:attr简写成:attr;
+v-on:event,简写成@event;
