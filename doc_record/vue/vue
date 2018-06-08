@@ -1,8 +1,5 @@
-Vue:
-	html模版:
-		{{msg}}
-		{{}}
-	var vm = new Vue({
+1.Vue定义:
+	new Vue({
 		el : "#html_label_id",
 		data : {
 			url:"http://www.baidu.com",
@@ -16,40 +13,79 @@ Vue:
 			getFullName : function(){
 				return this.firstName + this.lastName;
 			}
+		},
+		computed:{
+			lizic:{
+				return "";
+			}
+		},
+		watch:{
+			age:function(val){
+				//val,它是外边监听的值
+				//可以做相应的处理
+			}
+		},
+		filters:{
+
 		}
 	});
+	解释:
+		a.页面需要引用vue的js库,并且在body最下方引入自己编写的vue代码,自定义vue请参考上方所写
+		b.el,它是一些css选择器,用来确定页面dom的位置,例如这样:[#Id,.class]等
+		c.data,它里面可以定义一些模版数据,可以在el指定范围之内使用,
+			使用方法:
+				{{url}},这样可以直接的取出内容,它们完全会作为一个string输出出来,并不会出现其它的dom执行
+				如果和其它的标签结合使用,一般是用不到{{}}的,可以直接写,例如:v-bind:url="url",这样就可以设置值了
+		d.methods,这里面一般定义一些事件方法
+			methods中最好定义事件方法,如果定义的方法被在页面使用,会出现一些隐藏的问题,data中的数据发生变化,该方法就会被调用一次,出现多次加载,具体解决方法请看computed
+			methods中的方法,可以直接写名字,也可以带(),两种都可以
+			methods中定义的方法,有一个默认参数$event,代表的是事件
+		e.computed,计算属性,一般书写一些页面调用方法，都有返回值,都是在页面上直接调用的,{{lizic}},调用方式与data中的一样
+			这个计算属性,他会有一个分析的过程,如果引用的data中数据发生了变化,就会自动的调用该方法,使页面发生相应的变化
+			这个方法里面一般都要写成同步sync的方法,因为会出现分析
+		f.watch,监听属性,它的作用主要是监听data中指定的数据发生变化,而自动执行的方法
+			方法名称,必须是data中的属性;方法的参数它是变化后的值
+			方法里面可以写异步async方法
+		g.filters,过滤,此处里面定义的方法一般都是需要加工的方法;是根据data中不同的数据,而设定的方法
+			例如,age>20,age>30,age>50,age>70,返回不同的数据,这时就要用到该处了
 
 
-v-bind标签:绑定属性
-	<a v-bind:href="url">baidu</a>
-v-on标签:绑定事件
-	<button v-on:click="getFullName"></button>
-	<button v-on:click="getFullName($event)"></button>,$event默认有
-v-on:click.enter.space.esc.shift这样是触发或者是组合,enter也可以换成数字,evnet.which
-v-on:click.meta相当于window键
-	.trim
+2.标签：
+	v-bind标签:绑定属性
+		<a v-bind:href="url">baidu</a>
+	v-on标签:绑定事件
+		<button v-on:click="getFullName"></button>
+		<button v-on:click="getFullName($event)"></button>,$event默认有
+	v-on:click.enter.space.esc.shift这样是触发或者是组合,enter也可以换成数字,evnet.which
+	v-on:click.meta相当于window键
+		.trim
 
-v-if,v-else-if,v-else
+	v-if,v-else-if,v-else
 
-v-show,
-v-cloak,这是一个属性,渲染完成后就去掉了
+	<template></template>,有的时候会用到,并不会渲染到页面上
 
-v-html,让里面的代码执行渲染
+	v-show,显示隐藏
+	v-cloak,这是一个属性,渲染完成后就去掉了
 
-v-model,双向绑定,代表了v-on:click,v-bind:value;
+	v-html,让里面的代码执行渲染
 
-v-on:click.prevent(取消默认事件),.stop(阻止冒泡)
+	v-model,双向绑定,代表了v-on:click,v-bind:value;
+	v-model:attr.lazy,
 
-v-for标签:放到那里,就循环那里
-	<h1>电影列表</h1>
-	<ul>
-		<li v-for="(t,index) in moves">{{t.name}}</li>
-	</ul>
-	t是一个临时变量表达moves中的原素，index是索引从0开始，moves是一个array
-	v-for还可以遍历{name:"jiege",age:10},v-for="(value,key,index) in json",这里面是这样存放了
+	v-once,代码只执行一遍
 
-	v-for="(n,index) in 10",输出1,2,....,10;遍历数字
-	v-for="(s,index) in 'woshishui'",w,o,...,i;遍历字符串
+	v-on:click.prevent(取消默认事件),.stop(阻止冒泡)
+
+	v-for标签:放到那里,就循环那里
+		<h1>电影列表</h1>
+		<ul>
+			<li v-for="(t,index) in moves">{{t.name}}</li>
+		</ul>
+		t是一个临时变量表达moves中的原素，index是索引从0开始，moves是一个array
+		v-for还可以遍历{name:"jiege",age:10},v-for="(value,key,index) in json",这里面是这样存放了
+
+		v-for="(n,index) in 10",输出1,2,....,10;遍历数字
+		v-for="(s,index) in 'woshishui'",w,o,...,i;遍历字符串
 
 Vue.set(this.array,1,10)将数组中的第2个元素修改成10,这样会让以前渲染过的也修改了,数组中的数据也修改了
 Vue的data中定义array,被重写了几个方法,例如:push,pop,shift,reverse等,调用这些方法的时候会被Vue检测到,并反映到页面效果上
@@ -112,3 +148,105 @@ cirle,是字段;boolean是一个返回boolean值的表达式
 
 v-bind:attr简写成:attr;
 v-on:event,简写成@event;
+
+组件:component
+	https://github.com/kamranahmedse/developer-roadmap
+	
+	
+	组件一共三部分：父传子、子传父、父传子的一些dom节点
+	new Vue({
+		el:"#app",
+		components:{
+		
+		}
+	});
+	
+	1.组件定义,在引用组件标签时，就会将组件template中的内容渲染到页面上了,在template中,可以使用vue语法
+	在组件定义中template的内容，必须有一个root节点
+	Vue.component('组件的名称',{
+		template:`
+			<template>
+				{{msg}}
+			</template>
+			`,
+		data:function(){
+			return {
+				msg:'大家好'
+			};
+		}
+	});
+	自定义组件,必须在Vue实例范围内才能使用
+	
+	vue-cli,一个脚手架,可以快速的创建一个项目
+	webpack,这是一个打包工具
+	less,es6
+	单文件组件,可以由3部分组成
+	1.<template></template>，代表了template中的内容
+	2.<script>export default{
+		name:'name',
+		data(){
+			return {}
+		}
+	}</script>,他代表了组件的其它部分
+	3.<style scoped></style>，代表了局部的样式
+	
+	动态的组件,用到了props
+	驼峰式的
+	父传子：将父组件的值传递到子组件中
+	props:{
+		attrName:attrType,
+		jiege:String,
+		name:{
+			type:[String,Number],
+			default:'jiegehao',
+			required:false
+		}
+	}
+	子传父:子组件怎么修改父组件的内容
+	子组件中,this.emit('parentEventName',{name:'hahaha'}),意思是:触发父组件中的一个自定义事件,名字叫做parentEventName，可以传值的
+	在父组件中调用子组件的时候,就写一个@parentEventName="otherFunction",
+	
+	<slot></slot>,插槽,代表了自定义标签中间部分的内容
+	slot,可以有名字,在外部使用的时候,写slot=slotName,引用是<slot name="slotName">
+	
+	
+	https://router.vuejs.org/zh/guide/essentials/dynamic-matching.html
+	vue-router,路由：
+		1.安装，
+			npm install vue-router
+		2.引用
+			import VueRouter from 'vue-router'
+			Vue.use(VueRouter);
+		3.定义路由
+			let router = new VueRouter({
+				routes:[
+					{path:'/jiegehao',component:ComponentName}
+				]
+			});
+			new Vue({
+				el:'',
+				router,
+				
+			});
+		4.在页面上引用
+			<router-view></router-view>
+		5.路由跳转
+			<router-link to="路由地址"></router-link>
+			to，可以是动态的
+			to,的写法，可以包含多种，如果地址携带参数,就需要{path:'路由地址',params:{count:10}},请参考文档
+			在页面上引用路由参数:{{$route.params.count}},携带参数的路由,不需要path,需要name
+			
+			@,寻找根目录
+		6.嵌套路由
+			在父节点下,添加一个children:[{
+				path:'java',
+				conponent:ComponentName
+			}]
+			在子节点中,path不需要/开头,会自动的补全
+			在父节点中redirect，默认重定向的地址redirect:'/parentpath/java'
+	
+
+	
+	
+	
+	
